@@ -1,5 +1,6 @@
 package com.nos.tax.building.domain;
 
+import com.nos.tax.member.domain.Mobile;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.*;
@@ -8,13 +9,11 @@ import lombok.*;
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Address {
-    @Column(nullable = false)
-    private String address1;
+public class HouseHolder {
 
     @Column(nullable = false)
-    private String address2;
+    private String name;
 
     @Column(nullable = false)
-    private String zipNo;
+    private Mobile mobile;
 }
