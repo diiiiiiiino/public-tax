@@ -1,15 +1,19 @@
 package com.nos.tax.building.domain;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Building {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -21,11 +25,46 @@ public class Building {
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "household", joinColumns = @JoinColumn(name = "building_id"))
     @OrderColumn(name = "line_idx")
-    private List<HouseHold> houseHold;
+    private List<HouseHold> houseHolds;
 
-    public Building(String name, Address address, List<HouseHold> houseHold) {
-        this.name = name;
-        this.address = address;
-        this.houseHold = houseHold;
+    private Building(String name, Address address, List<HouseHold> houseHold) {
+        setName(name);
+        setAddress(address);
+        setHouseHolds(houseHold);
+    }
+
+    public static Building of(String name, Address address, List<HouseHold> houseHolds) {
+        return new Building(name, address, houseHolds);
+    }
+
+    public void changeName(String name) {
+        setName(name);
+    }
+
+    public void changeAddress(String address1, String address2, String zipNo) {
+        setAddress(Address.of(address1, address2, zipNo));
+    }
+
+    public void addHouseHolds(List<HouseHold> newHouseHolds) {
+        this.houseHolds.addAll(newHouseHolds);
+    }
+
+    private void setName(String name) {
+        this.name = Objects.requireNonNull(name);
+    }
+
+    private void setAddress(Address address) {
+        this.address = Objects.requireNonNull(address);
+    }
+
+    private void setHouseHolds(List<HouseHold> houseHolds) {
+        verifyAtLeastOneOrMoreHouseHold(houseHolds);
+        this.houseHolds = houseHolds;
+    }
+
+    private void verifyAtLeastOneOrMoreHouseHold(List<HouseHold> houseHolds){
+        if(houseHolds == null || houseHolds.isEmpty()){
+            throw new NullPointerException("no HouseHold");
+        }
     }
 }

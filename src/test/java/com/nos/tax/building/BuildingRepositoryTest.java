@@ -8,15 +8,17 @@ import com.nos.tax.building.domain.repository.BuildingRepository;
 import com.nos.tax.member.domain.Mobile;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.util.Assert;
 
 import java.util.List;
+import java.util.Optional;
+
+import static com.nos.tax.TestUtils.flushAndClear;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -30,28 +32,96 @@ public class BuildingRepositoryTest {
     @DisplayName("Building 엔티티 저장")
     @Test
     void buildingSave() {
-        Address address = new Address("서울시 동작구 사당동", "현대 아파트 101동", "111222");
-        List<HouseHold> houseHolds = List.of(new HouseHold("101호", new HouseHolder("세대주", new Mobile("010", "1111", "2222"))));
-        Building building = new Building("현대빌라", address, houseHolds);
+        Optional<Building> optionalBuilding = getBuilding();
+        Building building = optionalBuilding.get();
 
-        buildingRepository.save(building);
+        assertThat(building).isNotNull();
+        assertThat(building.getName()).isEqualTo("현대빌라");
 
-        flushAndClear();
+        Address findAddress = building.getAddress();
+        assertThat(findAddress).isNotNull();
+        assertThat(findAddress.getAddress1()).isEqualTo("서울시 동작구 사당동");
+        assertThat(findAddress.getAddress2()).isEqualTo("현대 아파트 101동");
+        assertThat(findAddress.getZipNo()).isEqualTo("111222");
 
-        Building findBuilding = buildingRepository.findById(1L).get();
-        Address findAddress = findBuilding.getAddress();
-        List<HouseHold> findHouseHolds = findBuilding.getHouseHold();
+        List<HouseHold> findHouseHolds = building.getHouseHolds();
+        assertThat(findHouseHolds).hasSize(1);
 
-        Assertions.assertNotNull(findBuilding);
-        Assertions.assertNotNull(findAddress);
-        org.assertj.core.api.Assertions.assertThat(findHouseHolds).hasSize(1);
+        HouseHold findHouseHold = findHouseHolds.get(0);
+        assertThat(findHouseHold.getRoom()).isEqualTo("101호");
 
-        Assertions.assertEquals("현대빌라", findBuilding.getName());
-        Assertions.assertEquals("서울시 동작구 사당동", findAddress.getAddress1());
+        HouseHolder houseHolder = findHouseHold.getHouseHolder();
+        assertThat(houseHolder).isNotNull();
+        assertThat(houseHolder.getName()).isEqualTo("세대주");
+        assertThat(houseHolder.getMobile().toString()).isEqualTo("010-1111-2222");
     }
 
-    void flushAndClear() {
-        entityManager.flush();
-        entityManager.clear();
+    @DisplayName("Building 엔티티 건물명 수정")
+    @Test
+    void buildingUpdate() {
+        Optional<Building> optionalBuilding = getBuilding();
+        Building building = optionalBuilding.get();
+
+        assertThat(building).isNotNull();
+
+        building.changeName("자이");
+
+        flushAndClear(entityManager);
+
+        building = buildingRepository.findById(building.getId()).get();
+
+        assertThat(building.getName()).isEqualTo("자이");
+    }
+
+    @DisplayName("Building 주소 수정")
+    @Test
+    void AddressUpdate(){
+        Optional<Building> optionalBuilding = getBuilding();
+        Building building = optionalBuilding.get();
+
+        assertThat(building).isNotNull();
+
+        Address address = building.getAddress();
+        assertThat(address).isNotNull();
+
+        building.changeAddress("변경주소1", "변경주소2", "99999");
+
+        flushAndClear(entityManager);
+
+        Building findBuilding = buildingRepository.findById(building.getId()).get();
+        Address findAddress = findBuilding.getAddress();
+
+        assertThat(findAddress.getAddress1()).isEqualTo("변경주소1");
+        assertThat(findAddress.getAddress2()).isEqualTo("변경주소2");
+        assertThat(findAddress.getZipNo()).isEqualTo("99999");
+    }
+
+    @DisplayName("Building 세대주 추가")
+    @Test
+    void addHouseHold(){
+        Optional<Building> optionalBuilding = getBuilding();
+        Building building = optionalBuilding.get();
+
+        List<HouseHold> newHouseHolds = List.of(HouseHold.of("102호", HouseHolder.of("102호 세대주", Mobile.of("010", "2222", "3333"))));
+
+        building.addHouseHolds(newHouseHolds);
+
+        flushAndClear(entityManager);
+
+        building = buildingRepository.findById(building.getId()).get();
+
+        assertThat(building.getHouseHolds()).hasSize(2);
+    }
+
+    private Optional<Building> getBuilding() {
+        Address address = Address.of("서울시 동작구 사당동", "현대 아파트 101동", "111222");
+        List<HouseHold> houseHolds = List.of(HouseHold.of("101호", HouseHolder.of("세대주", Mobile.of("010", "1111", "2222"))));
+        Building building = Building.of("현대빌라", address, houseHolds);
+
+        building = buildingRepository.save(building);
+
+        flushAndClear(entityManager);
+
+        return buildingRepository.findById(building.getId());
     }
 }
