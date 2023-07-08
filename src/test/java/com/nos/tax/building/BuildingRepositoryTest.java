@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -98,11 +99,11 @@ public class BuildingRepositoryTest {
 
     @DisplayName("Building 세대주 추가")
     @Test
-    void addHouseHold(){
+    void whenBuildingAddHouseholder(){
         Optional<Building> optionalBuilding = getBuilding();
         Building building = optionalBuilding.get();
 
-        List<HouseHold> newHouseHolds = List.of(HouseHold.of("102호", HouseHolder.of("102호 세대주", Mobile.of("010", "2222", "3333"))));
+        List<HouseHold> newHouseHolds = new ArrayList<>(List.of(HouseHold.of("102호", HouseHolder.of("102호 세대주", Mobile.of("010", "2222", "3333")))));
 
         building.addHouseHolds(newHouseHolds);
 

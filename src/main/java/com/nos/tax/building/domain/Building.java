@@ -1,5 +1,6 @@
 package com.nos.tax.building.domain;
 
+import com.nos.tax.util.VerifyUtil;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -46,11 +47,12 @@ public class Building {
     }
 
     public void addHouseHolds(List<HouseHold> newHouseHolds) {
+        verifyAtLeastOneOrMoreHouseHold(newHouseHolds);
         this.houseHolds.addAll(newHouseHolds);
     }
 
     private void setName(String name) {
-        this.name = Objects.requireNonNull(name);
+        this.name = VerifyUtil.verifyText(name);
     }
 
     private void setAddress(Address address) {
