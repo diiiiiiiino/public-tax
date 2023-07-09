@@ -1,8 +1,10 @@
 package com.nos.tax.building.domain;
 
 import com.nos.tax.member.domain.Mobile;
+import com.nos.tax.member.domain.converter.MobileConverter;
 import com.nos.tax.util.VerifyUtil;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
 import lombok.AccessLevel;
@@ -21,6 +23,7 @@ public class HouseHolder {
 
     @Embedded
     @Column(nullable = false)
+    @Convert(converter = MobileConverter.class, attributeName = "mobile")
     private Mobile mobile;
 
     private HouseHolder(String name, Mobile mobile) {

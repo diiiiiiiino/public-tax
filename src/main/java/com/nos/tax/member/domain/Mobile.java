@@ -1,7 +1,7 @@
 package com.nos.tax.member.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
+import com.nos.tax.member.domain.converter.MobileNumConverter;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,43 +9,58 @@ import lombok.NoArgsConstructor;
 import static com.nos.tax.util.VerifyUtil.verifyText;
 
 @Getter
-@Embeddable
+//@Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Mobile {
 
+    /*@Embedded
+    @AttributeOverrides(
+            @AttributeOverride(name = "num", column = @Column(name = "carrier_num"))
+    )*/
     @Column(nullable = false)
-    private String firstNo;
+    @Convert(converter = MobileNumConverter.class)
+    private MobileNum carrierNum;
 
+    /*@Embedded
+    @AttributeOverrides(
+            @AttributeOverride(name = "num", column = @Column(name = "second_num"))
+    )*/
     @Column(nullable = false)
-    private String secondNo;
+    @Convert(converter = MobileNumConverter.class)
+    private MobileNum secondNum;
 
+    /*@Embedded
+    @AttributeOverrides(
+            @AttributeOverride(name = "num", column = @Column(name = "three_num"))
+    )*/
     @Column(nullable = false)
-    private String threeNo;
+    @Convert(converter = MobileNumConverter.class)
+    private MobileNum threeNum;
 
-    private Mobile(String firstNo, String secondNo, String threeNo) {
-        setFirstNo(firstNo);
-        setSecondNo(secondNo);
-        setThreeNo(threeNo);
+    private Mobile(String carrierNum, String secondNum, String threeNum) {
+        setCarrierNum(carrierNum);
+        setSecondNum(secondNum);
+        setThreeNum(threeNum);
     }
 
-    public static Mobile of(String firstNo, String secondNo, String threeNo) {
-        return new Mobile(firstNo, secondNo, threeNo);
+    public static Mobile of(String carrierNum, String secondNum, String threeNum) {
+        return new Mobile(carrierNum, secondNum, threeNum);
     }
 
     @Override
     public String toString() {
-        return firstNo + "-" + secondNo + "-" + threeNo;
+        return carrierNum.getNum() + "-" + secondNum.getNum() + "-" + threeNum.getNum();
     }
 
-    private void setFirstNo(String firstNo) {
-        this.firstNo = verifyText(firstNo);
+    private void setCarrierNum(String carrierNum) {
+        this.carrierNum = MobileNum.of(carrierNum, 3);
     }
 
-    private void setSecondNo(String secondNo) {
-        this.secondNo = verifyText(secondNo);
+    private void setSecondNum(String secondNum) {
+        this.secondNum = MobileNum.of(secondNum,4);
     }
 
-    private void setThreeNo(String threeNo) {
-        this.threeNo = verifyText(threeNo);
+    private void setThreeNum(String threeNum) {
+        this.threeNum = MobileNum.of(threeNum, 4);
     }
 }

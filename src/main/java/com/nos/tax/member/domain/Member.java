@@ -1,5 +1,6 @@
 package com.nos.tax.member.domain;
 
+import com.nos.tax.member.domain.converter.MobileConverter;
 import com.nos.tax.util.VerifyUtil;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -22,7 +23,8 @@ public class Member {
     @Column(nullable = false)
     private String name;
 
-    @Embedded
+    //@Embedded
+    @Convert(converter = MobileConverter.class)
     private Mobile mobile;
 
     private Member(String loginId, String name, Mobile mobile) {
