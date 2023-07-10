@@ -1,40 +1,18 @@
 package com.nos.tax.member.domain;
 
-import com.nos.tax.member.domain.converter.MobileNumConverter;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import static com.nos.tax.util.VerifyUtil.verifyText;
+import java.util.Objects;
 
 @Getter
-//@Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Mobile {
 
-    /*@Embedded
-    @AttributeOverrides(
-            @AttributeOverride(name = "num", column = @Column(name = "carrier_num"))
-    )*/
-    @Column(nullable = false)
-    @Convert(converter = MobileNumConverter.class)
     private MobileNum carrierNum;
-
-    /*@Embedded
-    @AttributeOverrides(
-            @AttributeOverride(name = "num", column = @Column(name = "second_num"))
-    )*/
-    @Column(nullable = false)
-    @Convert(converter = MobileNumConverter.class)
     private MobileNum secondNum;
-
-    /*@Embedded
-    @AttributeOverrides(
-            @AttributeOverride(name = "num", column = @Column(name = "three_num"))
-    )*/
-    @Column(nullable = false)
-    @Convert(converter = MobileNumConverter.class)
     private MobileNum threeNum;
 
     private Mobile(String carrierNum, String secondNum, String threeNum) {
@@ -62,5 +40,20 @@ public class Mobile {
 
     private void setThreeNum(String threeNum) {
         this.threeNum = MobileNum.of(threeNum, 4);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Mobile mobile = (Mobile) o;
+        return Objects.equals(carrierNum, mobile.carrierNum) &&
+                Objects.equals(secondNum, mobile.secondNum) &&
+                Objects.equals(threeNum, mobile.threeNum);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(carrierNum, secondNum, threeNum);
     }
 }

@@ -23,7 +23,7 @@ public class Member {
     @Column(nullable = false)
     private String name;
 
-    //@Embedded
+    @Column(nullable = false)
     @Convert(converter = MobileConverter.class)
     private Mobile mobile;
 
@@ -35,6 +35,14 @@ public class Member {
 
     public static Member of(String loginId, String name, Mobile mobile) {
         return new Member(loginId, name, mobile);
+    }
+
+    public void changeName(String name) {
+        setName(name);
+    }
+
+    public void changeMobile(String carrierNum, String secondNum, String threeNum) {
+        setMobile(Mobile.of(carrierNum, secondNum, threeNum));
     }
 
     private void setLoginId(String loginId) {

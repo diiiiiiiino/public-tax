@@ -21,9 +21,8 @@ public class HouseHolder {
     @Column(nullable = false)
     private String name;
 
-    @Embedded
     @Column(nullable = false)
-    @Convert(converter = MobileConverter.class, attributeName = "mobile")
+    @Convert(converter = MobileConverter.class)
     private Mobile mobile;
 
     private HouseHolder(String name, Mobile mobile) {

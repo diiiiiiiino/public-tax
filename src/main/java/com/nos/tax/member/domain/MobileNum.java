@@ -7,14 +7,14 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 import static com.nos.tax.util.VerifyUtil.verifyText;
 
 @Getter
-//@Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MobileNum {
     String num;
-
     int length;
 
     private MobileNum(String num, int length){
@@ -41,5 +41,18 @@ public class MobileNum {
         }
 
         this.length = length;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MobileNum mobileNum = (MobileNum) o;
+        return length == mobileNum.length && Objects.equals(num, mobileNum.num);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(num, length);
     }
 }

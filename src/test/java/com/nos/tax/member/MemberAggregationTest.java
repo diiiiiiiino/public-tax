@@ -1,5 +1,6 @@
 package com.nos.tax.member;
 
+import com.nos.tax.member.domain.Member;
 import com.nos.tax.member.domain.Mobile;
 import com.nos.tax.member.domain.MobileNum;
 import org.junit.jupiter.api.DisplayName;
@@ -7,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.stream.Stream;
@@ -45,7 +47,7 @@ public class MemberAggregationTest {
 
     @DisplayName("전화번호 생성 시 null 또는 빈 문자열 전달 시 실패")
     @ParameterizedTest
-    @MethodSource("provideMobileArguments")
+    @MethodSource("provideMobileNullAndEmptyArguments")
     void whenMobileCreateThenIllegalArgumentException(String carrierNum, String secondNum, String threeNum) {
         assertThatThrownBy(() -> Mobile.of(carrierNum, secondNum, threeNum))
                 .isInstanceOf(IllegalArgumentException.class);
@@ -69,13 +71,65 @@ public class MemberAggregationTest {
         assertThat(mobile.toString()).isEqualTo("010-1111-2222");
     }
 
-    @DisplayName("회원  변경 시 ")
-    @Test
-    void whenMemberNameChangeThenIllegalArgumentException() {
+    @DisplayName("회원 이름 변경 시 null 또는 빈 문자열 전달 시 실패")
+    @ParameterizedTest
+    @NullAndEmptySource
+    void whenMemberNameChangeThenIllegalArgumentException(String name) {
+        Mobile mobile = Mobile.of("010", "1111", "2222");
+        Member member = Member.of("loginId", "홍길동", mobile);
 
+        assertThatThrownBy(() -> member.changeName(name))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Has No Text");
     }
 
-    private static Stream<Arguments> provideMobileArguments(){
+    @DisplayName("회원 이름 변경 성공")
+    @Test
+    void whenMemberNameChangeThenSuccess() {
+        Mobile mobile = Mobile.of("010", "1111", "2222");
+        Member member = Member.of("loginId", "홍길동", mobile);
+
+        member.changeName("김철수");
+
+        assertThat(member.getName()).isEqualTo("김철수");
+    }
+
+    @DisplayName("회원 전화번호 변경 시 null 또는 빈 문자열 전달 시 실패")
+    @ParameterizedTest
+    @MethodSource("provideMobileNullAndEmptyArguments")
+    void whenMemberMobileChangeThenIllegalArgumentException(String carrierNum, String secondNum, String threeNum) {
+        Mobile mobile = Mobile.of("010", "1111", "2222");
+        Member member = Member.of("loginId", "홍길동", mobile);
+
+        assertThatThrownBy(() -> member.changeMobile(carrierNum, secondNum, threeNum))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Has No Text");
+    }
+
+    @DisplayName("회원 전화번호 변경 시 정해진 길이와 다른 문자열 전달 시 실패")
+    @ParameterizedTest
+    @MethodSource("provideMobileInvalidLengthArguments")
+    void givenTooLongFirstNumWhenMemberMobileChangeThenIllegalArgumentException(String carrierNum, String secondNum, String threeNum) {
+        Mobile mobile = Mobile.of("010", "1111", "2222");
+        Member member = Member.of("loginId", "홍길동", mobile);
+
+        assertThatThrownBy(() -> member.changeMobile(carrierNum, secondNum, threeNum))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Length and Num Text Not Matched");
+    }
+
+    @DisplayName("회원 전화번호 변경 성공")
+    @Test
+    void whenMemberMobileChangeThenSuccess() {
+        Mobile mobile = Mobile.of("010", "1111", "2222");
+        Member member = Member.of("loginId", "홍길동", mobile);
+
+        member.changeMobile("010", "3333", "4444");
+
+        assertThat(member.getMobile().toString()).isEqualTo("010-3333-4444");
+    }
+
+    private static Stream<Arguments> provideMobileNullAndEmptyArguments(){
         return Stream.of(
                 Arguments.of("", "1111", "2222"),
                 Arguments.of(null, "1111", "2222"),
@@ -83,6 +137,22 @@ public class MemberAggregationTest {
                 Arguments.of("010", null, "2222"),
                 Arguments.of("010", "1111", ""),
                 Arguments.of("010", "1111", null)
+        );
+    }
+
+    private static Stream<Arguments> provideMobileInvalidLengthArguments(){
+        return Stream.of(
+                Arguments.of("0", "1111", "2222"),
+                Arguments.of("01", "1111", "2222"),
+                Arguments.of("0100", "1111", "2222"),
+                Arguments.of("010", "1", "2222"),
+                Arguments.of("010", "11", "2222"),
+                Arguments.of("010", "111", "2222"),
+                Arguments.of("010", "11111", "2222"),
+                Arguments.of("010", "1111", "2"),
+                Arguments.of("010", "1111", "22"),
+                Arguments.of("010", "1111", "222"),
+                Arguments.of("010", "1111", "22222")
         );
     }
 }
