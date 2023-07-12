@@ -1,6 +1,5 @@
 package com.nos.tax.member.domain;
 
-import com.nos.tax.member.domain.exception.PasswordNotMatchedException;
 import com.nos.tax.util.VerifyUtil;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -11,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Password {
-    String value;
+    private String value;
 
     private Password(String value) {
         setValue(value);
@@ -21,7 +20,7 @@ public class Password {
         return new Password(value);
     }
 
-    private void setValue(String value){
+    private void setValue(String value) {
         VerifyUtil.verifyText(value);
         confirmPasswordLength(value);
         confirmPasswordIncludingEnglish(value);
@@ -29,10 +28,10 @@ public class Password {
         this.value = value;
     }
 
-    private void confirmPasswordLength(String value){
+    private void confirmPasswordLength(String value) {
         int length = value.length();
-        if(length < 8 || length > 16){
-            throw new PasswordNotMatchedException("length condition not matched");
+        if (length < 8 || length > 16) {
+            throw new PasswordConditionException("length condition not matched");
         }
     }
 
@@ -45,7 +44,7 @@ public class Password {
         }
 
         if(!hasAlphabet){
-            throw new PasswordNotMatchedException("Has No Alphabet");
+            throw new PasswordConditionException("Has No Alphabet");
         }
     }
 
@@ -58,7 +57,7 @@ public class Password {
         }
 
         if(!hasDigit){
-            throw new PasswordNotMatchedException("Has No Digit");
+            throw new PasswordConditionException("Has No Digit");
         }
     }
 }

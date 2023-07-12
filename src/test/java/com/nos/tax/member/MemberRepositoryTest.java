@@ -2,6 +2,7 @@ package com.nos.tax.member;
 
 import com.nos.tax.member.domain.Member;
 import com.nos.tax.member.domain.Mobile;
+import com.nos.tax.member.domain.Password;
 import com.nos.tax.member.domain.repository.MemberRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -27,7 +28,8 @@ public class MemberRepositoryTest {
     @DisplayName("회원 엔티티 저장")
     @Test
     void saveMemberEntity() {
-        Member member = Member.of("member123", "회원", Mobile.of("010", "1111", "1111"));
+        Password password = Password.of("qwer1234!@#$");
+        Member member = Member.of("member123", password, "회원", Mobile.of("010", "1111", "1111"));
         member = memberRepository.save(member);
 
         flushAndClear(entityManager);
@@ -42,7 +44,8 @@ public class MemberRepositoryTest {
     @DisplayName("회원 이름 변경")
     @Test
     void changeMemberName() {
-        Member member = Member.of("member123", "회원", Mobile.of("010", "1111", "1111"));
+        Password password = Password.of("qwer1234!@#$");
+        Member member = Member.of("member123", password, "회원", Mobile.of("010", "1111", "1111"));
         member = memberRepository.save(member);
 
         flushAndClear(entityManager);
@@ -61,7 +64,8 @@ public class MemberRepositoryTest {
     @DisplayName("회원 전화번호 변경")
     @Test
     void changeMemberMobile() {
-        Member member = Member.of("member123", "회원", Mobile.of("010", "1111", "1111"));
+        Password password = Password.of("qwer1234!@#$");
+        Member member = Member.of("member123", password, "회원", Mobile.of("010", "1111", "1111"));
         member = memberRepository.save(member);
 
         flushAndClear(entityManager);
