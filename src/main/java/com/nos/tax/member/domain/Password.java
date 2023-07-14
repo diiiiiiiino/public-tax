@@ -1,5 +1,6 @@
 package com.nos.tax.member.domain;
 
+import com.nos.tax.member.domain.exception.PasswordConditionException;
 import com.nos.tax.util.VerifyUtil;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -25,6 +26,7 @@ public class Password {
         confirmPasswordLength(value);
         confirmPasswordIncludingEnglish(value);
         confirmPasswordIncludingDigit(value);
+        confirmPasswordIncludingSpecialCharacter(value);
         this.value = value;
     }
 
@@ -38,8 +40,9 @@ public class Password {
     private void confirmPasswordIncludingEnglish(String value){
         boolean hasAlphabet = false;
         for(char c : value.toCharArray()){
-            if((('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z'))){
+            if ((('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z'))) {
                 hasAlphabet = true;
+                break;
             }
         }
 
@@ -53,11 +56,22 @@ public class Password {
         for(char c : value.toCharArray()){
             if(Character.isDigit(c)){
                 hasDigit = true;
+                break;
             }
         }
 
         if(!hasDigit){
             throw new PasswordConditionException("Has No Digit");
         }
+    }
+
+    private void confirmPasswordIncludingSpecialCharacter(String value) {
+        if(!value.matches(".*[~`!@#$%^&*()\\-_+=|\\\\\\[\\]{};:'\",<.>/?]+.*")){
+            throw new PasswordConditionException("Has no special characters");
+        }
+    }
+
+    public boolean match(String password) {
+        return this.value.equals(password);
     }
 }

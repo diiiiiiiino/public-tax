@@ -1,6 +1,8 @@
 package com.nos.tax.member.domain;
 
 import com.nos.tax.member.domain.converter.MobileConverter;
+import com.nos.tax.member.domain.exception.LoginFailedException;
+import com.nos.tax.member.domain.exception.PasswordChangeException;
 import com.nos.tax.util.VerifyUtil;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -54,18 +56,27 @@ public class Member {
     }
 
     public void changePassword(String originPassword, String updatePassword) {
-        String password = this.password.getValue();
         VerifyUtil.verifyText(originPassword);
 
-        if(!password.equals(originPassword)){
+        if(!this.password.match(originPassword)){
             throw new PasswordChangeException("password is not the same");
         }
 
-        if(password.equals(updatePassword)){
+        if(this.password.match(updatePassword)){
             throw new PasswordChangeException("origin and update password same");
         }
 
         setPassword(Password.of(updatePassword));
+    }
+
+    public void login(String loginId, String password) {
+        if(!loginIdMatch(loginId) || !this.password.match(password)){
+            throw new LoginFailedException("Login information mismatch");
+        }
+    }
+
+    public boolean loginIdMatch(String loginId){
+        return this.loginId.equals(loginId);
     }
 
     private void setLoginId(String loginId) {
