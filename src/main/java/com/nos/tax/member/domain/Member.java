@@ -1,7 +1,6 @@
 package com.nos.tax.member.domain;
 
 import com.nos.tax.member.domain.converter.MobileConverter;
-import com.nos.tax.member.domain.exception.LoginFailedException;
 import com.nos.tax.member.domain.exception.PasswordChangeException;
 import com.nos.tax.util.VerifyUtil;
 import jakarta.persistence.*;
@@ -69,14 +68,8 @@ public class Member {
         setPassword(Password.of(updatePassword));
     }
 
-    public void login(String loginId, String password) {
-        if(!loginIdMatch(loginId) || !this.password.match(password)){
-            throw new LoginFailedException("Login information mismatch");
-        }
-    }
-
-    public boolean loginIdMatch(String loginId){
-        return this.loginId.equals(loginId);
+    public boolean passwordMatch(String password) {
+        return this.password.match(password);
     }
 
     private void setLoginId(String loginId) {
@@ -93,5 +86,18 @@ public class Member {
 
     private void setMobile(Mobile mobile) {
         this.mobile = Objects.requireNonNull(mobile);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Member member = (Member) o;
+        return id.equals(member.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

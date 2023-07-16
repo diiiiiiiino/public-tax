@@ -1,6 +1,5 @@
 package com.nos.tax.member.domain;
 
-import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -47,9 +46,7 @@ public class Mobile {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Mobile mobile = (Mobile) o;
-        return Objects.equals(carrierNum, mobile.carrierNum) &&
-                Objects.equals(secondNum, mobile.secondNum) &&
-                Objects.equals(threeNum, mobile.threeNum);
+        return carrierNum.equals(mobile.carrierNum) && secondNum.equals(mobile.secondNum) && threeNum.equals(mobile.threeNum);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.nos.tax.building.domain;
 
 import com.nos.tax.util.VerifyUtil;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
 import lombok.AccessLevel;
@@ -13,6 +14,7 @@ import java.util.Objects;
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class HouseHold {
+    @Column(unique = true)
     private String room;
 
     @Embedded
@@ -33,5 +35,18 @@ public class HouseHold {
 
     private void setHouseHolder(HouseHolder houseHolder) {
         this.houseHolder = Objects.requireNonNull(houseHolder);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HouseHold houseHold = (HouseHold) o;
+        return room.equals(houseHold.room);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(room);
     }
 }

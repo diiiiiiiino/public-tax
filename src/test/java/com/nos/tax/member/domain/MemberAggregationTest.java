@@ -1,14 +1,14 @@
 package com.nos.tax.member.domain;
 
-import com.nos.tax.member.domain.*;
-import com.nos.tax.member.domain.exception.LoginFailedException;
 import com.nos.tax.member.domain.exception.PasswordChangeException;
 import com.nos.tax.member.domain.exception.PasswordConditionException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.*;
-import org.springframework.beans.factory.annotation.Value;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.stream.Stream;
 
@@ -340,19 +340,6 @@ public class MemberAggregationTest {
         assertThat(updatePassword.getValue()).isNotEqualTo(originValue);
     }
 
-    @DisplayName("로그인 시 로그인 정보가 일치하지 않을 때")
-    @ParameterizedTest
-    @MethodSource("provideLoginInformationDoesNotMatchWhenLoggedInformationMethodSource")
-    void login_information_does_not_match_when_logged_information(String loginId, String pw) {
-        Password password = Password.of("qwer1234!@#$");
-        Mobile mobile = Mobile.of("010", "1111", "2222");
-        Member member = Member.of("loginId", password, "홍길동", mobile);
-
-        assertThatThrownBy(() -> member.login(loginId, pw))
-                .isInstanceOf(LoginFailedException.class)
-                .hasMessage("Login information mismatch");
-    }
-
     private static Stream<Arguments> provideMobileNullAndEmptyArguments(){
         return Stream.of(
                 Arguments.of("", "1111", "2222"),
@@ -386,13 +373,5 @@ public class MemberAggregationTest {
                 Arguments.of("", "qwer1234!@#$"),
                 Arguments.of("qwer1234!@#$", null),
                 Arguments.of("qwer1234!@#$", ""));
-    }
-
-    private static Stream<Arguments> provideLoginInformationDoesNotMatchWhenLoggedInformationMethodSource(){
-        return Stream.of(
-                Arguments.of("login", "qwer1234!@#$"),
-                Arguments.of("loginId", "qwer1234"),
-                Arguments.of("login", "1234!@#$")
-        );
     }
 }

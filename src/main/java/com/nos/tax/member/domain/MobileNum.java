@@ -1,8 +1,5 @@
 package com.nos.tax.member.domain;
 
-import com.nos.tax.util.VerifyUtil;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.Transient;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -48,7 +45,7 @@ public class MobileNum {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MobileNum mobileNum = (MobileNum) o;
-        return length == mobileNum.length && Objects.equals(num, mobileNum.num);
+        return length == mobileNum.length && num.equals(mobileNum.num);
     }
 
     @Override

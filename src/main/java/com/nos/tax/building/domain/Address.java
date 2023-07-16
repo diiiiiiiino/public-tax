@@ -7,6 +7,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 @Getter
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -40,5 +42,18 @@ public class Address {
 
     private void setZipNo(String zipNo) {
         this.zipNo = VerifyUtil.verifyText(zipNo);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Address address = (Address) o;
+        return address1.equals(address.address1) && address2.equals(address.address2) && zipNo.equals(address.zipNo);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(address1, address2, zipNo);
     }
 }

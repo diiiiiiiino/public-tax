@@ -6,7 +6,6 @@ import com.nos.tax.util.VerifyUtil;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.Embedded;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,5 +39,18 @@ public class HouseHolder {
 
     private void setMobile(Mobile mobile) {
         this.mobile = Objects.requireNonNull(mobile);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HouseHolder that = (HouseHolder) o;
+        return name.equals(that.name) && mobile.equals(that.mobile);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, mobile);
     }
 }
