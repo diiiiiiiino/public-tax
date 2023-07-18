@@ -2,8 +2,8 @@ package com.nos.tax.building;
 
 import com.nos.tax.building.domain.Address;
 import com.nos.tax.building.domain.Building;
-import com.nos.tax.building.domain.HouseHold;
-import com.nos.tax.building.domain.HouseHolder;
+import com.nos.tax.household.domain.HouseHold;
+import com.nos.tax.household.domain.HouseHolder;
 import com.nos.tax.building.domain.repository.BuildingRepository;
 import com.nos.tax.member.domain.Mobile;
 import jakarta.persistence.EntityManager;
@@ -42,7 +42,8 @@ public class BuildingRepositoryTest {
         assertThat(findAddress.getZipNo()).isEqualTo("111222");
 
         List<HouseHold> findHouseHolds = building.getHouseHolds();
-        assertThat(findHouseHolds).hasSize(1);
+
+        assertThat(findHouseHolds).hasSize(2);
 
         HouseHold findHouseHold = findHouseHolds.get(0);
         assertThat(findHouseHold.getRoom()).isEqualTo("101호");
@@ -102,7 +103,8 @@ public class BuildingRepositoryTest {
 
     private Building getBuilding() {
         Address address = Address.of("서울시 동작구 사당동", "현대 아파트 101동", "111222");
-        List<HouseHold> houseHolds = List.of(HouseHold.of("101호", HouseHolder.of("세대주", Mobile.of("010", "1111", "2222"))));
+        List<HouseHold> houseHolds = List.of(HouseHold.of("101호", HouseHolder.of("세대주", Mobile.of("010", "1111", "2222"))),
+                HouseHold.of("102호", HouseHolder.of("세대주", Mobile.of("010", "1111", "2222"))));
         Building building = Building.of("현대빌라", address, houseHolds);
 
         building = buildingRepository.save(building);

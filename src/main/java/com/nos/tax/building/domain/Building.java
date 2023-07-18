@@ -1,5 +1,6 @@
 package com.nos.tax.building.domain;
 
+import com.nos.tax.household.domain.HouseHold;
 import com.nos.tax.util.VerifyUtil;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -23,9 +24,7 @@ public class Building {
     @Embedded
     private Address address;
 
-    @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "household", joinColumns = @JoinColumn(name = "building_id"))
-    @OrderColumn(name = "line_idx")
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "building")
     private List<HouseHold> houseHolds;
 
     private Building(String name, Address address, List<HouseHold> houseHold) {
@@ -48,6 +47,11 @@ public class Building {
 
     public void addHouseHolds(List<HouseHold> newHouseHolds) {
         verifyAtLeastOneOrMoreHouseHold(newHouseHolds);
+
+        for(HouseHold houseHold : newHouseHolds){
+            houseHold.setBuilding(this);
+        }
+
         this.houseHolds.addAll(newHouseHolds);
     }
 
@@ -61,6 +65,10 @@ public class Building {
 
     private void setHouseHolds(List<HouseHold> houseHolds) {
         verifyAtLeastOneOrMoreHouseHold(houseHolds);
+
+        for(HouseHold houseHold : houseHolds){
+            houseHold.setBuilding(this);
+        }
         this.houseHolds = houseHolds;
     }
 

@@ -1,11 +1,10 @@
-package com.nos.tax.building.domain;
+package com.nos.tax.household.domain;
 
+import com.nos.tax.member.domain.Member;
 import com.nos.tax.member.domain.Mobile;
 import com.nos.tax.member.domain.converter.MobileConverter;
 import com.nos.tax.util.VerifyUtil;
-import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
-import jakarta.persistence.Embeddable;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +15,9 @@ import java.util.Objects;
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class HouseHolder {
+
+    @OneToOne(fetch = FetchType.LAZY)
+    private Member member;
 
     @Column(nullable = false)
     private String name;

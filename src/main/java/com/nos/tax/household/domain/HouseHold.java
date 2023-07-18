@@ -1,9 +1,8 @@
-package com.nos.tax.building.domain;
+package com.nos.tax.household.domain;
 
+import com.nos.tax.building.domain.Building;
 import com.nos.tax.util.VerifyUtil;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.Embedded;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,9 +10,16 @@ import lombok.NoArgsConstructor;
 import java.util.Objects;
 
 @Getter
-@Embeddable
+@Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class HouseHold {
+
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private Building building;
+
     @Column(unique = true)
     private String room;
 
@@ -35,6 +41,10 @@ public class HouseHold {
 
     private void setHouseHolder(HouseHolder houseHolder) {
         this.houseHolder = Objects.requireNonNull(houseHolder);
+    }
+
+    public void setBuilding(Building building){
+        this.building = building;
     }
 
     @Override
