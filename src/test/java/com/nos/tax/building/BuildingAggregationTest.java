@@ -174,8 +174,6 @@ public class BuildingAggregationTest {
 
         List<Function<Building, HouseHold>> buildingFunctions = new ArrayList<>(List.of((building) -> HouseHold.of("101호", houseHolder, building)));
 
-        Building.of("현대빌라", address, buildingFunctions);
-
         return Building.of("현대빌라", address, buildingFunctions);
     }
 }

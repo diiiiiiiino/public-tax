@@ -9,4 +9,12 @@ public class VerifyUtil {
 
         return text;
     }
+
+    public static int verifyNegative(int value){
+        if(value < 0){
+            throw new IllegalArgumentException("no negative");
+        }
+
+        return value;
+    }
 }
