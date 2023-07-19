@@ -16,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
+import java.util.function.Function;
 
 import static com.nos.tax.TestUtils.flushAndClear;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,25 +38,28 @@ public class HouseholdRepositoryTest {
     void saveHouseHold() {
         Address address = Address.of("서울시 동작구 사당동", "현대 아파트 101동", "111222");
 
-        HouseHold houseHold1 = HouseHold.of("101호", HouseHolder.of("세대주", Mobile.of("010", "1111", "2222")));
-        HouseHold houseHold2 = HouseHold.of("102호", HouseHolder.of("세대주", Mobile.of("010", "1111", "2222")));
+        Function<Building, HouseHold> function1 = (building) -> HouseHold.of("101호", HouseHolder.of("세대주", Mobile.of("010", "1111", "2222")), building);
+        Function<Building, HouseHold> function2 = (building) -> HouseHold.of("102호", HouseHolder.of("세대주", Mobile.of("010", "1111", "2222")), building);
 
-        List<HouseHold> houseHolds = List.of(houseHold1, houseHold2);
+        List<Function<Building, HouseHold>> houseHolds = List.of(function1, function2);
         Building building = Building.of("현대빌라", address, houseHolds);
 
-        buildingRepository.save(building);
+        building = buildingRepository.save(building);
 
         Mobile mobile = Mobile.of("010", "1111", "2222");
         HouseHolder houseHolder = HouseHolder.of("세대주", mobile);
 
-        HouseHold houseHold = HouseHold.of("103호", houseHolder);
+        HouseHold houseHold = HouseHold.of("103호", houseHolder, building);
 
         houseHoldRepository.save(houseHold);
 
         flushAndClear(entityManager);
 
-        houseHold = houseHoldRepository.findById(1L).get();
+        houseHold = houseHoldRepository.findById(3L).get();
 
+        assertThat(houseHold).isNotNull();
         assertThat(houseHold.getRoom()).isEqualTo("103호");
+        assertThat(houseHold.getHouseHolder().getName()).isEqualTo("세대주");
+        assertThat(houseHold.getHouseHolder().getMobile().toString()).isEqualTo("010-1111-2222");
     }
 }

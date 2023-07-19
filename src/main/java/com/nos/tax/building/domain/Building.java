@@ -7,8 +7,10 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 
 @Getter
 @Entity
@@ -27,14 +29,14 @@ public class Building {
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "building")
     private List<HouseHold> houseHolds;
 
-    private Building(String name, Address address, List<HouseHold> houseHold) {
+    private Building(String name, Address address, List<Function<Building, HouseHold>> buildingFunctions) {
         setName(name);
         setAddress(address);
-        setHouseHolds(houseHold);
+        setBuildingFunctions(buildingFunctions);
     }
 
-    public static Building of(String name, Address address, List<HouseHold> houseHolds) {
-        return new Building(name, address, houseHolds);
+    public static Building of(String name, Address address, List<Function<Building, HouseHold>> buildingFunctions) {
+        return new Building(name, address, buildingFunctions);
     }
 
     public void changeName(String name) {
@@ -47,11 +49,6 @@ public class Building {
 
     public void addHouseHolds(List<HouseHold> newHouseHolds) {
         verifyAtLeastOneOrMoreHouseHold(newHouseHolds);
-
-        for(HouseHold houseHold : newHouseHolds){
-            houseHold.setBuilding(this);
-        }
-
         this.houseHolds.addAll(newHouseHolds);
     }
 
@@ -65,16 +62,29 @@ public class Building {
 
     private void setHouseHolds(List<HouseHold> houseHolds) {
         verifyAtLeastOneOrMoreHouseHold(houseHolds);
-
-        for(HouseHold houseHold : houseHolds){
-            houseHold.setBuilding(this);
-        }
         this.houseHolds = houseHolds;
+    }
+
+    private void setBuildingFunctions(List<Function<Building, HouseHold>> buildingFunctions) {
+        verifyAtLeastOneOrMoreBuildingFunctions(buildingFunctions);
+
+        List<HouseHold> houseHolds = new ArrayList<>();
+        for(Function<Building, HouseHold> function : buildingFunctions){
+            houseHolds.add(function.apply(this));
+        }
+
+        setHouseHolds(houseHolds);
     }
 
     private void verifyAtLeastOneOrMoreHouseHold(List<HouseHold> houseHolds){
         if(houseHolds == null || houseHolds.isEmpty()){
             throw new NullPointerException("no HouseHold");
+        }
+    }
+
+    private void verifyAtLeastOneOrMoreBuildingFunctions(List<Function<Building, HouseHold>> buildingFunctions){
+        if(buildingFunctions == null || buildingFunctions.isEmpty()){
+            throw new NullPointerException("no buildingFunctions");
         }
     }
 

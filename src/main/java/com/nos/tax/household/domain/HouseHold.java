@@ -26,13 +26,14 @@ public class HouseHold {
     @Embedded
     private HouseHolder houseHolder;
 
-    private HouseHold(String room, HouseHolder houseHolder) {
+    private HouseHold(String room, HouseHolder houseHolder, Building building) {
         setRoom(room);
         setHouseHolder(houseHolder);
+        setBuilding(building);
     }
 
-    public static HouseHold of(String room, HouseHolder houseHolder) {
-        return new HouseHold(room, houseHolder);
+    public static HouseHold of(String room, HouseHolder houseHolder, Building building) {
+        return new HouseHold(room, houseHolder, building);
     }
 
     private void setRoom(String room) {
@@ -43,8 +44,8 @@ public class HouseHold {
         this.houseHolder = Objects.requireNonNull(houseHolder);
     }
 
-    public void setBuilding(Building building){
-        this.building = building;
+    private void setBuilding(Building building){
+        this.building = Objects.requireNonNull(building);
     }
 
     @Override

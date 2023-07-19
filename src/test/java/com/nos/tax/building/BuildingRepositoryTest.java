@@ -2,9 +2,9 @@ package com.nos.tax.building;
 
 import com.nos.tax.building.domain.Address;
 import com.nos.tax.building.domain.Building;
+import com.nos.tax.building.domain.repository.BuildingRepository;
 import com.nos.tax.household.domain.HouseHold;
 import com.nos.tax.household.domain.HouseHolder;
-import com.nos.tax.building.domain.repository.BuildingRepository;
 import com.nos.tax.member.domain.Mobile;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -16,6 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import static com.nos.tax.TestUtils.flushAndClear;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -90,7 +91,7 @@ public class BuildingRepositoryTest {
     void whenBuildingAddHouseholder(){
         Building building = getBuilding();
 
-        List<HouseHold> newHouseHolds = new ArrayList<>(List.of(HouseHold.of("102호", HouseHolder.of("102호 세대주", Mobile.of("010", "2222", "3333")))));
+        List<HouseHold> newHouseHolds = new ArrayList<>(List.of(HouseHold.of("103호", HouseHolder.of("103호 세대주", Mobile.of("010", "2222", "3333")), building)));
 
         building.addHouseHolds(newHouseHolds);
 
@@ -98,14 +99,17 @@ public class BuildingRepositoryTest {
 
         building = buildingRepository.findById(building.getId()).get();
 
-        assertThat(building.getHouseHolds()).hasSize(2);
+        assertThat(building.getHouseHolds()).hasSize(3);
     }
 
     private Building getBuilding() {
         Address address = Address.of("서울시 동작구 사당동", "현대 아파트 101동", "111222");
-        List<HouseHold> houseHolds = List.of(HouseHold.of("101호", HouseHolder.of("세대주", Mobile.of("010", "1111", "2222"))),
-                HouseHold.of("102호", HouseHolder.of("세대주", Mobile.of("010", "1111", "2222"))));
-        Building building = Building.of("현대빌라", address, houseHolds);
+
+        List<Function<Building, HouseHold>> buildingFunctions = List.of(
+                (building) -> HouseHold.of("101호", HouseHolder.of("세대주", Mobile.of("010", "1111", "2222")), building),
+                (building) -> HouseHold.of("102호", HouseHolder.of("세대주2", Mobile.of("010", "2222", "3333")), building));
+
+        Building building = Building.of("현대빌라", address, buildingFunctions);
 
         building = buildingRepository.save(building);
 

@@ -15,6 +15,7 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -48,10 +49,9 @@ public class BuildingAggregationTest {
         Address address = Address.of("서울시 동작구 사당동", "현대 아파트 101동", "111222");
         Mobile mobile = Mobile.of("010", "1111", "2222");
         HouseHolder houseHolder = HouseHolder.of("세대주", mobile);
+        List<Function<Building, HouseHold>> buildingFunctions = List.of((building) -> HouseHold.of("101호", houseHolder, building));
 
-        List<HouseHold> houseHolds = List.of(HouseHold.of("101호", houseHolder));
-
-        Assertions.assertThatThrownBy(() -> Building.of(name, address, houseHolds))
+        Assertions.assertThatThrownBy(() -> Building.of(name, address, buildingFunctions))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -61,11 +61,9 @@ public class BuildingAggregationTest {
         Address address = null;
         Mobile mobile = Mobile.of("010", "1111", "2222");
         HouseHolder houseHolder = HouseHolder.of("세대주", mobile);
-        HouseHold houseHold = HouseHold.of("101호", houseHolder);
+        List<Function<Building, HouseHold>> buildingFunctions = List.of((building) -> HouseHold.of("101호", houseHolder, building));
 
-        List<HouseHold> houseHolds = List.of(houseHold);
-
-        Assertions.assertThatThrownBy(() -> Building.of("현대빌라", address, houseHolds))
+        Assertions.assertThatThrownBy(() -> Building.of("현대빌라", address, buildingFunctions))
                 .isInstanceOf(NullPointerException.class);
     }
 
@@ -73,11 +71,11 @@ public class BuildingAggregationTest {
     @Test
     void whenBuildingSaveThenHouseHoldsNullPointerException() {
         Address address = Address.of("서울시 동작구 사당동", "현대 아파트 101동", "111222");
-        List<HouseHold> houseHolds = List.of();
+        List<Function<Building, HouseHold>> buildingFunctions = List.of();
 
-        Assertions.assertThatThrownBy(() -> Building.of("현대빌라", address, houseHolds))
+        Assertions.assertThatThrownBy(() -> Building.of("현대빌라", address, buildingFunctions))
                 .isInstanceOf(NullPointerException.class)
-                .hasMessage("no HouseHold");
+                .hasMessage("no buildingFunctions");
     }
 
     @DisplayName("건물 엔티티 생성 성공")
@@ -151,7 +149,7 @@ public class BuildingAggregationTest {
     void whenBuildingAddHouseholderThenSuccess(){
         Building building = getBuilding();
 
-        List<HouseHold> newHouseHolds = List.of(HouseHold.of("102호", HouseHolder.of("102호 세대주", Mobile.of("010", "2222", "3333"))));
+        List<HouseHold> newHouseHolds = List.of(HouseHold.of("102호", HouseHolder.of("102호 세대주", Mobile.of("010", "2222", "3333")), building));
 
         building.addHouseHolds(newHouseHolds);
 
@@ -173,10 +171,11 @@ public class BuildingAggregationTest {
         Address address = Address.of("서울시 동작구 사당동", "현대 아파트 101동", "111222");
         Mobile mobile = Mobile.of("010", "1111", "2222");
         HouseHolder houseHolder = HouseHolder.of("세대주", mobile);
-        HouseHold houseHold = HouseHold.of("101호", houseHolder);
 
-        List<HouseHold> houseHolds = new ArrayList<>(List.of(houseHold));
+        List<Function<Building, HouseHold>> buildingFunctions = new ArrayList<>(List.of((building) -> HouseHold.of("101호", houseHolder, building)));
 
-        return Building.of("현대빌라", address, houseHolds);
+        Building.of("현대빌라", address, buildingFunctions);
+
+        return Building.of("현대빌라", address, buildingFunctions);
     }
 }
