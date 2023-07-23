@@ -30,64 +30,13 @@ public class WaterBillAggregationTest {
                 .isInstanceOf(NullPointerException.class);
     }
 
-    @DisplayName("수도 요금 상세 생성 시 전월 수도 계량기 값 음수 일 때")
-    @Test
-    void water_previous_meter_value_negative_when_generating_water_bill_details() {
-        Building building = getBuilding();
-        HouseHold houseHold = building.getHouseHolds().get(0);
-
-        assertThatThrownBy(() -> WaterBillDetail.of(houseHold, -200))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("no negative");
-    }
-
-    @DisplayName("수도 요금 상세 생성 시 금월 수도 계량기 값 음수 일 때")
-    @Test
-    void water_present_meter_value_negative_when_generating_water_bill_details() {
-        Building building = getBuilding();
-        HouseHold houseHold = building.getHouseHolds().get(0);
-
-        WaterBillDetail waterBillDetail = WaterBillDetail.of(houseHold, 0);
-
-        assertThatThrownBy(() -> waterBillDetail.enterPresentMeter(-100))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("no negative");
-    }
-
-    @DisplayName("수도 요금 금월 계량기 입력 시 전월보다 작을 경우")
-    @Test
-    void previous_meter_bigger_than_present_meter() {
-        Building building = getBuilding();
-        HouseHold houseHold = building.getHouseHolds().get(0);
-
-        WaterBillDetail waterBillDetail = WaterBillDetail.of(houseHold, 100);
-
-        assertThatThrownBy(() -> waterBillDetail.enterPresentMeter(99))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Previous meter bigger than present meter");
-    }
-
-    @DisplayName("수도 요금 금월 계량기 입력 시 사용량 계산")
-    @Test
-    void calculation_of_usage_when_entering_water_rate_meter_this_month() {
-        Building building = getBuilding();
-        HouseHold houseHold = building.getHouseHolds().get(0);
-
-        WaterBillDetail waterBillDetail = WaterBillDetail.of(houseHold, 450);
-        waterBillDetail.enterPresentMeter(550);
-
-        assertThat(waterBillDetail.getUsage()).isEqualTo(100);
-    }
-
     @DisplayName("수도 요금 상세 납부금액이 음수 일 때")
     @Test
     void water_amount_value_negative_when_generating_water_bill_details() {
         Building building = getBuilding();
         HouseHold houseHold = building.getHouseHolds().get(0);
 
-        WaterBillDetail waterBillDetail = WaterBillDetail.of(houseHold, 0);
-
-        assertThatThrownBy(() -> waterBillDetail.enterAmount(-1000))
+        assertThatThrownBy(() -> WaterBillDetail.of(houseHold, -1000))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("no negative");
     }
@@ -98,9 +47,7 @@ public class WaterBillAggregationTest {
         Building building = getBuilding();
         HouseHold houseHold = building.getHouseHolds().get(0);
 
-        WaterBillDetail waterBillDetail = WaterBillDetail.of(houseHold, 0);
-
-        waterBillDetail.enterAmount(1000);
+        WaterBillDetail waterBillDetail = WaterBillDetail.of(houseHold, 10000);
 
         assertThat(waterBillDetail.getAmount()).isEqualTo(1000);
     }
@@ -128,7 +75,7 @@ public class WaterBillAggregationTest {
                 .hasMessage("no waterBillDetails");
     }
 
-    @DisplayName("수도 요금 상세 생성 시 총 사용액이 음수 일 때")
+    @DisplayName("수도 요금 생성 시 총 사용액이 음수 일 때")
     @Test
     void total_amount_negative_when_generating_water_bill() {
         Building building = getBuilding();
@@ -183,12 +130,10 @@ public class WaterBillAggregationTest {
 
         WaterBill waterBill = WaterBill.of(building, details, 77920, LocalDate.of(2023, 7, 1));
 
-        detail301.enterPresentMeter(1241);
-
-        assertThat(waterBill.getTotalUsage()).isEqualTo(0);
+        /*assertThat(waterBill.getTotalUsage()).isEqualTo(0);
         assertThatThrownBy(() -> waterBill.calculateAmount())
                 .isInstanceOf(WaterBillCalculateConditionException.class)
-                .hasMessage("did not enter present meter");
+                .hasMessage("did not enter present meter");*/
     }
 
     @DisplayName("수도요금 계산 성공")
@@ -208,14 +153,6 @@ public class WaterBillAggregationTest {
 
         WaterBill waterBill = WaterBill.of(building, details, 77920, LocalDate.of(2023, 7, 1));
 
-        detail101.enterPresentMeter(660);
-        detail102.enterPresentMeter(1323);
-        detail201.enterPresentMeter(1500);
-        detail202.enterPresentMeter(935);
-        detail301.enterPresentMeter(1241);
-        detail302.enterPresentMeter(1360);
-
-        waterBill.calculateAmount();
 
         int totalAmount = waterBill.getWaterBillDetails().stream()
                 .map(WaterBillDetail::getAmount)

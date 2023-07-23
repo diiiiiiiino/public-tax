@@ -2,7 +2,6 @@ package com.nos.tax.waterbill.domain;
 
 import com.nos.tax.building.domain.Building;
 import com.nos.tax.util.VerifyUtil;
-import com.nos.tax.waterbill.domain.exception.WaterBillCalculateConditionException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -29,40 +28,23 @@ public class WaterBill {
     private List<WaterBillDetail> waterBillDetails;
 
     private int totalAmount;
-    private LocalDate localDate;
+    private LocalDate calculateDate;
 
-    private WaterBill(Building building, List<WaterBillDetail> waterBillDetails, int totalAmount, LocalDate localDate) {
+    private WaterBill(Building building, List<WaterBillDetail> waterBillDetails, int totalAmount, LocalDate calculateDate) {
         setBuilding(building);
         setWaterBillDetails(waterBillDetails);
         setTotalAmount(totalAmount);
-        setLocalDate(localDate);
+        setCalculateDate(calculateDate);
     }
 
     public static WaterBill of(Building building, List<WaterBillDetail> waterBillDetails, int totalAmount, LocalDate localDate){
         return new WaterBill(building, waterBillDetails, totalAmount, localDate);
     }
 
-    public void calculateAmount() {
-        int presentEnteredCount = (int) waterBillDetails.stream()
-                .map(WaterBillDetail::getPresentMeter)
-                .mapToInt(Integer::intValue)
-                .filter(v -> v > 0)
-                .count();
-
-        if(presentEnteredCount != waterBillDetails.size()){
-            throw new WaterBillCalculateConditionException("did not enter present meter");
-        }
-
-        int totalUsage = getTotalUsage();
-        int unitAmount = Math.round(totalAmount / totalUsage);
-        for(WaterBillDetail detail : waterBillDetails){
-            detail.enterAmount(detail.getUsage() * unitAmount);
-        }
-    }
-
     public int getTotalUsage(){
         return waterBillDetails.stream()
-                .map(WaterBillDetail::getUsage)
+                .map(WaterBillDetail::getWaterMeter)
+                .map(WaterMeter::getUsage)
                 .mapToInt(Integer::intValue)
                 .sum();
     }
@@ -81,8 +63,8 @@ public class WaterBill {
         this.totalAmount = totalAmount;
     }
 
-    private void setLocalDate(LocalDate localDate) {
-        this.localDate = Objects.requireNonNull(localDate);
+    private void setCalculateDate(LocalDate localDate) {
+        this.calculateDate = Objects.requireNonNull(localDate);
     }
 
     private void verifyAtLeastOneOrMoreWaterBillDetails(List<WaterBillDetail> waterBillDetails) {

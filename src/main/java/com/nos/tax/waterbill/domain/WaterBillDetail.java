@@ -5,6 +5,7 @@ import com.nos.tax.util.VerifyUtil;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,46 +20,29 @@ public class WaterBillDetail {
     @ManyToOne(fetch = FetchType.LAZY)
     private HouseHold houseHold;
 
-    private int previousMeter;
-    private int presentMeter;
-    private int usage;
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    private WaterMeter waterMeter;
+
     private int amount;
 
-    public WaterBillDetail(HouseHold houseHold, int previousMeter) {
+    public WaterBillDetail(HouseHold houseHold, int amount) {
         setHouseHold(houseHold);
-        setPreviousMeter(previousMeter);
+        setAmount(amount);
     }
 
-    public static WaterBillDetail of(HouseHold houseHold, int previousMeter) {
-        return new WaterBillDetail(houseHold, previousMeter);
+    public void updateWaterMeter(WaterMeter waterMeter){
+        this.waterMeter = waterMeter;
     }
 
-    public void enterPresentMeter(int presentMeter) {
-        VerifyUtil.verifyNegative(presentMeter);
-        checkPresentMeterBiggerThanPreviousMeter(presentMeter);
-        this.presentMeter = presentMeter;
-        calculateUsage();
-    }
-
-    public void enterAmount(int amount){
+    private void setAmount(int amount) {
         this.amount = VerifyUtil.verifyNegative(amount);
     }
 
-    private void calculateUsage() {
-        usage = presentMeter - previousMeter;
+    public static WaterBillDetail of(HouseHold houseHold, int amount) {
+        return new WaterBillDetail(houseHold, amount);
     }
 
     private void setHouseHold(HouseHold houseHold) {
         this.houseHold = Objects.requireNonNull(houseHold);
-    }
-
-    private void setPreviousMeter(int previousMeter) {
-        this.previousMeter = VerifyUtil.verifyNegative(previousMeter);
-    }
-
-    private void checkPresentMeterBiggerThanPreviousMeter(int presentMeter) {
-        if(this.previousMeter > presentMeter){
-            throw new IllegalArgumentException("Previous meter bigger than present meter");
-        }
     }
 }
