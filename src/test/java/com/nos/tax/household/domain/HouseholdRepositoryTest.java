@@ -1,4 +1,4 @@
-package com.nos.tax.household;
+package com.nos.tax.household.domain;
 
 import com.nos.tax.building.domain.Address;
 import com.nos.tax.building.domain.Building;
@@ -51,11 +51,11 @@ public class HouseholdRepositoryTest {
 
         HouseHold houseHold = HouseHold.of("103호", houseHolder, building);
 
-        houseHoldRepository.save(houseHold);
+        houseHold = houseHoldRepository.save(houseHold);
 
         flushAndClear(entityManager);
 
-        houseHold = houseHoldRepository.findById(3L).get();
+        houseHold = houseHoldRepository.findById(houseHold.getId()).get();
 
         assertThat(houseHold).isNotNull();
         assertThat(houseHold.getRoom()).isEqualTo("103호");

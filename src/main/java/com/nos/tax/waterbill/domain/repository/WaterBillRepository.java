@@ -1,4 +1,4 @@
-package com.nos.tax.waterbill;
+package com.nos.tax.waterbill.domain.repository;
 
 import com.nos.tax.waterbill.domain.WaterBill;
 import org.springframework.data.jpa.repository.JpaRepository;

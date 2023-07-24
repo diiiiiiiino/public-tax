@@ -32,8 +32,17 @@ public class HouseHold {
         setBuilding(building);
     }
 
+    private HouseHold(Long id, String room, HouseHolder houseHolder, Building building){
+        this(room, houseHolder, building);
+        this.id = id;
+    }
+
     public static HouseHold of(String room, HouseHolder houseHolder, Building building) {
         return new HouseHold(room, houseHolder, building);
+    }
+
+    public static HouseHold of(Long id, String room, HouseHolder houseHolder, Building building) {
+        return new HouseHold(id, room, houseHolder, building);
     }
 
     private void setRoom(String room) {

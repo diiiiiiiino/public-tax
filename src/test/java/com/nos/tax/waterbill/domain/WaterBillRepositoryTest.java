@@ -1,4 +1,4 @@
-package com.nos.tax.waterbill;
+package com.nos.tax.waterbill.domain;
 
 import com.nos.tax.building.domain.Address;
 import com.nos.tax.building.domain.Building;
@@ -6,8 +6,10 @@ import com.nos.tax.building.domain.repository.BuildingRepository;
 import com.nos.tax.household.domain.HouseHold;
 import com.nos.tax.household.domain.HouseHolder;
 import com.nos.tax.member.domain.Mobile;
-import com.nos.tax.waterbill.domain.WaterBill;
-import com.nos.tax.waterbill.domain.WaterBillDetail;
+import com.nos.tax.waterbill.domain.repository.WaterBillRepository;
+import com.nos.tax.waterbill.domain.service.WaterBillCalculateService;
+import com.nos.tax.watermeter.domain.WaterMeter;
+import com.nos.tax.watermeter.domain.repository.WaterMeterRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -33,8 +35,17 @@ public class WaterBillRepositoryTest {
     @Autowired
     private BuildingRepository buildingRepository;
 
+    @Autowired
+    private WaterMeterRepository waterMeterRepository;
+
+    private WaterBillCalculateService waterBillCalculateService;
+
     @PersistenceContext
     private EntityManager entityManager;
+
+    public WaterBillRepositoryTest() {
+        this.waterBillCalculateService = new WaterBillCalculateService();
+    }
 
     @DisplayName("수도 요금 정산 데이터 생성")
     @Test
@@ -45,10 +56,7 @@ public class WaterBillRepositoryTest {
 
         flushAndClear(entityManager);
 
-        List<HouseHold> houseHolds = building.getHouseHolds();
-        List<WaterBillDetail> details = getHouseHold(houseHolds);
-
-        WaterBill waterBill = WaterBill.of(building, details, 77920, LocalDate.of(2023, 7, 1));
+        WaterBill waterBill = WaterBill.of(building, 77920, YearMonth.of(2023, 7));
 
         waterBillRepository.save(waterBill);
 
@@ -57,53 +65,55 @@ public class WaterBillRepositoryTest {
         waterBill = waterBillRepository.findById(1L).get();
 
         assertThat(waterBill.getBuilding()).isEqualTo(building);
-        assertThat(waterBill.getWaterBillDetails().size()).isEqualTo(6);
+        assertThat(waterBill.getWaterBillDetails().size()).isEqualTo(0);
         assertThat(waterBill.getTotalAmount()).isEqualTo(77920);
-        assertThat(waterBill.getCalculateDate()).isEqualTo(LocalDate.of(2023, 7, 1));
+        assertThat(waterBill.getCalculateYm()).isEqualTo(YearMonth.of(2023, 7));
     }
 
     @DisplayName("수도요금 계산 적용 시")
     @Test
     void calculate_water_bills_usage() {
         Building building = getBuilding();
+        YearMonth yearMonth = YearMonth.of(2023, 7);
 
         buildingRepository.save(building);
 
         flushAndClear(entityManager);
 
+        WaterBill waterBill = WaterBill.of(building, 77920, yearMonth);
+
+        waterBill = waterBillRepository.save(waterBill);
+
+        flushAndClear(entityManager);
+
+        waterBill = waterBillRepository.findById(waterBill.getId()).get();
+
         List<HouseHold> houseHolds = building.getHouseHolds();
-        List<WaterBillDetail> details = getHouseHold(houseHolds);
 
-        WaterBill waterBill = WaterBill.of(building, details, 77920, LocalDate.of(2023, 7, 1));
+        List<WaterMeter> meters = List.of(
+                WaterMeter.of(634, 644, yearMonth, houseHolds.get(0)),
+                WaterMeter.of(1308, 1318, yearMonth, houseHolds.get(1)),
+                WaterMeter.of(1477, 1487, yearMonth, houseHolds.get(2)),
+                WaterMeter.of(922, 932, yearMonth, houseHolds.get(3)),
+                WaterMeter.of(1241, 1241, yearMonth, houseHolds.get(4)),
+                WaterMeter.of(1344, 1354, yearMonth, houseHolds.get(5)));
 
-        waterBillRepository.save(waterBill);
+        waterMeterRepository.saveAll(meters);
 
-        flushAndClear(entityManager);
-
-        waterBill = waterBillRepository.findById(1L).get();
-
-        List<WaterBillDetail> waterBillDetails = waterBill.getWaterBillDetails();
-        /*waterBillDetails.get(0).enterPresentMeter(660);
-        waterBillDetails.get(1).enterPresentMeter(1323);
-        waterBillDetails.get(2).enterPresentMeter(1500);
-        waterBillDetails.get(3).enterPresentMeter(935);
-        waterBillDetails.get(4).enterPresentMeter(1241);
-        waterBillDetails.get(5).enterPresentMeter(1360);*/
-
-        //waterBill.calculateAmount();
+        waterBillCalculateService.calculate(building, waterBill, meters);
 
         flushAndClear(entityManager);
 
-        waterBill = waterBillRepository.findById(1L).get();
+        waterBill = waterBillRepository.findById(waterBill.getId()).get();
 
         int totalAmount = waterBill.getWaterBillDetails().stream()
                 .map(WaterBillDetail::getAmount)
                 .mapToInt(Integer::intValue)
                 .sum();
 
-        assertThat(waterBill.getTotalUsage()).isEqualTo(93);
+        assertThat(waterBill.getTotalUsage()).isEqualTo(50);
         assertThat(totalAmount).isLessThanOrEqualTo(77920);
-
+        assertThat(waterBill.getState()).isEqualTo(WaterBillState.COMPLETE);
     }
 
     private Building getBuilding(){
@@ -118,16 +128,5 @@ public class WaterBillRepositoryTest {
                         (building) -> HouseHold.of("302호", HouseHolder.of("세대주6", Mobile.of("010", "6666", "6666")), building)));
 
         return Building.of("광동빌라", address, buildingFunctions);
-    }
-
-    private List<WaterBillDetail> getHouseHold(List<HouseHold> houseHolds){
-        WaterBillDetail detail101 = WaterBillDetail.of(houseHolds.get(0), 634);
-        WaterBillDetail detail102 = WaterBillDetail.of(houseHolds.get(1), 1308);
-        WaterBillDetail detail201 = WaterBillDetail.of(houseHolds.get(2), 1477);
-        WaterBillDetail detail202 = WaterBillDetail.of(houseHolds.get(3), 922);
-        WaterBillDetail detail301 = WaterBillDetail.of(houseHolds.get(4), 1241);
-        WaterBillDetail detail302 = WaterBillDetail.of(houseHolds.get(5), 1344);
-
-        return List.of(detail101 ,detail102, detail201, detail202, detail301, detail302);
     }
 }
