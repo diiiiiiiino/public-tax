@@ -25,19 +25,25 @@ public class WaterBillDetail {
     private WaterMeter waterMeter;
 
     private int amount;
+    private int difference;
 
-    public WaterBillDetail(int amount, HouseHold houseHold, WaterMeter waterMeter) {
-        setHouseHold(houseHold);
+    public WaterBillDetail(int amount, int difference, HouseHold houseHold, WaterMeter waterMeter) {
         setAmount(amount);
+        setDifference(difference);
+        setHouseHold(houseHold);
         setWaterMeter(waterMeter);
     }
 
-    public static WaterBillDetail of(int amount, HouseHold houseHold, WaterMeter waterMeter) {
-        return new WaterBillDetail(amount, houseHold, waterMeter);
+    public static WaterBillDetail of(int amount, int difference, HouseHold houseHold, WaterMeter waterMeter) {
+        return new WaterBillDetail(amount, difference, houseHold, waterMeter);
     }
 
     private void setAmount(int amount) {
         this.amount = VerifyUtil.verifyNegative(amount);
+    }
+
+    private void setDifference(int difference) {
+        this.difference = difference;
     }
 
     private void setHouseHold(HouseHold houseHold) {

@@ -2,8 +2,6 @@ package com.nos.tax.household.domain;
 
 import com.nos.tax.building.domain.Address;
 import com.nos.tax.building.domain.Building;
-import com.nos.tax.household.domain.HouseHold;
-import com.nos.tax.household.domain.HouseHolder;
 import com.nos.tax.member.domain.Mobile;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

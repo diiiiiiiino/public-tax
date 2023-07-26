@@ -91,12 +91,12 @@ public class WaterBillRepositoryTest {
         List<HouseHold> houseHolds = building.getHouseHolds();
 
         List<WaterMeter> meters = List.of(
-                WaterMeter.of(634, 644, yearMonth, houseHolds.get(0)),
-                WaterMeter.of(1308, 1318, yearMonth, houseHolds.get(1)),
-                WaterMeter.of(1477, 1487, yearMonth, houseHolds.get(2)),
+                WaterMeter.of(634, 638, yearMonth, houseHolds.get(0)),
+                WaterMeter.of(1308, 1323, yearMonth, houseHolds.get(1)),
+                WaterMeter.of(1477, 1491, yearMonth, houseHolds.get(2)),
                 WaterMeter.of(922, 932, yearMonth, houseHolds.get(3)),
                 WaterMeter.of(1241, 1241, yearMonth, houseHolds.get(4)),
-                WaterMeter.of(1344, 1354, yearMonth, houseHolds.get(5)));
+                WaterMeter.of(1344, 1359, yearMonth, houseHolds.get(5)));
 
         waterMeterRepository.saveAll(meters);
 
@@ -111,8 +111,8 @@ public class WaterBillRepositoryTest {
                 .mapToInt(Integer::intValue)
                 .sum();
 
-        assertThat(waterBill.getTotalUsage()).isEqualTo(50);
-        assertThat(totalAmount).isLessThanOrEqualTo(77920);
+        assertThat(waterBill.getTotalUsage()).isEqualTo(58);
+        assertThat(totalAmount).isEqualTo(77800);
         assertThat(waterBill.getState()).isEqualTo(WaterBillState.COMPLETE);
     }
 

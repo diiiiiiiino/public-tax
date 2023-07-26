@@ -5,6 +5,7 @@ import com.nos.tax.building.domain.Building;
 import com.nos.tax.household.domain.HouseHold;
 import com.nos.tax.household.domain.HouseHolder;
 import com.nos.tax.member.domain.Mobile;
+import com.nos.tax.waterbill.domain.exception.WaterBillStateException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -21,7 +22,7 @@ public class WaterBillAggregationTest {
     @DisplayName("수도 요금 상세 생성 시 세대 id 누락")
     @Test
     void household_id_missing_when_generating_water_bill_details() {
-        assertThatThrownBy(() -> WaterBillDetail.of(0, null, null))
+        assertThatThrownBy(() -> WaterBillDetail.of(0, 0, null, null))
                 .isInstanceOf(NullPointerException.class);
     }
 
@@ -31,7 +32,7 @@ public class WaterBillAggregationTest {
         Building building = getBuilding();
         HouseHold houseHold = building.getHouseHolds().get(0);
 
-        assertThatThrownBy(() -> WaterBillDetail.of(-1000, houseHold, null))
+        assertThatThrownBy(() -> WaterBillDetail.of(-1000, 0, houseHold, null))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("no negative");
     }
@@ -42,7 +43,7 @@ public class WaterBillAggregationTest {
         Building building = getBuilding();
         HouseHold houseHold = building.getHouseHolds().get(0);
 
-        WaterBillDetail waterBillDetail = WaterBillDetail.of(1000, houseHold, null);
+        WaterBillDetail waterBillDetail = WaterBillDetail.of(1000, 0, houseHold, null);
 
         assertThat(waterBillDetail.getAmount()).isEqualTo(1000);
     }
@@ -78,6 +79,84 @@ public class WaterBillAggregationTest {
         WaterBill waterBill = WaterBill.of(building, 77920, YearMonth.of(2023, 7));
 
         assertThat(waterBill.getTotalAmount()).isEqualTo(77920);
+    }
+
+    @DisplayName("수도 요금 준비 상태에서 계산 상태로 변경")
+    @Test
+    void update_calculation_status_in_water_bill_ready() {
+        Building building = getBuilding();
+        WaterBill waterBill = WaterBill.of(building, 77920, YearMonth.of(2023, 7));
+
+        waterBill.updateCalculateState();
+
+        assertThat(waterBill.getState()).isEqualTo(WaterBillState.CALCULATING);
+    }
+
+    @DisplayName("수도 요금 계산 상태에서 계산 상태로 변경")
+    @Test
+    void update_calculation_status_in_water_bill_calculation() {
+        Building building = getBuilding();
+        WaterBill waterBill = WaterBill.of(building, 77920, YearMonth.of(2023, 7));
+
+        waterBill.updateCalculateState();
+
+        assertThatThrownBy(() -> waterBill.updateCalculateState())
+                .isInstanceOf(WaterBillStateException.class)
+                .hasMessage("You can only calculate the water bill when you are ready");
+    }
+
+    @DisplayName("수도 요금 완료 상태에서 계산 상태로 변경")
+    @Test
+    void update_calculation_status_in_water_bill_complete() {
+        Building building = getBuilding();
+        WaterBill waterBill = WaterBill.of(building, 77920, YearMonth.of(2023, 7));
+
+        waterBill.updateCalculateState();
+
+        waterBill.updateCompleteState();
+
+        assertThatThrownBy(() -> waterBill.updateCalculateState())
+                .isInstanceOf(WaterBillStateException.class)
+                .hasMessage("You can only calculate the water bill when you are ready");
+    }
+
+    @DisplayName("수도 요금 준비 상태에서 완료 상태로 변경")
+    @Test
+    void update_complete_status_in_water_bill_ready() {
+        Building building = getBuilding();
+        WaterBill waterBill = WaterBill.of(building, 77920, YearMonth.of(2023, 7));
+
+        assertThatThrownBy(() -> waterBill.updateCompleteState())
+                .isInstanceOf(WaterBillStateException.class)
+                .hasMessage("The unit amount cannot be changed when the water rate is calculating");
+    }
+
+    @DisplayName("수도 요금 계산 상태에서 완료 상태로 변경")
+    @Test
+    void update_complete_status_in_water_bill_calculation() {
+        Building building = getBuilding();
+        WaterBill waterBill = WaterBill.of(building, 77920, YearMonth.of(2023, 7));
+
+        waterBill.updateCalculateState();
+
+        waterBill.updateCompleteState();
+
+        assertThat(waterBill.getState()).isEqualTo(WaterBillState.COMPLETE);
+    }
+
+    @DisplayName("수도 요금 완료 상태에서 완료 상태로 변경")
+    @Test
+    void update_complete_status_in_water_bill_complete() {
+        Building building = getBuilding();
+        WaterBill waterBill = WaterBill.of(building, 77920, YearMonth.of(2023, 7));
+
+        waterBill.updateCalculateState();
+
+        waterBill.updateCompleteState();
+
+        assertThatThrownBy(() -> waterBill.updateCompleteState())
+                .isInstanceOf(WaterBillStateException.class)
+                .hasMessage("The unit amount cannot be changed when the water rate is calculating");
     }
 
     private Building getBuilding(){

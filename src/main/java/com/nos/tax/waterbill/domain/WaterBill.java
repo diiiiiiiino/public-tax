@@ -31,6 +31,7 @@ public class WaterBill {
     private List<WaterBillDetail> waterBillDetails = new ArrayList<>();
 
     private int totalAmount;
+    private double unitAmount;
     private YearMonth calculateYm;
     private WaterBillState state;
 
@@ -38,7 +39,7 @@ public class WaterBill {
         setBuilding(building);
         setTotalAmount(totalAmount);
         setCalculateYm(calculateYm);
-        this.state = WaterBillState.ONGOING;
+        this.state = WaterBillState.READY;
     }
 
     public static WaterBill of(Building building, int totalAmount, YearMonth calculateYm){
@@ -58,8 +59,28 @@ public class WaterBill {
         this.waterBillDetails.add(waterBillDetail);
     }
 
-    public void completeWaterBill() {
+    public void updateCalculateState() {
+        if(state != WaterBillState.READY){
+            throw new WaterBillStateException("You can only calculate the water bill when you are ready");
+        }
+
+        state = WaterBillState.CALCULATING;
+    }
+
+    public void updateCompleteState() {
+        verifyCalculatingState("The unit amount cannot be changed when the water rate is calculating");
         state = WaterBillState.COMPLETE;
+    }
+
+    public void changeUnitAmount(double unitAmount){
+        verifyCalculatingState("The unit amount cannot be changed when the water rate is calculating");
+        this.unitAmount = unitAmount;
+    }
+
+    private void verifyCalculatingState(String msg){
+        if(state != WaterBillState.CALCULATING){
+            throw new WaterBillStateException(msg);
+        }
     }
 
     private void verifyWaterBillDetailAddState() {
