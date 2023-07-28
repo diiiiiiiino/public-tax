@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -21,7 +20,6 @@ public class LoginRecord {
     Member member;
 
     @Column(nullable = false)
-    @CreationTimestamp
     LocalDateTime loginTime;
 
     String userAgent;

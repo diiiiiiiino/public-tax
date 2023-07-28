@@ -16,7 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.List;
 import java.util.function.Function;
 
-import static com.nos.tax.TestUtils.flushAndClear;
+import static com.nos.tax.helper.util.JpaUtils.flushAndClear;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest

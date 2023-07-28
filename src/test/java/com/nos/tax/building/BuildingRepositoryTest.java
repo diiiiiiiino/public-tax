@@ -3,6 +3,7 @@ package com.nos.tax.building;
 import com.nos.tax.building.domain.Address;
 import com.nos.tax.building.domain.Building;
 import com.nos.tax.building.domain.repository.BuildingRepository;
+import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
 import com.nos.tax.household.domain.HouseHold;
 import com.nos.tax.household.domain.HouseHolder;
 import com.nos.tax.member.domain.Mobile;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-import static com.nos.tax.TestUtils.flushAndClear;
+import static com.nos.tax.helper.util.JpaUtils.flushAndClear;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -33,9 +34,9 @@ public class BuildingRepositoryTest {
     @DisplayName("Building 엔티티 저장")
     @Test
     void buildingSave() {
-        Building building = getBuilding();
+        Building building = createBuilding();
 
-        assertThat(building.getName()).isEqualTo("현대빌라");
+        assertThat(building.getName()).isEqualTo("빌라");
 
         Address findAddress = building.getAddress();
         assertThat(findAddress.getAddress1()).isEqualTo("서울시 동작구 사당동");
@@ -57,7 +58,7 @@ public class BuildingRepositoryTest {
     @DisplayName("Building 엔티티 건물명 수정")
     @Test
     void buildingUpdate() {
-        Building building = getBuilding();
+        Building building = createBuilding();
 
         building.changeName("자이");
 
@@ -65,13 +66,13 @@ public class BuildingRepositoryTest {
 
         Building findBuilding = buildingRepository.findById(building.getId()).get();
 
-        assertThat(findBuilding.getName()).isEqualTo(building.getName());
+        assertThat(findBuilding.getName()).isEqualTo("자이");
     }
 
     @DisplayName("Building 주소 수정")
     @Test
     void AddressUpdate(){
-        Building building = getBuilding();
+        Building building = createBuilding();
 
         building.changeAddress("변경주소1", "변경주소2", "99999");
 
@@ -79,17 +80,16 @@ public class BuildingRepositoryTest {
 
         Building findBuilding = buildingRepository.findById(building.getId()).get();
         Address findAddress = findBuilding.getAddress();
-        Address address = building.getAddress();
 
-        assertThat(findAddress.getAddress1()).isEqualTo(address.getAddress1());
-        assertThat(findAddress.getAddress2()).isEqualTo(address.getAddress2());
-        assertThat(findAddress.getZipNo()).isEqualTo(address.getZipNo());
+        assertThat(findAddress.getAddress1()).isEqualTo("변경주소1");
+        assertThat(findAddress.getAddress2()).isEqualTo("변경주소2");
+        assertThat(findAddress.getZipNo()).isEqualTo("99999");
     }
 
     @DisplayName("Building 세대주 추가")
     @Test
     void whenBuildingAddHouseholder(){
-        Building building = getBuilding();
+        Building building = createBuilding();
 
         List<HouseHold> newHouseHolds = new ArrayList<>(List.of(HouseHold.of("103호", HouseHolder.of("103호 세대주", Mobile.of("010", "2222", "3333")), building)));
 
@@ -102,14 +102,12 @@ public class BuildingRepositoryTest {
         assertThat(building.getHouseHolds()).hasSize(3);
     }
 
-    private Building getBuilding() {
-        Address address = Address.of("서울시 동작구 사당동", "현대 아파트 101동", "111222");
-
+    private Building createBuilding() {
         List<Function<Building, HouseHold>> buildingFunctions = List.of(
                 (building) -> HouseHold.of("101호", HouseHolder.of("세대주", Mobile.of("010", "1111", "2222")), building),
                 (building) -> HouseHold.of("102호", HouseHolder.of("세대주2", Mobile.of("010", "2222", "3333")), building));
 
-        Building building = Building.of("현대빌라", address, buildingFunctions);
+        Building building = BuildingCreateHelperBuilder.builder().houseHolds(buildingFunctions).build();
 
         building = buildingRepository.save(building);
 

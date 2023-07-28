@@ -1,8 +1,8 @@
 package com.nos.tax.waterbill.domain;
 
-import com.nos.tax.building.domain.Address;
 import com.nos.tax.building.domain.Building;
 import com.nos.tax.building.domain.repository.BuildingRepository;
+import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
 import com.nos.tax.household.domain.HouseHold;
 import com.nos.tax.household.domain.HouseHolder;
 import com.nos.tax.member.domain.Mobile;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-import static com.nos.tax.TestUtils.flushAndClear;
+import static com.nos.tax.helper.util.JpaUtils.flushAndClear;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -50,7 +50,7 @@ public class WaterBillRepositoryTest {
     @DisplayName("수도 요금 정산 데이터 생성")
     @Test
     void save_water_bill() {
-        Building building = getBuilding();
+        Building building = createBuilding();
 
         buildingRepository.save(building);
 
@@ -73,7 +73,7 @@ public class WaterBillRepositoryTest {
     @DisplayName("수도요금 계산 적용 시")
     @Test
     void calculate_water_bills_usage() {
-        Building building = getBuilding();
+        Building building = createBuilding();
         YearMonth yearMonth = YearMonth.of(2023, 7);
 
         buildingRepository.save(building);
@@ -116,10 +116,8 @@ public class WaterBillRepositoryTest {
         assertThat(waterBill.getState()).isEqualTo(WaterBillState.COMPLETE);
     }
 
-    private Building getBuilding(){
-        Address address = Address.of("서울시 동작구 사당동", "현대 아파트 101동", "111222");
-
-        List<Function<Building, HouseHold>> buildingFunctions = new ArrayList<>(
+    private Building createBuilding(){
+        List<Function<Building, HouseHold>> houseHolds = new ArrayList<>(
                 List.of((building) -> HouseHold.of("101호", HouseHolder.of("세대주1", Mobile.of("010", "1111", "1111")), building),
                         (building) -> HouseHold.of("102호", HouseHolder.of("세대주2", Mobile.of("010", "2222", "2222")), building),
                         (building) -> HouseHold.of("201호", HouseHolder.of("세대주3", Mobile.of("010", "3333", "3333")), building),
@@ -127,6 +125,9 @@ public class WaterBillRepositoryTest {
                         (building) -> HouseHold.of("301호", HouseHolder.of("세대주5", Mobile.of("010", "5555", "5555")), building),
                         (building) -> HouseHold.of("302호", HouseHolder.of("세대주6", Mobile.of("010", "6666", "6666")), building)));
 
-        return Building.of("광동빌라", address, buildingFunctions);
+        return BuildingCreateHelperBuilder.builder()
+                .buildingName("광동빌라")
+                .houseHolds(houseHolds)
+                .build();
     }
 }

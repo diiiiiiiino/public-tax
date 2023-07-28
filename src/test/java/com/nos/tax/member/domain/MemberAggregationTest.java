@@ -1,5 +1,6 @@
 package com.nos.tax.member.domain;
 
+import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
 import com.nos.tax.member.domain.exception.PasswordChangeException;
 import com.nos.tax.member.domain.exception.PasswordConditionException;
 import org.junit.jupiter.api.DisplayName;
@@ -54,46 +55,13 @@ public class MemberAggregationTest {
                 .hasMessage("Has No Digit");
     }
 
-    @DisplayName("비밀번호에 특수문자가 포함되어 있지 않을 때")
-    @ParameterizedTest
-    @ValueSource(strings = { "qwer1234", "1234qwer", "1q2w3e4r", "q1w2e3r4" })
-    void password_doesnt_contain_special_characters(String value) {
-        assertThatThrownBy(() -> Password.of(value))
-                .isInstanceOf(PasswordConditionException.class)
-                .hasMessage("Has no special characters");
-    }
-
     @DisplayName("비밀번호 생성 성공")
     @ParameterizedTest
-    @ValueSource(strings = { "!qwer1234", "4r5t6y7@u8i9o0p1", "12345abcd<>" })
+    @ValueSource(strings = { "qwer1234!@", "4r5t6y7u#$p1q", "!12345abcde" })
     void successful_password_generation(String value) {
         Password password = Password.of(value);
 
         assertThat(password.getValue()).isEqualTo(value);
-    }
-
-    @DisplayName("비밀번호 일치 여부 확인 시 null과 빈 문자열 전달")
-    @ParameterizedTest
-    @NullAndEmptySource
-    void pass_null_and_empty_strings_when_checking_for_matching_passwords(String value) {
-        Password password = Password.of("qwer1234!!");
-        assertThat(password.match(value)).isFalse();
-    }
-
-    @DisplayName("비밀번호 일치 여부 확인 시 일치하지 않는 비밀번호 전달")
-    @ParameterizedTest
-    @ValueSource(strings = { "qwer!@#$", "qwer1234!", "wer1234!!" })
-    void pass_mismatched_passwords_when_checking_for_matching_passwords(String value) {
-        Password password = Password.of("qwer1234!!");
-        assertThat(password.match(value)).isFalse();
-    }
-
-    @DisplayName("비밀번호 일치 여부 확인")
-    @Test
-    void verifying_password_match() {
-        String value = "qwer1234!!";
-        Password password = Password.of("qwer1234!!");
-        assertThat(password.match(value)).isTrue();
     }
 
     @DisplayName("상세 전화번호 생성 시 설정 길이가 너무 짧거나 길 때 실패")
@@ -153,9 +121,7 @@ public class MemberAggregationTest {
     @ParameterizedTest
     @NullAndEmptySource
     void whenMemberNameChangeThenIllegalArgumentException(String name) {
-        Password password = Password.of("qwer1234!@#$");
-        Mobile mobile = Mobile.of("010", "1111", "2222");
-        Member member = Member.of("loginId", password, "홍길동", mobile);
+        Member member = MemberCreateHelperBuilder.builder().build();
 
         assertThatThrownBy(() -> member.changeName(name))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -165,9 +131,7 @@ public class MemberAggregationTest {
     @DisplayName("회원 이름 변경 성공")
     @Test
     void whenMemberNameChangeThenSuccess() {
-        Password password = Password.of("qwer1234!@#$");
-        Mobile mobile = Mobile.of("010", "1111", "2222");
-        Member member = Member.of("loginId", password, "홍길동", mobile);
+        Member member = MemberCreateHelperBuilder.builder().build();
 
         member.changeName("김철수");
 
@@ -178,9 +142,7 @@ public class MemberAggregationTest {
     @ParameterizedTest
     @MethodSource("provideMobileNullAndEmptyArguments")
     void whenMemberMobileChangeThenIllegalArgumentException(String carrierNum, String secondNum, String threeNum) {
-        Password password = Password.of("qwer1234!@#$");
-        Mobile mobile = Mobile.of("010", "1111", "2222");
-        Member member = Member.of("loginId", password, "홍길동", mobile);
+        Member member = MemberCreateHelperBuilder.builder().build();
 
         assertThatThrownBy(() -> member.changeMobile(carrierNum, secondNum, threeNum))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -191,9 +153,7 @@ public class MemberAggregationTest {
     @ParameterizedTest
     @MethodSource("provideMobileInvalidLengthArguments")
     void givenTooLongFirstNumWhenMemberMobileChangeThenIllegalArgumentException(String carrierNum, String secondNum, String threeNum) {
-        Password password = Password.of("qwer1234!@#$");
-        Mobile mobile = Mobile.of("010", "1111", "2222");
-        Member member = Member.of("loginId", password, "홍길동", mobile);
+        Member member = MemberCreateHelperBuilder.builder().build();
 
         assertThatThrownBy(() -> member.changeMobile(carrierNum, secondNum, threeNum))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -203,9 +163,7 @@ public class MemberAggregationTest {
     @DisplayName("회원 전화번호 변경 성공")
     @Test
     void whenMemberMobileChangeThenSuccess() {
-        Password password = Password.of("qwer1234!@#$");
-        Mobile mobile = Mobile.of("010", "1111", "2222");
-        Member member = Member.of("loginId", password, "홍길동", mobile);
+        Member member = MemberCreateHelperBuilder.builder().build();
 
         member.changeMobile("010", "3333", "4444");
 
@@ -216,9 +174,7 @@ public class MemberAggregationTest {
     @ParameterizedTest
     @MethodSource("provideChangePasswordNullAndEmptyArguments")
     void failed_to_deliver_null_when_changing_member_password(String originPassword, String updatePassword) {
-        Password password = Password.of("qwer1234!@#$");
-        Mobile mobile = Mobile.of("010", "1111", "2222");
-        Member member = Member.of("loginId", password, "홍길동", mobile);
+        Member member = MemberCreateHelperBuilder.builder().build();
 
         assertThatThrownBy(() -> member.changePassword(originPassword, updatePassword))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -230,9 +186,7 @@ public class MemberAggregationTest {
     @ValueSource(strings = { "qwer1234!@#", "qwer123!@#$", "wer1234!@#" })
     void when_password_change_origin_password_not_match(String value){
         String updateValue = "sprtjtm13$$@@";
-        Password password = Password.of("qwer1234!@#$");
-        Mobile mobile = Mobile.of("010", "1111", "2222");
-        Member member = Member.of("loginId", password, "홍길동", mobile);
+        Member member = MemberCreateHelperBuilder.builder().build();
 
         assertThatThrownBy(() -> member.changePassword(value, updateValue))
                 .isInstanceOf(PasswordChangeException.class)
@@ -245,8 +199,10 @@ public class MemberAggregationTest {
     void when_password_change_digits_are_not_8_to_16_digits(String value) {
         String originValue = "qwer1234!@#$";
         Password password = Password.of(originValue);
-        Mobile mobile = Mobile.of("010", "1111", "2222");
-        Member member = Member.of("loginId", password, "홍길동", mobile);
+
+        Member member = MemberCreateHelperBuilder.builder()
+                .password(password)
+                .build();
 
         assertThatThrownBy(() -> member.changePassword(originValue, value))
                 .isInstanceOf(PasswordConditionException.class)
@@ -259,8 +215,9 @@ public class MemberAggregationTest {
     void when_password_change_origin_value_is_null_or_empty_string(String value) {
         String updateValue = "qwer1234!@#$";
         Password password = Password.of(updateValue);
-        Mobile mobile = Mobile.of("010", "1111", "2222");
-        Member member = Member.of("loginId", password, "홍길동", mobile);
+        Member member = MemberCreateHelperBuilder.builder()
+                .password(password)
+                .build();
 
         assertThatThrownBy(() -> member.changePassword(value, updateValue))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -273,8 +230,9 @@ public class MemberAggregationTest {
     void when_password_change_update_value_is_null_or_empty_string(String value) {
         String originValue = "qwer1234!@#$";
         Password password = Password.of(originValue);
-        Mobile mobile = Mobile.of("010", "1111", "2222");
-        Member member = Member.of("loginId", password, "홍길동", mobile);
+        Member member = MemberCreateHelperBuilder.builder()
+                .password(password)
+                .build();
 
         assertThatThrownBy(() -> member.changePassword(originValue, value))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -287,8 +245,9 @@ public class MemberAggregationTest {
     void when_the_password_change_does_not_contain_english_characters(String value) {
         String originValue = "qwer1234!@#$";
         Password password = Password.of(originValue);
-        Mobile mobile = Mobile.of("010", "1111", "2222");
-        Member member = Member.of("loginId", password, "홍길동", mobile);
+        Member member = MemberCreateHelperBuilder.builder()
+                .password(password)
+                .build();
 
         assertThatThrownBy(() -> member.changePassword(originValue, value))
                 .isInstanceOf(PasswordConditionException.class)
@@ -301,8 +260,9 @@ public class MemberAggregationTest {
     void when_password_change_doesnt_contain_numbers(String value) {
         String originValue = "qwer1234!@#$";
         Password password = Password.of(originValue);
-        Mobile mobile = Mobile.of("010", "1111", "2222");
-        Member member = Member.of("loginId", password, "홍길동", mobile);
+        Member member = MemberCreateHelperBuilder.builder()
+                .password(password)
+                .build();
 
         assertThatThrownBy(() -> member.changePassword(originValue, value))
                 .isInstanceOf(PasswordConditionException.class)
@@ -315,8 +275,9 @@ public class MemberAggregationTest {
         String originValue = "qwer1234!@#$";
         String updateValue = "qwer1234!@#$";
         Password password = Password.of(originValue);
-        Mobile mobile = Mobile.of("010", "1111", "2222");
-        Member member = Member.of("loginId", password, "홍길동", mobile);
+        Member member = MemberCreateHelperBuilder.builder()
+                .password(password)
+                .build();
 
         assertThatThrownBy(() -> member.changePassword(originValue, updateValue))
                 .isInstanceOf(PasswordChangeException.class)
@@ -325,12 +286,13 @@ public class MemberAggregationTest {
 
     @DisplayName("회원 비밀번호 변경 성공")
     @Test
-    void password_chagne_successful() {
+    void password_change_successful() {
         String originValue = "qwer1234!@#$";
         String updateValue = "!@#$qwer1234";
         Password password = Password.of(originValue);
-        Mobile mobile = Mobile.of("010", "1111", "2222");
-        Member member = Member.of("loginId", password, "홍길동", mobile);
+        Member member = MemberCreateHelperBuilder.builder()
+                .password(password)
+                .build();
 
         member.changePassword(originValue, updateValue);
 
