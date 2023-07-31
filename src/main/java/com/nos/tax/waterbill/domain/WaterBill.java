@@ -2,6 +2,7 @@ package com.nos.tax.waterbill.domain;
 
 import com.nos.tax.building.domain.Building;
 import com.nos.tax.util.VerifyUtil;
+import com.nos.tax.waterbill.domain.converter.YearMonthConverter;
 import com.nos.tax.waterbill.domain.exception.WaterBillStateException;
 import com.nos.tax.watermeter.domain.WaterMeter;
 import jakarta.persistence.*;
@@ -32,7 +33,11 @@ public class WaterBill {
 
     private int totalAmount;
     private double unitAmount;
+
+    @Convert(converter = YearMonthConverter.class)
     private YearMonth calculateYm;
+
+    @Enumerated(EnumType.STRING)
     private WaterBillState state;
 
     private WaterBill(Building building, int totalAmount, YearMonth calculateYm) {

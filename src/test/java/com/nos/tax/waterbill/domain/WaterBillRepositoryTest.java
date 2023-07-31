@@ -3,9 +3,13 @@ package com.nos.tax.waterbill.domain;
 import com.nos.tax.building.domain.Building;
 import com.nos.tax.building.domain.repository.BuildingRepository;
 import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
+import com.nos.tax.helper.builder.HouseHolderCreateHelperBuilder;
 import com.nos.tax.household.domain.HouseHold;
 import com.nos.tax.household.domain.HouseHolder;
+import com.nos.tax.member.domain.Member;
 import com.nos.tax.member.domain.Mobile;
+import com.nos.tax.member.domain.Password;
+import com.nos.tax.member.domain.repository.MemberRepository;
 import com.nos.tax.waterbill.domain.repository.WaterBillRepository;
 import com.nos.tax.waterbill.domain.service.WaterBillCalculateService;
 import com.nos.tax.watermeter.domain.WaterMeter;
@@ -22,6 +26,7 @@ import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static com.nos.tax.helper.util.JpaUtils.flushAndClear;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,6 +34,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @ActiveProfiles("test")
 public class WaterBillRepositoryTest {
+    @Autowired
+    private MemberRepository memberRepository;
+
     @Autowired
     private WaterBillRepository waterBillRepository;
 
@@ -52,10 +60,6 @@ public class WaterBillRepositoryTest {
     void save_water_bill() {
         Building building = createBuilding();
 
-        buildingRepository.save(building);
-
-        flushAndClear(entityManager);
-
         WaterBill waterBill = WaterBill.of(building, 77920, YearMonth.of(2023, 7));
 
         waterBillRepository.save(waterBill);
@@ -76,17 +80,9 @@ public class WaterBillRepositoryTest {
         Building building = createBuilding();
         YearMonth yearMonth = YearMonth.of(2023, 7);
 
-        buildingRepository.save(building);
-
-        flushAndClear(entityManager);
-
         WaterBill waterBill = WaterBill.of(building, 77920, yearMonth);
 
         waterBill = waterBillRepository.save(waterBill);
-
-        flushAndClear(entityManager);
-
-        waterBill = waterBillRepository.findById(waterBill.getId()).get();
 
         List<HouseHold> houseHolds = building.getHouseHolds();
 
@@ -116,18 +112,28 @@ public class WaterBillRepositoryTest {
         assertThat(waterBill.getState()).isEqualTo(WaterBillState.COMPLETE);
     }
 
-    private Building createBuilding(){
-        List<Function<Building, HouseHold>> houseHolds = new ArrayList<>(
-                List.of((building) -> HouseHold.of("101호", HouseHolder.of("세대주1", Mobile.of("010", "1111", "1111")), building),
-                        (building) -> HouseHold.of("102호", HouseHolder.of("세대주2", Mobile.of("010", "2222", "2222")), building),
-                        (building) -> HouseHold.of("201호", HouseHolder.of("세대주3", Mobile.of("010", "3333", "3333")), building),
-                        (building) -> HouseHold.of("202호", HouseHolder.of("세대주4", Mobile.of("010", "4444", "4444")), building),
-                        (building) -> HouseHold.of("301호", HouseHolder.of("세대주5", Mobile.of("010", "5555", "5555")), building),
-                        (building) -> HouseHold.of("302호", HouseHolder.of("세대주6", Mobile.of("010", "6666", "6666")), building)));
+    private Building createBuilding() {
+        List<Function<Building, HouseHold>> houseHolds = new ArrayList<>();
+        for(int i = 1; i <= 6; i++){
+            Member member = Member.of("loginId" + i, Password.of("qwer1234!@"), "세대주" + i, Mobile.of("010", String.valueOf(i).repeat(4), String.valueOf(i).repeat(4)));
 
-        return BuildingCreateHelperBuilder.builder()
-                .buildingName("광동빌라")
-                .houseHolds(houseHolds)
-                .build();
+            String room = i + "01호";
+            houseHolds.add((building -> HouseHold.of(room, HouseHolderCreateHelperBuilder.builder().member(member).name(member.getName()).mobile(member.getMobile()).build(), building)));
+        }
+
+        Building building = BuildingCreateHelperBuilder.builder().houseHolds(houseHolds).build();
+
+        List<Member> members = building.getHouseHolds().stream()
+                .map(HouseHold::getHouseHolder)
+                .map(HouseHolder::getMember)
+                .collect(Collectors.toList());
+
+        memberRepository.saveAll(members);
+
+        building = buildingRepository.save(building);
+
+        flushAndClear(entityManager);
+
+        return buildingRepository.findById(building.getId()).get();
     }
 }

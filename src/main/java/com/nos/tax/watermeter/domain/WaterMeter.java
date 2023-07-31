@@ -2,6 +2,7 @@ package com.nos.tax.watermeter.domain;
 
 import com.nos.tax.household.domain.HouseHold;
 import com.nos.tax.util.VerifyUtil;
+import com.nos.tax.waterbill.domain.converter.YearMonthConverter;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,6 +22,7 @@ public class WaterMeter {
     @ManyToOne(fetch = FetchType.LAZY)
     private HouseHold houseHold;
 
+    @Convert(converter = YearMonthConverter.class)
     private YearMonth yearMonth;
     private int previousMeter;
     private int presentMeter;

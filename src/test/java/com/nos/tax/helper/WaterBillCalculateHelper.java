@@ -2,8 +2,8 @@ package com.nos.tax.helper;
 
 import com.nos.tax.building.domain.Building;
 import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
+import com.nos.tax.helper.builder.HouseHolderCreateHelperBuilder;
 import com.nos.tax.household.domain.HouseHold;
-import com.nos.tax.household.domain.HouseHolder;
 import com.nos.tax.member.domain.Mobile;
 import com.nos.tax.waterbill.domain.WaterBill;
 import com.nos.tax.watermeter.domain.WaterMeter;
@@ -71,12 +71,12 @@ public class WaterBillCalculateHelper {
 
         private Building createBuilding(){
             List<Function<Building, HouseHold>> houseHolds = new ArrayList<>(
-                    List.of((building) -> HouseHold.of(1L,"101호", HouseHolder.of("세대주1", Mobile.of("010", "1111", "1111")), building),
-                            (building) -> HouseHold.of(2L,"102호", HouseHolder.of("세대주2", Mobile.of("010", "2222", "2222")), building),
-                            (building) -> HouseHold.of(3L,"201호", HouseHolder.of("세대주3", Mobile.of("010", "3333", "3333")), building),
-                            (building) -> HouseHold.of(4L,"202호", HouseHolder.of("세대주4", Mobile.of("010", "4444", "4444")), building),
-                            (building) -> HouseHold.of(5L,"301호", HouseHolder.of("세대주5", Mobile.of("010", "5555", "5555")), building),
-                            (building) -> HouseHold.of(6L,"302호", HouseHolder.of("세대주6", Mobile.of("010", "6666", "6666")), building)));
+                    List.of((building) -> HouseHold.of(1L,"101호", HouseHolderCreateHelperBuilder.builder().name("세대주1").mobile(Mobile.of("010", "1111", "1111")).build(), building),
+                            (building) -> HouseHold.of(2L,"102호", HouseHolderCreateHelperBuilder.builder().name("세대주2").mobile(Mobile.of("010", "2222", "2222")).build(), building),
+                            (building) -> HouseHold.of(3L,"201호", HouseHolderCreateHelperBuilder.builder().name("세대주3").mobile(Mobile.of("010", "3333", "3333")).build(), building),
+                            (building) -> HouseHold.of(4L,"202호", HouseHolderCreateHelperBuilder.builder().name("세대주4").mobile(Mobile.of("010", "4444", "4444")).build(), building),
+                            (building) -> HouseHold.of(5L,"301호", HouseHolderCreateHelperBuilder.builder().name("세대주5").mobile(Mobile.of("010", "5555", "5555")).build(), building),
+                            (building) -> HouseHold.of(6L,"302호", HouseHolderCreateHelperBuilder.builder().name("세대주6").mobile(Mobile.of("010", "6666", "6666")).build(), building)));
 
             return BuildingCreateHelperBuilder.builder()
                     .buildingName("광동빌라")

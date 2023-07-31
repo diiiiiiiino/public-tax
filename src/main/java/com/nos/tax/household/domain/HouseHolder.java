@@ -26,13 +26,14 @@ public class HouseHolder {
     @Convert(converter = MobileConverter.class)
     private Mobile mobile;
 
-    private HouseHolder(String name, Mobile mobile) {
+    private HouseHolder(Member member, String name, Mobile mobile) {
+        setMember(member);
         setName(name);
         setMobile(mobile);
     }
 
-    public static HouseHolder of(String name, Mobile mobile) {
-        return new HouseHolder(name, mobile);
+    public static HouseHolder of(Member member, String name, Mobile mobile) {
+        return new HouseHolder(member, name, mobile);
     }
 
     private void setName(String name) {
@@ -41,6 +42,10 @@ public class HouseHolder {
 
     private void setMobile(Mobile mobile) {
         this.mobile = Objects.requireNonNull(mobile);
+    }
+
+    private void setMember(Member member) {
+        this.member = Objects.requireNonNull(member);
     }
 
     @Override

@@ -3,8 +3,12 @@ package com.nos.tax.household.domain;
 import com.nos.tax.building.domain.Address;
 import com.nos.tax.building.domain.Building;
 import com.nos.tax.building.domain.repository.BuildingRepository;
+import com.nos.tax.helper.builder.HouseHolderCreateHelperBuilder;
 import com.nos.tax.household.domain.repository.HouseHoldRepository;
+import com.nos.tax.member.domain.Member;
 import com.nos.tax.member.domain.Mobile;
+import com.nos.tax.member.domain.Password;
+import com.nos.tax.member.domain.repository.MemberRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.DisplayName;
@@ -13,8 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static com.nos.tax.helper.util.JpaUtils.flushAndClear;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,6 +28,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @ActiveProfiles("test")
 public class HouseholdRepositoryTest {
+
+    @Autowired
+    private MemberRepository memberRepository;
+
     @Autowired
     private HouseHoldRepository houseHoldRepository;
 
@@ -36,16 +46,29 @@ public class HouseholdRepositoryTest {
     void saveHouseHold() {
         Address address = Address.of("서울시 동작구 사당동", "현대 아파트 101동", "111222");
 
-        Function<Building, HouseHold> function1 = (building) -> HouseHold.of("101호", HouseHolder.of("세대주", Mobile.of("010", "1111", "2222")), building);
-        Function<Building, HouseHold> function2 = (building) -> HouseHold.of("102호", HouseHolder.of("세대주", Mobile.of("010", "1111", "2222")), building);
+        List<Function<Building, HouseHold>> houseHolds = new ArrayList<>();
+        for(int i = 1; i <= 6; i++){
+            Member member = Member.of("loginId" + i, Password.of("qwer1234!@"), "세대주" + i, Mobile.of("010", String.valueOf(i).repeat(4), String.valueOf(i).repeat(4)));
 
-        List<Function<Building, HouseHold>> houseHolds = List.of(function1, function2);
+            String room = i + "01호";
+            houseHolds.add((building -> HouseHold.of(room, HouseHolderCreateHelperBuilder.builder().member(member).name(member.getName()).mobile(member.getMobile()).build(), building)));
+        }
+
         Building building = Building.of("현대빌라", address, houseHolds);
+
+        List<Member> members = building.getHouseHolds().stream()
+                .map(HouseHold::getHouseHolder)
+                .map(HouseHolder::getMember)
+                .collect(Collectors.toList());
+
+        memberRepository.saveAll(members);
 
         building = buildingRepository.save(building);
 
-        Mobile mobile = Mobile.of("010", "1111", "2222");
-        HouseHolder houseHolder = HouseHolder.of("세대주", mobile);
+        Member member = Member.of("skull0202", Password.of("qwer1234!"), "스컬", Mobile.of("010", "1212", "1313"));
+        memberRepository.save(member);
+
+        HouseHolder houseHolder = HouseHolderCreateHelperBuilder.builder().member(member).name(member.getName()).mobile(member.getMobile()).build();
 
         HouseHold houseHold = HouseHold.of("103호", houseHolder, building);
 
@@ -57,7 +80,7 @@ public class HouseholdRepositoryTest {
 
         assertThat(houseHold).isNotNull();
         assertThat(houseHold.getRoom()).isEqualTo("103호");
-        assertThat(houseHold.getHouseHolder().getName()).isEqualTo("세대주");
-        assertThat(houseHold.getHouseHolder().getMobile().toString()).isEqualTo("010-1111-2222");
+        assertThat(houseHold.getHouseHolder().getName()).isEqualTo("스컬");
+        assertThat(houseHold.getHouseHolder().getMobile().toString()).isEqualTo("010-1212-1313");
     }
 }

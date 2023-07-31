@@ -3,9 +3,8 @@ package com.nos.tax.building;
 import com.nos.tax.building.domain.Address;
 import com.nos.tax.building.domain.Building;
 import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
+import com.nos.tax.helper.builder.HouseHolderCreateHelperBuilder;
 import com.nos.tax.household.domain.HouseHold;
-import com.nos.tax.household.domain.HouseHolder;
-import com.nos.tax.member.domain.Mobile;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -130,7 +129,7 @@ public class BuildingAggregationTest {
     void whenBuildingAddHouseholderThenSuccess(){
         Building building = BuildingCreateHelperBuilder.builder().build();
 
-        List<HouseHold> newHouseHolds = List.of(HouseHold.of("102호", HouseHolder.of("102호 세대주", Mobile.of("010", "2222", "3333")), building));
+        List<HouseHold> newHouseHolds = List.of(HouseHold.of("102호", HouseHolderCreateHelperBuilder.builder().build(), building));
 
         building.addHouseHolds(newHouseHolds);
 

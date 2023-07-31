@@ -1,6 +1,7 @@
 package com.nos.tax.household.domain;
 
 import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
+import com.nos.tax.helper.builder.HouseHolderCreateHelperBuilder;
 import com.nos.tax.member.domain.Mobile;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -37,26 +38,21 @@ public class HouseholdAggregationTest {
     @ParameterizedTest
     @NullAndEmptySource
     void whenHouseHolderSaveThenNameIllegalArgumentException(String name){
-        Mobile mobile = Mobile.of("010", "1111", "2222");
-
-        assertThatThrownBy(() -> HouseHolder.of(name, mobile))
+        assertThatThrownBy(() -> HouseHolderCreateHelperBuilder.builder().name(name).build())
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @DisplayName("세대주 밸류 생성 시 Mobile 밸류 누락")
     @Test
     void whenHouseHolderSaveThenMobileIllegalArgumentException() {
-        Mobile mobile = null;
-
-        assertThatThrownBy(() -> HouseHolder.of("세대주", mobile))
+        assertThatThrownBy(() -> HouseHolderCreateHelperBuilder.builder().mobile(null).build())
                 .isInstanceOf(NullPointerException.class);
     }
 
     @DisplayName("세대주 밸류 생성 성공")
     @Test
     void whenHouseHolderSaveThenSuccess() {
-        Mobile mobile = Mobile.of("010", "1111", "2222");
-        HouseHolder houseHolder = HouseHolder.of("세대주", mobile);
+        HouseHolder houseHolder = HouseHolderCreateHelperBuilder.builder().build();
 
         assertThat(houseHolder.getName()).isEqualTo("세대주");
     }
@@ -65,8 +61,7 @@ public class HouseholdAggregationTest {
     @ParameterizedTest
     @NullAndEmptySource
     void whenHouseHoldSaveThenRoomIllegalArgumentException(String room) {
-        Mobile mobile = Mobile.of("010", "1111", "2222");
-        HouseHolder houseHolder = HouseHolder.of("세대주", mobile);
+        HouseHolder houseHolder = HouseHolderCreateHelperBuilder.builder().build();
 
         assertThatThrownBy(() -> HouseHold.of(room, houseHolder, BuildingCreateHelperBuilder.builder().build()))
                 .isInstanceOf(IllegalArgumentException.class);
@@ -84,8 +79,7 @@ public class HouseholdAggregationTest {
     @DisplayName("세대 밸류 생성 성공")
     @Test
     void whenHouseHoldSaveThenSuccess() {
-        Mobile mobile = Mobile.of("010", "1111", "2222");
-        HouseHolder houseHolder = HouseHolder.of("세대주", mobile);
+        HouseHolder houseHolder = HouseHolderCreateHelperBuilder.builder().build();
 
         HouseHold houseHold = HouseHold.of("101호", houseHolder, BuildingCreateHelperBuilder.builder().build());
 

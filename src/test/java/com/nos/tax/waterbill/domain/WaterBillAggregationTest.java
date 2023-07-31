@@ -2,9 +2,11 @@ package com.nos.tax.waterbill.domain;
 
 import com.nos.tax.building.domain.Building;
 import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
+import com.nos.tax.helper.builder.HouseHolderCreateHelperBuilder;
 import com.nos.tax.household.domain.HouseHold;
-import com.nos.tax.household.domain.HouseHolder;
+import com.nos.tax.member.domain.Member;
 import com.nos.tax.member.domain.Mobile;
+import com.nos.tax.member.domain.Password;
 import com.nos.tax.waterbill.domain.exception.WaterBillStateException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -160,13 +162,13 @@ public class WaterBillAggregationTest {
     }
 
     private Building createBuilding(){
-        List<Function<Building, HouseHold>> houseHolds = new ArrayList<>(
-                List.of((building) -> HouseHold.of("101호", HouseHolder.of("세대주1", Mobile.of("010", "1111", "1111")), building),
-                        (building) -> HouseHold.of("102호", HouseHolder.of("세대주2", Mobile.of("010", "2222", "2222")), building),
-                        (building) -> HouseHold.of("201호", HouseHolder.of("세대주3", Mobile.of("010", "3333", "3333")), building),
-                        (building) -> HouseHold.of("202호", HouseHolder.of("세대주4", Mobile.of("010", "4444", "4444")), building),
-                        (building) -> HouseHold.of("301호", HouseHolder.of("세대주5", Mobile.of("010", "5555", "5555")), building),
-                        (building) -> HouseHold.of("302호", HouseHolder.of("세대주6", Mobile.of("010", "6666", "6666")), building)));
+        List<Function<Building, HouseHold>> houseHolds = new ArrayList<>();
+        for(int i = 1; i <= 6; i++){
+            Member member = Member.of("loginId" + i, Password.of("qwer1234!@"), "세대주" + i, Mobile.of("010", String.valueOf(i).repeat(4), String.valueOf(i).repeat(4)));
+
+            String room = i + "01호";
+            houseHolds.add((building -> HouseHold.of(room, HouseHolderCreateHelperBuilder.builder().member(member).name(member.getName()).mobile(member.getMobile()).build(), building)));
+        }
 
         return BuildingCreateHelperBuilder.builder()
                 .buildingName("광동빌라")

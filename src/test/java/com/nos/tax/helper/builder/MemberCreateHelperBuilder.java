@@ -9,7 +9,6 @@ public class MemberCreateHelperBuilder {
     private Mobile mobile = Mobile.of("010", "1111", "2222");
     private String loginId = "loginId";
     private String name = "홍길동";
-    private Member member = Member.of(loginId, password, "홍길동", mobile);
 
     public static MemberCreateHelperBuilder builder(){
         return new MemberCreateHelperBuilder();
@@ -36,6 +35,6 @@ public class MemberCreateHelperBuilder {
     }
 
     public Member build(){
-        return Member.of("loginId", password, "홍길동", mobile);
+        return Member.of(loginId, password, name, mobile);
     }
 }

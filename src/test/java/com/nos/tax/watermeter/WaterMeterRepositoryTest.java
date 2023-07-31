@@ -3,6 +3,9 @@ package com.nos.tax.watermeter;
 import com.nos.tax.building.domain.Building;
 import com.nos.tax.building.domain.repository.BuildingRepository;
 import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
+import com.nos.tax.household.domain.HouseHold;
+import com.nos.tax.member.domain.Member;
+import com.nos.tax.member.domain.repository.MemberRepository;
 import com.nos.tax.watermeter.domain.WaterMeter;
 import com.nos.tax.watermeter.domain.repository.WaterMeterRepository;
 import jakarta.persistence.EntityManager;
@@ -22,6 +25,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")
 public class WaterMeterRepositoryTest {
     @Autowired
+    MemberRepository memberRepository;
+
+    @Autowired
     BuildingRepository buildingRepository;
 
     @Autowired
@@ -34,6 +40,11 @@ public class WaterMeterRepositoryTest {
     @Test
     void save_water_meter() {
         Building building = BuildingCreateHelperBuilder.builder().build();
+
+        for(HouseHold houseHold : building.getHouseHolds()){
+            Member member = houseHold.getHouseHolder().getMember();
+            memberRepository.save(member);
+        }
 
         buildingRepository.save(building);
 
