@@ -1,8 +1,8 @@
 package com.nos.tax.helper.builder;
 
-import com.nos.tax.household.domain.HouseHolder;
-import com.nos.tax.member.domain.Member;
-import com.nos.tax.member.domain.Mobile;
+import com.nos.tax.household.command.domain.HouseHolder;
+import com.nos.tax.member.command.domain.Member;
+import com.nos.tax.member.command.domain.Mobile;
 import lombok.Getter;
 
 @Getter

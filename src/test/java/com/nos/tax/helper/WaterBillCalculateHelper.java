@@ -1,12 +1,12 @@
 package com.nos.tax.helper;
 
-import com.nos.tax.building.domain.Building;
+import com.nos.tax.building.command.domain.Building;
 import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
 import com.nos.tax.helper.builder.HouseHolderCreateHelperBuilder;
-import com.nos.tax.household.domain.HouseHold;
-import com.nos.tax.member.domain.Mobile;
-import com.nos.tax.waterbill.domain.WaterBill;
-import com.nos.tax.watermeter.domain.WaterMeter;
+import com.nos.tax.household.command.domain.HouseHold;
+import com.nos.tax.member.command.domain.Mobile;
+import com.nos.tax.waterbill.command.domain.WaterBill;
+import com.nos.tax.watermeter.command.domain.repository.WaterMeter;
 import lombok.Getter;
 
 import java.time.YearMonth;

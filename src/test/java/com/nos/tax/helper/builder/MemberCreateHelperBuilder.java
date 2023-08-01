@@ -1,8 +1,8 @@
 package com.nos.tax.helper.builder;
 
-import com.nos.tax.member.domain.Member;
-import com.nos.tax.member.domain.Mobile;
-import com.nos.tax.member.domain.Password;
+import com.nos.tax.member.command.domain.Member;
+import com.nos.tax.member.command.domain.Mobile;
+import com.nos.tax.member.command.domain.Password;
 
 public class MemberCreateHelperBuilder {
     private Password password = Password.of("qwer1234!@#$");

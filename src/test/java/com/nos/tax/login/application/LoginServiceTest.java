@@ -1,14 +1,14 @@
 package com.nos.tax.login.application;
 
-import com.nos.tax.login.application.service.LoginRequest;
-import com.nos.tax.login.application.service.LoginServiceImpl;
-import com.nos.tax.login.domain.LoginRecord;
-import com.nos.tax.login.domain.LoginRecordRepository;
-import com.nos.tax.member.domain.Member;
-import com.nos.tax.member.domain.Mobile;
-import com.nos.tax.member.domain.Password;
-import com.nos.tax.member.domain.exception.LoginFailedException;
-import com.nos.tax.member.domain.repository.MemberRepository;
+import com.nos.tax.login.command.application.service.LoginRequest;
+import com.nos.tax.login.command.application.service.LoginServiceImpl;
+import com.nos.tax.login.command.domain.LoginRecord;
+import com.nos.tax.login.command.domain.LoginRecordRepository;
+import com.nos.tax.member.command.domain.Member;
+import com.nos.tax.member.command.domain.Mobile;
+import com.nos.tax.member.command.domain.Password;
+import com.nos.tax.member.command.domain.exception.LoginFailedException;
+import com.nos.tax.member.command.domain.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

@@ -1,17 +1,17 @@
 package com.nos.tax.building;
 
-import com.nos.tax.building.domain.Address;
-import com.nos.tax.building.domain.Building;
-import com.nos.tax.building.domain.repository.BuildingRepository;
+import com.nos.tax.building.command.domain.Address;
+import com.nos.tax.building.command.domain.Building;
+import com.nos.tax.building.command.domain.repository.BuildingRepository;
 import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
 import com.nos.tax.helper.builder.HouseHolderCreateHelperBuilder;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
-import com.nos.tax.household.domain.HouseHold;
-import com.nos.tax.household.domain.HouseHolder;
-import com.nos.tax.member.domain.Member;
-import com.nos.tax.member.domain.Mobile;
-import com.nos.tax.member.domain.Password;
-import com.nos.tax.member.domain.repository.MemberRepository;
+import com.nos.tax.household.command.domain.HouseHold;
+import com.nos.tax.household.command.domain.HouseHolder;
+import com.nos.tax.member.command.domain.Member;
+import com.nos.tax.member.command.domain.Mobile;
+import com.nos.tax.member.command.domain.Password;
+import com.nos.tax.member.command.domain.repository.MemberRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.DisplayName;
@@ -22,7 +22,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -113,19 +112,6 @@ public class BuildingRepositoryTest {
         building = buildingRepository.findById(building.getId()).get();
 
         assertThat(building.getHouseHolds()).hasSize(7);
-    }
-
-    @DisplayName("Member로 Building 조회")
-    @Test
-    void find_by_Member() {
-        Member member = MemberCreateHelperBuilder.builder().build();
-
-        memberRepository.save(member);
-
-        Building building = BuildingCreateHelperBuilder.builder().build();
-        buildingRepository.save(building);
-
-        Optional<Building> optionalBuilding = buildingRepository.findByMember(member.getId());
     }
 
     private Building createBuilding() {

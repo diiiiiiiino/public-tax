@@ -1,8 +1,10 @@
 package com.nos.tax.login.domain;
 
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
-import com.nos.tax.member.domain.Member;
-import com.nos.tax.member.domain.repository.MemberRepository;
+import com.nos.tax.login.command.domain.LoginRecord;
+import com.nos.tax.login.command.domain.LoginRecordRepository;
+import com.nos.tax.member.command.domain.Member;
+import com.nos.tax.member.command.domain.repository.MemberRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.DisplayName;

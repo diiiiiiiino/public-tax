@@ -2,7 +2,9 @@ package com.nos.tax.household.domain;
 
 import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
 import com.nos.tax.helper.builder.HouseHolderCreateHelperBuilder;
-import com.nos.tax.member.domain.Mobile;
+import com.nos.tax.household.command.domain.HouseHold;
+import com.nos.tax.household.command.domain.HouseHolder;
+import com.nos.tax.member.command.domain.Mobile;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

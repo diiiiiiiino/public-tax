@@ -1,8 +1,8 @@
 package com.nos.tax.helper.builder;
 
-import com.nos.tax.building.domain.Address;
-import com.nos.tax.building.domain.Building;
-import com.nos.tax.household.domain.HouseHold;
+import com.nos.tax.building.command.domain.Address;
+import com.nos.tax.building.command.domain.Building;
+import com.nos.tax.household.command.domain.HouseHold;
 
 import java.util.ArrayList;
 import java.util.List;

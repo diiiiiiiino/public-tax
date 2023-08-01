@@ -1,14 +1,16 @@
 package com.nos.tax.household.domain;
 
-import com.nos.tax.building.domain.Address;
-import com.nos.tax.building.domain.Building;
-import com.nos.tax.building.domain.repository.BuildingRepository;
+import com.nos.tax.building.command.domain.Building;
+import com.nos.tax.building.command.domain.repository.BuildingRepository;
+import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
 import com.nos.tax.helper.builder.HouseHolderCreateHelperBuilder;
-import com.nos.tax.household.domain.repository.HouseHoldRepository;
-import com.nos.tax.member.domain.Member;
-import com.nos.tax.member.domain.Mobile;
-import com.nos.tax.member.domain.Password;
-import com.nos.tax.member.domain.repository.MemberRepository;
+import com.nos.tax.household.command.domain.HouseHold;
+import com.nos.tax.household.command.domain.HouseHolder;
+import com.nos.tax.household.command.domain.repository.HouseHoldRepository;
+import com.nos.tax.member.command.domain.Member;
+import com.nos.tax.member.command.domain.Mobile;
+import com.nos.tax.member.command.domain.Password;
+import com.nos.tax.member.command.domain.repository.MemberRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.DisplayName;
@@ -44,26 +46,7 @@ public class HouseholdRepositoryTest {
     @DisplayName("세대 저장")
     @Test
     void saveHouseHold() {
-        Address address = Address.of("서울시 동작구 사당동", "현대 아파트 101동", "111222");
-
-        List<Function<Building, HouseHold>> houseHolds = new ArrayList<>();
-        for(int i = 1; i <= 6; i++){
-            Member member = Member.of("loginId" + i, Password.of("qwer1234!@"), "세대주" + i, Mobile.of("010", String.valueOf(i).repeat(4), String.valueOf(i).repeat(4)));
-
-            String room = i + "01호";
-            houseHolds.add((building -> HouseHold.of(room, HouseHolderCreateHelperBuilder.builder().member(member).name(member.getName()).mobile(member.getMobile()).build(), building)));
-        }
-
-        Building building = Building.of("현대빌라", address, houseHolds);
-
-        List<Member> members = building.getHouseHolds().stream()
-                .map(HouseHold::getHouseHolder)
-                .map(HouseHolder::getMember)
-                .collect(Collectors.toList());
-
-        memberRepository.saveAll(members);
-
-        building = buildingRepository.save(building);
+        Building building = createBuilding();
 
         Member member = Member.of("skull0202", Password.of("qwer1234!"), "스컬", Mobile.of("010", "1212", "1313"));
         memberRepository.save(member);
@@ -82,5 +65,30 @@ public class HouseholdRepositoryTest {
         assertThat(houseHold.getRoom()).isEqualTo("103호");
         assertThat(houseHold.getHouseHolder().getName()).isEqualTo("스컬");
         assertThat(houseHold.getHouseHolder().getMobile().toString()).isEqualTo("010-1212-1313");
+    }
+
+    private Building createBuilding() {
+        List<Function<Building, HouseHold>> houseHolds = new ArrayList<>();
+        for(int i = 1; i <= 6; i++){
+            Member member = Member.of("loginId" + i, Password.of("qwer1234!@"), "세대주" + i, Mobile.of("010", String.valueOf(i).repeat(4), String.valueOf(i).repeat(4)));
+
+            String room = i + "01호";
+            houseHolds.add((building -> HouseHold.of(room, HouseHolderCreateHelperBuilder.builder().member(member).name(member.getName()).mobile(member.getMobile()).build(), building)));
+        }
+
+        Building building = BuildingCreateHelperBuilder.builder().houseHolds(houseHolds).build();
+
+        List<Member> members = building.getHouseHolds().stream()
+                .map(HouseHold::getHouseHolder)
+                .map(HouseHolder::getMember)
+                .collect(Collectors.toList());
+
+        memberRepository.saveAll(members);
+
+        building = buildingRepository.save(building);
+
+        flushAndClear(entityManager);
+
+        return buildingRepository.findById(building.getId()).get();
     }
 }
