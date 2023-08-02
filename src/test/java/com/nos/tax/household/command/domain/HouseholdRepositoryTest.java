@@ -1,4 +1,4 @@
-package com.nos.tax.household.domain;
+package com.nos.tax.household.command.domain;
 
 import com.nos.tax.building.command.domain.Building;
 import com.nos.tax.building.command.domain.repository.BuildingRepository;

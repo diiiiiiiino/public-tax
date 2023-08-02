@@ -1,4 +1,4 @@
-package com.nos.tax.household.domain;
+package com.nos.tax.household.command.domain;
 
 import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
 import com.nos.tax.helper.builder.HouseHolderCreateHelperBuilder;

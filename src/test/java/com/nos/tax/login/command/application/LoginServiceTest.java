@@ -1,4 +1,4 @@
-package com.nos.tax.login.application;
+package com.nos.tax.login.command.application;
 
 import com.nos.tax.login.command.application.service.LoginRequest;
 import com.nos.tax.login.command.application.service.LoginServiceImpl;

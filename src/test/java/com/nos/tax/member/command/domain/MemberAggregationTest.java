@@ -1,4 +1,4 @@
-package com.nos.tax.member.domain;
+package com.nos.tax.member.command.domain;
 
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
 import com.nos.tax.member.command.domain.Member;
