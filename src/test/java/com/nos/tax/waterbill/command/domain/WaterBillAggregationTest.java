@@ -165,10 +165,8 @@ public class WaterBillAggregationTest {
     private Building createBuilding(){
         List<Function<Building, HouseHold>> houseHolds = new ArrayList<>();
         for(int i = 1; i <= 6; i++){
-            Member member = Member.of("loginId" + i, Password.of("qwer1234!@"), "세대주" + i, Mobile.of("010", String.valueOf(i).repeat(4), String.valueOf(i).repeat(4)));
-
             String room = i + "01호";
-            houseHolds.add((building -> HouseHold.of(room, HouseHolderCreateHelperBuilder.builder().member(member).name(member.getName()).mobile(member.getMobile()).build(), building)));
+            houseHolds.add((building -> HouseHold.of(room, building)));
         }
 
         return BuildingCreateHelperBuilder.builder()

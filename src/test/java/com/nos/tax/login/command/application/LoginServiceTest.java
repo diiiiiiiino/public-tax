@@ -66,7 +66,7 @@ public class LoginServiceTest {
 
     @DisplayName("로그인 성공")
     @Test
-    void login_successful() {
+    void login_success() {
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setLoginId("loginId");
         loginRequest.setPassword("qwer1234!@#$");

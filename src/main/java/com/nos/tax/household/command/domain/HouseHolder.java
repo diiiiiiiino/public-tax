@@ -19,10 +19,7 @@ public class HouseHolder {
     @OneToOne(fetch = FetchType.LAZY)
     private Member member;
 
-    @Column(nullable = false)
     private String name;
-
-    @Column(nullable = false)
     @Convert(converter = MobileConverter.class)
     private Mobile mobile;
 

@@ -25,9 +25,9 @@ public class MemberRepositoryTest {
     @PersistenceContext
     EntityManager entityManager;
 
-    @DisplayName("회원 엔티티 저장")
+    @DisplayName("회원 저장")
     @Test
-    void saveMemberEntity() {
+    void member_create_success() {
         Password password = Password.of("qwer1234!@#$");
         Member member = Member.of("member123", password, "회원", Mobile.of("010", "1111", "1111"));
         member = memberRepository.save(member);
@@ -43,7 +43,7 @@ public class MemberRepositoryTest {
 
     @DisplayName("회원 이름 변경")
     @Test
-    void changeMemberName() {
+    void member_name_update() {
         Password password = Password.of("qwer1234!@#$");
         Member member = Member.of("member123", password, "회원", Mobile.of("010", "1111", "1111"));
         member = memberRepository.save(member);
@@ -63,7 +63,7 @@ public class MemberRepositoryTest {
 
     @DisplayName("회원 전화번호 변경")
     @Test
-    void changeMemberMobile() {
+    void member_mobile_update() {
         Password password = Password.of("qwer1234!@#$");
         Member member = Member.of("member123", password, "회원", Mobile.of("010", "1111", "1111"));
         member = memberRepository.save(member);

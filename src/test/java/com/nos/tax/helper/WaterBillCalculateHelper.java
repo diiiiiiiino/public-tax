@@ -71,12 +71,12 @@ public class WaterBillCalculateHelper {
 
         private Building createBuilding(){
             List<Function<Building, HouseHold>> houseHolds = new ArrayList<>(
-                    List.of((building) -> HouseHold.of(1L,"101호", HouseHolderCreateHelperBuilder.builder().name("세대주1").mobile(Mobile.of("010", "1111", "1111")).build(), building),
-                            (building) -> HouseHold.of(2L,"102호", HouseHolderCreateHelperBuilder.builder().name("세대주2").mobile(Mobile.of("010", "2222", "2222")).build(), building),
-                            (building) -> HouseHold.of(3L,"201호", HouseHolderCreateHelperBuilder.builder().name("세대주3").mobile(Mobile.of("010", "3333", "3333")).build(), building),
-                            (building) -> HouseHold.of(4L,"202호", HouseHolderCreateHelperBuilder.builder().name("세대주4").mobile(Mobile.of("010", "4444", "4444")).build(), building),
-                            (building) -> HouseHold.of(5L,"301호", HouseHolderCreateHelperBuilder.builder().name("세대주5").mobile(Mobile.of("010", "5555", "5555")).build(), building),
-                            (building) -> HouseHold.of(6L,"302호", HouseHolderCreateHelperBuilder.builder().name("세대주6").mobile(Mobile.of("010", "6666", "6666")).build(), building)));
+                    List.of((building) -> HouseHold.of(1L,"101호", building),
+                            (building) -> HouseHold.of(2L,"102호", building),
+                            (building) -> HouseHold.of(3L,"201호", building),
+                            (building) -> HouseHold.of(4L,"202호", building),
+                            (building) -> HouseHold.of(5L,"301호", building),
+                            (building) -> HouseHold.of(6L,"302호", building)));
 
             return BuildingCreateHelperBuilder.builder()
                     .buildingName("광동빌라")

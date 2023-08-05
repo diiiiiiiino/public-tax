@@ -38,13 +38,8 @@ public class WaterMeterRepositoryTest {
 
     @DisplayName("수도계량값 저장")
     @Test
-    void save_water_meter() {
+    void water_meter_create() {
         Building building = BuildingCreateHelperBuilder.builder().build();
-
-        for(HouseHold houseHold : building.getHouseHolds()){
-            Member member = houseHold.getHouseHolder().getMember();
-            memberRepository.save(member);
-        }
 
         buildingRepository.save(building);
 

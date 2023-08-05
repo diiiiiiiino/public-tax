@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class BuildingAggregationTest {
 
-    @DisplayName("주소 생성 시 파라미터에 null이나 빈 문자열 전달")
+    @DisplayName("주소 생성 시 파라미터에 null이나 빈 값 전달")
     @ParameterizedTest
     @MethodSource("provideArgsForAddress")
     void address_create_with_null_and_empty_parameter(String address1, String address2, String zipNo){
@@ -41,7 +41,7 @@ public class BuildingAggregationTest {
 
     @DisplayName("건물 엔티티 생성 시 주소 누락")
     @Test
-    void whenBuildingSaveThenAddressNullPointerException() {
+    void building_create_with_null_address() {
         Assertions.assertThatThrownBy(() -> BuildingCreateHelperBuilder.builder()
                         .address(null)
                         .build())
@@ -50,7 +50,7 @@ public class BuildingAggregationTest {
 
     @DisplayName("건물 엔티티 생성 시 비어있는 세대 목록을 생성할 경우")
     @Test
-    void whenBuildingSaveThenHouseHoldsNullPointerException() {
+    void building_create_with_null_households() {
         Assertions.assertThatThrownBy(() -> BuildingCreateHelperBuilder.builder()
                         .houseHolds(List.of())
                         .build())
@@ -60,17 +60,17 @@ public class BuildingAggregationTest {
 
     @DisplayName("건물 엔티티 생성 성공")
     @Test
-    void whenBuildingSaveThenSuccess() {
+    void building_create_success() {
         Building building = BuildingCreateHelperBuilder.builder().build();
 
         assertThat(building).isNotNull();
         assertThat(building.getName()).isEqualTo("빌라");
     }
 
-    @DisplayName("건물 엔티티 건물명 수정 실패")
+    @DisplayName("건물 엔티티 건물명 수정 시 null이나 빈 값 전달 ")
     @ParameterizedTest
     @NullAndEmptySource
-    void whenBuildingChangeNameThenIllegalArgumentsException(String name){
+    void building_name_update_with_null_and_empty(String name){
         Building building = BuildingCreateHelperBuilder.builder().build();
 
         assertThatThrownBy(() -> building.changeName(name))
@@ -80,7 +80,7 @@ public class BuildingAggregationTest {
 
     @DisplayName("건물 엔티티 건물명 수정 성공")
     @Test
-    void whenBuildingChangeNameThenSuccess(){
+    void building_name_update_success(){
         Building building = BuildingCreateHelperBuilder.builder().build();
 
         building.changeName("래미안");
@@ -91,7 +91,7 @@ public class BuildingAggregationTest {
     @DisplayName("건물 엔티티 주소 수정 실패")
     @ParameterizedTest
     @MethodSource("provideArgsForAddress")
-    void whenBuildingChangeAddressThenIllegalArgumentsException(String address1, String address2, String zipNo){
+    void building_address_update_fail(String address1, String address2, String zipNo){
         Building building = BuildingCreateHelperBuilder.builder().build();
 
         assertThatThrownBy(() -> building.changeAddress(address1, address2, zipNo))
@@ -100,7 +100,7 @@ public class BuildingAggregationTest {
 
     @DisplayName("건물 엔티티 주소 수정 성공")
     @Test
-    void whenBuildingChangeAddressThenSuccess(){
+    void building_address_update_success(){
         Building building = BuildingCreateHelperBuilder.builder().build();
 
         building.changeAddress("수정 주소1", "수정 주소2", "수정 우편번호");
@@ -115,7 +115,7 @@ public class BuildingAggregationTest {
 
     @DisplayName("건물 세대주 추가 시 비어있는 리스트 전달")
     @Test
-    void whenBuildingAddHouseholderThenNullPointerException(){
+    void building_householder_add_with_empty_list(){
         Building building = BuildingCreateHelperBuilder.builder().build();
 
         List<HouseHold> newHouseHolds = List.of();
@@ -124,12 +124,12 @@ public class BuildingAggregationTest {
                 .isInstanceOf(NullPointerException.class);
     }
 
-    @DisplayName("건물 세대주 추가 성공")
+    @DisplayName("건물 세대 추가 성공")
     @Test
-    void whenBuildingAddHouseholderThenSuccess(){
+    void building_householder_add_success(){
         Building building = BuildingCreateHelperBuilder.builder().build();
 
-        List<HouseHold> newHouseHolds = List.of(HouseHold.of("102호", HouseHolderCreateHelperBuilder.builder().build(), building));
+        List<HouseHold> newHouseHolds = List.of(HouseHold.of("102호", building));
 
         building.addHouseHolds(newHouseHolds);
 

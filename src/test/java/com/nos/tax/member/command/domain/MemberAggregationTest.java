@@ -71,7 +71,7 @@ public class MemberAggregationTest {
     @DisplayName("상세 전화번호 생성 시 설정 길이가 너무 짧거나 길 때 실패")
     @ParameterizedTest
     @ValueSource(ints = {-1, 0, 6, 10})
-    void givenTooLongLengthWhenMobileNumCreateThenIllegalArgumentException(int length) {
+    void mobileNum_create_with_too_short_or_long_length(int length) {
         assertThatThrownBy(() -> MobileNum.of("010", length))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("MobileNum Length Invalid");
@@ -79,7 +79,7 @@ public class MemberAggregationTest {
 
     @DisplayName("상세 전화번호 생성 시 설정 길이와 번호가 다를때 실패")
     @Test
-    void givenNotMatchLengthAndTextWhenMobileNumCreateThenIllegalArgumentException() {
+    void mobileNum_create_with_different_length_and_num() {
         assertThatThrownBy(() -> MobileNum.of("010", 4))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Length and Num Text Not Matched");
@@ -87,7 +87,7 @@ public class MemberAggregationTest {
 
     @DisplayName("상세 전화번호 생성 성공")
     @Test
-    void WhenMobileNumCreateThenSuccess() {
+    void mobileNum_create_success() {
         MobileNum mobileNum = MobileNum.of("010", 3);
 
         assertThat(mobileNum).isNotNull();
@@ -98,7 +98,7 @@ public class MemberAggregationTest {
     @DisplayName("전화번호 생성 시 null 또는 빈 문자열 전달 시 실패")
     @ParameterizedTest
     @MethodSource("provideMobileNullAndEmptyArguments")
-    void whenMobileCreateThenIllegalArgumentException(String carrierNum, String secondNum, String threeNum) {
+    void mobile_create_with_null_and_empty_num(String carrierNum, String secondNum, String threeNum) {
         assertThatThrownBy(() -> Mobile.of(carrierNum, secondNum, threeNum))
                 .isInstanceOf(IllegalArgumentException.class);
     }
@@ -106,7 +106,7 @@ public class MemberAggregationTest {
     @DisplayName("전화번호 생성 시 첫번째 번호가 정해진 길이와 다를 경우")
     @ParameterizedTest
     @ValueSource(strings = {"0", "01", "0100"})
-    void givenTooLongFirstNumWhenMobileCreateThenIllegalArgumentException(String carrierNum) {
+    void mobile_create_different_firstNum_and_length(String carrierNum) {
         assertThatThrownBy(() -> Mobile.of(carrierNum, "1111", "2222"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Length and Num Text Not Matched");
@@ -114,7 +114,7 @@ public class MemberAggregationTest {
 
     @DisplayName("전화번호 생성 성공")
     @Test
-    void whenMobileCreateThenSuccess() {
+    void mobile_create_success() {
         Mobile mobile = Mobile.of("010", "1111", "2222");
 
         assertThat(mobile).isNotNull();
@@ -124,7 +124,7 @@ public class MemberAggregationTest {
     @DisplayName("회원 이름 변경 시 null 또는 빈 문자열 전달 시 실패")
     @ParameterizedTest
     @NullAndEmptySource
-    void whenMemberNameChangeThenIllegalArgumentException(String name) {
+    void member_name_update_with_null_and_empty(String name) {
         Member member = MemberCreateHelperBuilder.builder().build();
 
         assertThatThrownBy(() -> member.changeName(name))
@@ -134,7 +134,7 @@ public class MemberAggregationTest {
 
     @DisplayName("회원 이름 변경 성공")
     @Test
-    void whenMemberNameChangeThenSuccess() {
+    void member_name_update_success() {
         Member member = MemberCreateHelperBuilder.builder().build();
 
         member.changeName("김철수");
@@ -145,7 +145,7 @@ public class MemberAggregationTest {
     @DisplayName("회원 전화번호 변경 시 null 또는 빈 문자열 전달 시 실패")
     @ParameterizedTest
     @MethodSource("provideMobileNullAndEmptyArguments")
-    void whenMemberMobileChangeThenIllegalArgumentException(String carrierNum, String secondNum, String threeNum) {
+    void member_mobile_update_with_null_and_empty(String carrierNum, String secondNum, String threeNum) {
         Member member = MemberCreateHelperBuilder.builder().build();
 
         assertThatThrownBy(() -> member.changeMobile(carrierNum, secondNum, threeNum))
@@ -156,7 +156,7 @@ public class MemberAggregationTest {
     @DisplayName("회원 전화번호 변경 시 정해진 길이와 다른 문자열 전달 시 실패")
     @ParameterizedTest
     @MethodSource("provideMobileInvalidLengthArguments")
-    void givenTooLongFirstNumWhenMemberMobileChangeThenIllegalArgumentException(String carrierNum, String secondNum, String threeNum) {
+    void member_mobile_update_different_length_and_num(String carrierNum, String secondNum, String threeNum) {
         Member member = MemberCreateHelperBuilder.builder().build();
 
         assertThatThrownBy(() -> member.changeMobile(carrierNum, secondNum, threeNum))
@@ -166,7 +166,7 @@ public class MemberAggregationTest {
 
     @DisplayName("회원 전화번호 변경 성공")
     @Test
-    void whenMemberMobileChangeThenSuccess() {
+    void member_mobile_update_success() {
         Member member = MemberCreateHelperBuilder.builder().build();
 
         member.changeMobile("010", "3333", "4444");

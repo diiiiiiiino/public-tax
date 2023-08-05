@@ -40,9 +40,9 @@ public class BuildingRepositoryTest {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @DisplayName("Building 엔티티 저장")
+    @DisplayName("Building 저장")
     @Test
-    void buildingSave() {
+    void building_save() {
         Building building = createBuilding();
 
         assertThat(building.getName()).isEqualTo("빌라");
@@ -64,9 +64,9 @@ public class BuildingRepositoryTest {
         assertThat(houseHolder.getMobile().toString()).isEqualTo("010-1111-1111");
     }
 
-    @DisplayName("Building 엔티티 건물명 수정")
+    @DisplayName("Building 건물명 수정")
     @Test
-    void buildingUpdate() {
+    void name_update() {
         Building building = createBuilding();
 
         building.changeName("자이");
@@ -80,7 +80,7 @@ public class BuildingRepositoryTest {
 
     @DisplayName("Building 주소 수정")
     @Test
-    void AddressUpdate(){
+    void address_update(){
         Building building = createBuilding();
 
         building.changeAddress("변경주소1", "변경주소2", "99999");
@@ -95,15 +95,12 @@ public class BuildingRepositoryTest {
         assertThat(findAddress.getZipNo()).isEqualTo("99999");
     }
 
-    @DisplayName("Building 세대주 추가")
+    @DisplayName("Building 세대 추가")
     @Test
-    void whenBuildingAddHouseholder(){
+    void household_add(){
         Building building = createBuilding();
 
-        Member member = MemberCreateHelperBuilder.builder().loginId("kim0211").name("회원").mobile(Mobile.of("010", "7777", "8888")).build();
-        memberRepository.save(member);
-
-        List<HouseHold> newHouseHolds = new ArrayList<>(List.of(HouseHold.of("102호", HouseHolderCreateHelperBuilder.builder().member(member).build(), building)));
+        List<HouseHold> newHouseHolds = new ArrayList<>(List.of(HouseHold.of("102호", building)));
 
         building.addHouseHolds(newHouseHolds);
 
@@ -116,23 +113,25 @@ public class BuildingRepositoryTest {
 
     private Building createBuilding() {
         List<Function<Building, HouseHold>> houseHolds = new ArrayList<>();
+        List<Member> members = new ArrayList<>();
         for(int i = 1; i <= 6; i++){
             Member member = Member.of("loginId" + i, Password.of("qwer1234!@"), "세대주" + i, Mobile.of("010", String.valueOf(i).repeat(4), String.valueOf(i).repeat(4)));
+            members.add(member);
 
             String room = i + "01호";
-            houseHolds.add((building -> HouseHold.of(room, HouseHolderCreateHelperBuilder.builder().member(member).name(member.getName()).mobile(member.getMobile()).build(), building)));
+            houseHolds.add((building -> HouseHold.of(room, building)));
         }
 
         Building building = BuildingCreateHelperBuilder.builder().houseHolds(houseHolds).build();
-
-        List<Member> members = building.getHouseHolds().stream()
-                .map(HouseHold::getHouseHolder)
-                .map(HouseHolder::getMember)
-                .collect(Collectors.toList());
-
+        building = buildingRepository.save(building);
         memberRepository.saveAll(members);
 
-        building = buildingRepository.save(building);
+        List<HouseHold> houseHolds1 = building.getHouseHolds();
+        for(int i = 0; i < houseHolds1.size(); i++){
+            Member member = members.get(i);
+            HouseHold houseHold = houseHolds1.get(i);
+            houseHold.updateHouseHolder(HouseHolder.of(member, member.getName(), member.getMobile()));
+        }
 
         flushAndClear(entityManager);
 

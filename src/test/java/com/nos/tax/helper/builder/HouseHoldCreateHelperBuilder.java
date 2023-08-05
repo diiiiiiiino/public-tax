@@ -29,6 +29,6 @@ public class HouseHoldCreateHelperBuilder {
     }
 
     public HouseHold build(){
-        return HouseHold.of(room, houseHolder, building);
+        return HouseHold.of(room, building);
     }
 }
