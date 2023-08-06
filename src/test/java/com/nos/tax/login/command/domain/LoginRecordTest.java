@@ -1,7 +1,6 @@
 package com.nos.tax.login.command.domain;
 
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
-import com.nos.tax.login.command.domain.LoginRecord;
 import com.nos.tax.member.command.domain.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

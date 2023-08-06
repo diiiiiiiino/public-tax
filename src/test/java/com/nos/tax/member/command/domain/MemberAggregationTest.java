@@ -1,10 +1,6 @@
 package com.nos.tax.member.command.domain;
 
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
-import com.nos.tax.member.command.domain.Member;
-import com.nos.tax.member.command.domain.Mobile;
-import com.nos.tax.member.command.domain.MobileNum;
-import com.nos.tax.member.command.domain.Password;
 import com.nos.tax.member.command.domain.exception.PasswordChangeException;
 import com.nos.tax.member.command.domain.exception.PasswordConditionException;
 import org.junit.jupiter.api.DisplayName;

@@ -35,8 +35,19 @@ public class Building {
         setBuildingFunctions(buildingFunctions);
     }
 
+    private Building(Long id, String name, Address address, List<Function<Building, HouseHold>> buildingFunctions) {
+        setId(id);
+        setName(name);
+        setAddress(address);
+        setBuildingFunctions(buildingFunctions);
+    }
+
     public static Building of(String name, Address address, List<Function<Building, HouseHold>> buildingFunctions) {
         return new Building(name, address, buildingFunctions);
+    }
+
+    public static Building of(Long id, String name, Address address, List<Function<Building, HouseHold>> buildingFunctions) {
+        return new Building(id, name, address, buildingFunctions);
     }
 
     public void changeName(String name) {
@@ -50,6 +61,10 @@ public class Building {
     public void addHouseHolds(List<HouseHold> newHouseHolds) {
         verifyAtLeastOneOrMoreHouseHold(newHouseHolds);
         this.houseHolds.addAll(newHouseHolds);
+    }
+
+    private void setId(Long id){
+        this.id = id;
     }
 
     private void setName(String name) {

@@ -1,11 +1,7 @@
 package com.nos.tax.building.command.domain;
 
-import com.nos.tax.building.command.domain.Address;
-import com.nos.tax.building.command.domain.Building;
 import com.nos.tax.building.command.domain.repository.BuildingRepository;
 import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
-import com.nos.tax.helper.builder.HouseHolderCreateHelperBuilder;
-import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.household.command.domain.HouseHolder;
 import com.nos.tax.member.command.domain.Member;
@@ -23,7 +19,6 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static com.nos.tax.helper.util.JpaUtils.flushAndClear;
 import static org.assertj.core.api.Assertions.assertThat;

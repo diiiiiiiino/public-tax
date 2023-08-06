@@ -2,24 +2,23 @@ package com.nos.tax.helper.builder;
 
 import com.nos.tax.building.command.domain.Building;
 import com.nos.tax.household.command.domain.HouseHold;
-import com.nos.tax.household.command.domain.HouseHolder;
 
 public class HouseHoldCreateHelperBuilder {
+    private Long id = 1L;
     private String room = "101호";
-    private HouseHolder houseHolder = HouseHolderCreateHelperBuilder.builder().build();
     private Building building = BuildingCreateHelperBuilder.builder().build();
 
     public static HouseHoldCreateHelperBuilder builder(){
         return new HouseHoldCreateHelperBuilder();
     }
 
-    public HouseHoldCreateHelperBuilder room(String room){
-        this.room = room;
+    public HouseHoldCreateHelperBuilder id(Long id){
+        this.id = id;
         return this;
     }
 
-    public HouseHoldCreateHelperBuilder houseHolder(HouseHolder houseHolder){
-        this.houseHolder = houseHolder;
+    public HouseHoldCreateHelperBuilder room(String room){
+        this.room = room;
         return this;
     }
 
@@ -29,6 +28,6 @@ public class HouseHoldCreateHelperBuilder {
     }
 
     public HouseHold build(){
-        return HouseHold.of(room, building);
+        return HouseHold.of(id, room, building);
     }
 }

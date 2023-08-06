@@ -1,8 +1,5 @@
 package com.nos.tax.member.command.domain;
 
-import com.nos.tax.member.command.domain.Member;
-import com.nos.tax.member.command.domain.Mobile;
-import com.nos.tax.member.command.domain.Password;
 import com.nos.tax.member.command.domain.repository.MemberRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;

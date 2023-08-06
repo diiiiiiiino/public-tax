@@ -3,8 +3,6 @@ package com.nos.tax.watermeter.command.domain;
 import com.nos.tax.building.command.domain.Building;
 import com.nos.tax.building.command.domain.repository.BuildingRepository;
 import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
-import com.nos.tax.household.command.domain.HouseHold;
-import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.member.command.domain.repository.MemberRepository;
 import com.nos.tax.watermeter.command.domain.repository.WaterMeter;
 import com.nos.tax.watermeter.command.domain.repository.WaterMeterRepository;

@@ -2,11 +2,7 @@ package com.nos.tax.waterbill.command.domain;
 
 import com.nos.tax.building.command.domain.Building;
 import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
-import com.nos.tax.helper.builder.HouseHolderCreateHelperBuilder;
 import com.nos.tax.household.command.domain.HouseHold;
-import com.nos.tax.member.command.domain.Member;
-import com.nos.tax.member.command.domain.Mobile;
-import com.nos.tax.member.command.domain.Password;
 import com.nos.tax.waterbill.command.domain.enumeration.WaterBillState;
 import com.nos.tax.waterbill.command.domain.exception.WaterBillStateException;
 import org.junit.jupiter.api.DisplayName;

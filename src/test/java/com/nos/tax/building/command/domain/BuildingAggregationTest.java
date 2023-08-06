@@ -1,9 +1,6 @@
 package com.nos.tax.building.command.domain;
 
-import com.nos.tax.building.command.domain.Address;
-import com.nos.tax.building.command.domain.Building;
 import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
-import com.nos.tax.helper.builder.HouseHolderCreateHelperBuilder;
 import com.nos.tax.household.command.domain.HouseHold;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

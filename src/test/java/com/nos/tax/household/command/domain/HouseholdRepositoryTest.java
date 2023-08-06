@@ -42,11 +42,16 @@ public class HouseholdRepositoryTest {
     @DisplayName("세대 저장")
     @Test
     void household_create() {
-        Building building = createBuilding();
+        HouseHold houseHold = createHouseHold();
 
-        HouseHold houseHold = HouseHold.of("103호", building);
+        assertThat(houseHold).isNotNull();
+        assertThat(houseHold.getRoom()).isEqualTo("103호");
+    }
 
-        houseHold = houseHoldRepository.save(houseHold);
+    @DisplayName("세대에 세대주 수정")
+    @Test
+    void household_householder_update() {
+        HouseHold houseHold = createHouseHold();
 
         flushAndClear(entityManager);
 
@@ -61,10 +66,16 @@ public class HouseholdRepositoryTest {
 
         flushAndClear(entityManager);
 
-        assertThat(houseHold).isNotNull();
-        assertThat(houseHold.getRoom()).isEqualTo("103호");
         assertThat(houseHold.getHouseHolder().getName()).isEqualTo("스컬");
         assertThat(houseHold.getHouseHolder().getMobile().toString()).isEqualTo("010-1212-1313");
+    }
+
+    private HouseHold createHouseHold(){
+        Building building = createBuilding();
+
+        HouseHold houseHold = HouseHold.of("103호", building);
+
+        return houseHoldRepository.save(houseHold);
     }
 
     private Building createBuilding() {
