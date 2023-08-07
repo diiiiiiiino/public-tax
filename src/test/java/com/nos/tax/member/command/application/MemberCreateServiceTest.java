@@ -1,18 +1,117 @@
 package com.nos.tax.member.command.application;
 
+import com.nos.tax.application.exception.NotFoundException;
+import com.nos.tax.helper.builder.HouseHoldCreateHelperBuilder;
+import com.nos.tax.household.command.domain.HouseHold;
+import com.nos.tax.household.command.domain.HouseHolder;
+import com.nos.tax.household.command.domain.repository.HouseHoldRepository;
+import com.nos.tax.application.component.DateUtils;
+import com.nos.tax.invite.command.domain.MemberInvite;
+import com.nos.tax.invite.command.domain.repository.MemberInviteCodeRepository;
+import com.nos.tax.member.command.application.exception.ExpiredInviteCodeException;
+import com.nos.tax.member.command.application.dto.MemberCreateRequest;
+import com.nos.tax.member.command.application.service.MemberCreateService;
+import com.nos.tax.member.command.domain.Mobile;
+import com.nos.tax.member.command.domain.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 public class MemberCreateServiceTest {
 
-    /**
-     * 1. 초대 코드가 존재하지 않는 경우 또는 초대 코드가 만료된 경우
-     * 2. 초대 코드에 매핑된 세대 ID가 유효하지 않을 경우
-     */
+    private DateUtils dateUtils;
+    private MemberInviteCodeRepository memberInviteCodeRepository;
+    private HouseHoldRepository houseHoldRepository;
+    private MemberRepository memberRepository;
+    private MemberCreateService memberCreateService;
 
-    @DisplayName("")
+    public MemberCreateServiceTest() {
+        dateUtils = mock(DateUtils.class);
+        memberInviteCodeRepository = mock(MemberInviteCodeRepository.class);
+        houseHoldRepository = mock(HouseHoldRepository.class);
+        memberRepository = mock(MemberRepository.class);
+        memberCreateService = new MemberCreateService(dateUtils, memberInviteCodeRepository, houseHoldRepository, memberRepository);
+    }
+
+    @DisplayName("초대 코드가 존재하지 않는 경우")
     @Test
-    void name() {
+    void notFountInviteCode() {
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("loginId", "qwer1234!@", "홍길동", "01012345678", 1L, "123456");
 
+        when(memberInviteCodeRepository.findByCode(anyString())).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> memberCreateService.create(memberCreateRequest))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("not found inviteCode");
+    }
+
+    @DisplayName("초대 코드가 만료된 경우")
+    @Test
+    void expiredInviteCode () {
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("loginId", "qwer1234!@", "홍길동", "01012345678", 1L,"123456");
+        MemberInvite memberInvite = MemberInvite.of(HouseHoldCreateHelperBuilder.builder().build(),
+                Mobile.of("01012345678"),
+                "123456",
+                LocalDateTime.of(2023, 8, 7, 20, 15, 0));
+
+        when(dateUtils.today()).thenReturn(LocalDateTime.of(2023, 8, 7, 20, 15, 1));
+        when(memberInviteCodeRepository.findByCode(anyString())).thenReturn(Optional.of(memberInvite));
+
+        assertThatThrownBy(() -> memberCreateService.create(memberCreateRequest))
+                .isInstanceOf(ExpiredInviteCodeException.class)
+                .hasMessage("expired inviteCode");
+    }
+
+    @DisplayName("초대코드에 매핑된 세대가 존재하지 않을 경우")
+    @Test
+    void notFoundHousehold() {
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("loginId", "qwer1234!@", "홍길동", "01012345678", 1L,"123456");
+        MemberInvite memberInvite = MemberInvite.of(HouseHoldCreateHelperBuilder.builder().build(),
+                Mobile.of("01012345678"),
+                "123456",
+                LocalDateTime.of(2023, 8, 7, 20, 15, 0));
+
+        when(dateUtils.today()).thenReturn(LocalDateTime.of(2023, 8, 7, 20, 15, 0));
+        when(memberInviteCodeRepository.findByCode(anyString())).thenReturn(Optional.of(memberInvite));
+        when(houseHoldRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> memberCreateService.create(memberCreateRequest))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage("not found household");
+    }
+
+    @DisplayName("회원 생성 및 세대에 세대주 업데이트")
+    @Test
+    void createMemberSuccess() {
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("loginId", "qwer1234!@", "홍길동", "01012345678", 1L,"123456");
+        MemberInvite memberInvite = MemberInvite.of(HouseHoldCreateHelperBuilder.builder().build(),
+                Mobile.of("01012345678"),
+                "123456",
+                LocalDateTime.of(2023, 8, 7, 20, 15, 0));
+
+        HouseHold houseHold = HouseHoldCreateHelperBuilder.builder().build();
+
+        when(dateUtils.today()).thenReturn(LocalDateTime.of(2023, 8, 7, 20, 15, 0));
+        when(memberInviteCodeRepository.findByCode(anyString())).thenReturn(Optional.of(memberInvite));
+        when(houseHoldRepository.findById(anyLong())).thenReturn(Optional.of(houseHold));
+
+        memberCreateService.create(memberCreateRequest);
+
+        HouseHolder houseHolder = houseHold.getHouseHolder();
+        assertThat(houseHolder).isNotNull();
+        assertThat(houseHolder.getMember().getLoginId()).isEqualTo("loginId");
+        assertThat(houseHolder.getMember().getPassword().getValue()).isEqualTo("qwer1234!@");
+        assertThat(houseHolder.getMember().getName()).isEqualTo("홍길동");
+        assertThat(houseHolder.getName()).isEqualTo("홍길동");
+        assertThat(houseHolder.getMobile().toString()).isEqualTo("01012345678");
     }
 }

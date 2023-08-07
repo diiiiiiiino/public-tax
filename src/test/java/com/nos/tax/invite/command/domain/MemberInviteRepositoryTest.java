@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.time.LocalDateTime;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -39,7 +41,7 @@ public class MemberInviteRepositoryTest {
 
         HouseHold houseHold = building.getHouseHolds().get(0);
 
-        MemberInvite memberInvite = MemberInvite.of(houseHold, Mobile.of("01012345678"), "123456");
+        MemberInvite memberInvite = MemberInvite.of(houseHold, Mobile.of("01012345678"), "123456", LocalDateTime.of(2023, 8, 7, 19, 50));
 
         memberInvite = memberInviteCodeRepository.save(memberInvite);
 
@@ -49,6 +51,26 @@ public class MemberInviteRepositoryTest {
 
         assertThat(findMemberInvite.getCode()).isEqualTo("123456");
         assertThat(findMemberInvite.getMobile().toString()).isEqualTo("01012345678");
-        assertThat(findMemberInvite.isExpired()).isFalse();
+    }
+
+    @DisplayName("회원 초대 코드 조회")
+    @Test
+    void findByCode() {
+        Building building = BuildingCreateHelperBuilder.builder().build();
+
+        buildingRepository.save(building);
+
+        HouseHold houseHold = building.getHouseHolds().get(0);
+
+        MemberInvite memberInvite = MemberInvite.of(houseHold, Mobile.of("01012345678"), "123456", LocalDateTime.of(2023, 8, 7, 19, 50));
+
+        memberInviteCodeRepository.save(memberInvite);
+
+        JpaUtils.flushAndClear(entityManager);
+
+        MemberInvite findMemberInvite = memberInviteCodeRepository.findByCode("123456").get();
+
+        assertThat(findMemberInvite.getCode()).isEqualTo("123456");
+        assertThat(findMemberInvite.getMobile().toString()).isEqualTo("01012345678");
     }
 }

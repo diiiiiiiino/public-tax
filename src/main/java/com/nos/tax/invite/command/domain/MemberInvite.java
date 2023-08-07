@@ -9,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
@@ -22,24 +23,29 @@ public class MemberInvite {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private HouseHold houseHold;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     @Convert(converter = MobileConverter.class)
     private Mobile mobile;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String code;
 
     @Column(nullable = false)
-    private boolean isExpired;
+    private LocalDateTime expireDateTime;
 
-    private MemberInvite(HouseHold houseHold, Mobile mobile, String code) {
+    private MemberInvite(HouseHold houseHold, Mobile mobile, String code, LocalDateTime expireDateTime) {
         setHouseHold(houseHold);
         setMobile(mobile);
         setCode(code);
+        setExpireDate(expireDateTime);
     }
 
-    public static MemberInvite of(HouseHold houseHold, Mobile mobile, String code){
-        return new MemberInvite(houseHold, mobile, code);
+    public static MemberInvite of(HouseHold houseHold, Mobile mobile, String code, LocalDateTime expireDateTime){
+        return new MemberInvite(houseHold, mobile, code, expireDateTime);
+    }
+
+    public boolean isExpired(LocalDateTime dateTime){
+        return dateTime.isAfter(expireDateTime);
     }
 
     private void setHouseHold(HouseHold houseHold) {
@@ -52,5 +58,9 @@ public class MemberInvite {
 
     private void setCode(String code) {
         this.code = VerifyUtil.verifyText(code);
+    }
+
+    private void setExpireDate(LocalDateTime expireDateTime) {
+        this.expireDateTime = Objects.requireNonNull(expireDateTime);
     }
 }

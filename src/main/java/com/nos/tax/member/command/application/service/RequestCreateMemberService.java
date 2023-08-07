@@ -13,6 +13,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -25,7 +26,8 @@ public class RequestCreateMemberService {
     private final HouseHoldRepository houseHoldRepository;
     private final MemberInviteCodeRepository memberInviteCodeRepository;
     private final AlertCreateMemberService alertCreateMemberService;
-
+    
+    //todo : 트랜잭션 경계 설정
     public void request(List<CreateMemberRequest> requests) {
         VerifyUtil.verifyList(requests);
 
@@ -58,11 +60,11 @@ public class RequestCreateMemberService {
             CreateMemberRequest request = requests.get(i);
             String mobile = request.getMobile();
 
-            inviteCodes.add(MemberInvite.of(houseHold, Mobile.of(mobile), RandomStringUtils.randomNumeric(6)));
+            inviteCodes.add(MemberInvite.of(houseHold, Mobile.of(mobile), RandomStringUtils.randomNumeric(6), LocalDateTime.now().plusMinutes(3L)));
         }
 
         memberInviteCodeRepository.saveAll(inviteCodes);
-
+        
         for(MemberInvite inviteCode : inviteCodes){
             alertCreateMemberService.alert(inviteCode.getMobile().toString(), inviteCode.getCode());
         }
