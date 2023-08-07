@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 public class HouseHolderCreateHelperBuilder {
     private Member member = MemberCreateHelperBuilder.builder().build();
-    private Mobile mobile = Mobile.of("010", "2222", "3333");
+    private Mobile mobile = Mobile.of("01022223333");
     private String name = "세대주";
 
     public static HouseHolderCreateHelperBuilder builder(){

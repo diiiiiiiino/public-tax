@@ -1,5 +1,6 @@
 package com.nos.tax.member.command.domain;
 
+import com.nos.tax.util.VerifyUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,36 +10,33 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Mobile {
+    private final int LENGTH = 11;
 
-    private MobileNum carrierNum;
-    private MobileNum secondNum;
-    private MobileNum threeNum;
+    private String value;
 
-    private Mobile(String carrierNum, String secondNum, String threeNum) {
-        setCarrierNum(carrierNum);
-        setSecondNum(secondNum);
-        setThreeNum(threeNum);
+    private Mobile(String value) {
+        setValue(value);
     }
 
-    public static Mobile of(String carrierNum, String secondNum, String threeNum) {
-        return new Mobile(carrierNum, secondNum, threeNum);
+    public static Mobile of(String value) {
+        return new Mobile(value);
+    }
+
+    private void setValue(String value){
+        VerifyUtil.verifyText(value);
+        verifyLength(value);
+        this.value = value;
+    }
+
+    private void verifyLength(String value){
+        if(value.length() != LENGTH){
+            throw new IllegalArgumentException("mobile length is different set length");
+        }
     }
 
     @Override
     public String toString() {
-        return carrierNum.getNum() + "-" + secondNum.getNum() + "-" + threeNum.getNum();
-    }
-
-    private void setCarrierNum(String carrierNum) {
-        this.carrierNum = MobileNum.of(carrierNum, 3);
-    }
-
-    private void setSecondNum(String secondNum) {
-        this.secondNum = MobileNum.of(secondNum,4);
-    }
-
-    private void setThreeNum(String threeNum) {
-        this.threeNum = MobileNum.of(threeNum, 4);
+        return value;
     }
 
     @Override
@@ -46,11 +44,11 @@ public class Mobile {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Mobile mobile = (Mobile) o;
-        return carrierNum.equals(mobile.carrierNum) && secondNum.equals(mobile.secondNum) && threeNum.equals(mobile.threeNum);
+        return value.equals(mobile.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(carrierNum, secondNum, threeNum);
+        return Objects.hash(value);
     }
 }

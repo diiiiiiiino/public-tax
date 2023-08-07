@@ -50,8 +50,8 @@ public class Member {
         setName(name);
     }
 
-    public void changeMobile(String carrierNum, String secondNum, String threeNum) {
-        setMobile(Mobile.of(carrierNum, secondNum, threeNum));
+    public void changeMobile(Mobile mobile) {
+        setMobile(mobile);
     }
 
     public void changePassword(String originPassword, String updatePassword) {

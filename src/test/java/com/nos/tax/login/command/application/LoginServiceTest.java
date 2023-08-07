@@ -55,7 +55,7 @@ public class LoginServiceTest {
         loginRequest.setPassword(pw);
 
         Password password = Password.of("qwer1234!@#$");
-        Member member = Member.of("loginId", password, "회원", Mobile.of("010", "1111", "1111"));
+        Member member = Member.of("loginId", password, "회원", Mobile.of("01011111111"));
 
         when(memberRepository.findByLoginId(anyString())).thenReturn(Optional.of(member));
 
@@ -72,7 +72,7 @@ public class LoginServiceTest {
         loginRequest.setPassword("qwer1234!@#$");
 
         Password password = Password.of("qwer1234!@#$");
-        Member member = Member.of("loginId", password, "회원", Mobile.of("010", "1111", "1111"));
+        Member member = Member.of("loginId", password, "회원", Mobile.of("01011111111"));
         when(memberRepository.findByLoginId(anyString())).thenReturn(Optional.of(member));
 
         loginService.login(loginRequest);

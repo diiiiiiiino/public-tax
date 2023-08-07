@@ -6,7 +6,7 @@ import com.nos.tax.member.command.domain.Password;
 
 public class MemberCreateHelperBuilder {
     private Password password = Password.of("qwer1234!@#$");
-    private Mobile mobile = Mobile.of("010", "1111", "2222");
+    private Mobile mobile = Mobile.of("01011112222");
     private String loginId = "loginId";
     private String name = "홍길동";
 

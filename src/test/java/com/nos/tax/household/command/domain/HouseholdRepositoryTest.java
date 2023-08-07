@@ -57,7 +57,7 @@ public class HouseholdRepositoryTest {
 
         houseHold = houseHoldRepository.findById(houseHold.getId()).get();
 
-        Member member = Member.of("skull0202", Password.of("qwer1234!"), "스컬", Mobile.of("010", "1212", "1313"));
+        Member member = Member.of("skull0202", Password.of("qwer1234!"), "스컬", Mobile.of("01012121313"));
         memberRepository.save(member);
 
         HouseHolder houseHolder = HouseHolder.of(member, member.getName(), member.getMobile());
@@ -67,7 +67,7 @@ public class HouseholdRepositoryTest {
         flushAndClear(entityManager);
 
         assertThat(houseHold.getHouseHolder().getName()).isEqualTo("스컬");
-        assertThat(houseHold.getHouseHolder().getMobile().toString()).isEqualTo("010-1212-1313");
+        assertThat(houseHold.getHouseHolder().getMobile().toString()).isEqualTo("01012121313");
     }
 
     private HouseHold createHouseHold(){

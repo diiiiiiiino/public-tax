@@ -4,13 +4,10 @@ import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
 import com.nos.tax.helper.builder.HouseHolderCreateHelperBuilder;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
 import com.nos.tax.member.command.domain.Member;
-import com.nos.tax.member.command.domain.Mobile;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 
 import java.util.stream.Stream;
@@ -19,22 +16,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class HouseholdAggregationTest {
-
-    @DisplayName("전화번호 생성 시 값 누락")
-    @ParameterizedTest
-    @MethodSource("provideArgsForMobile")
-    void mobile_create_with_null_and_empty_no(String firstNo, String secondNo, String threeNo) {
-        Assertions.assertThatThrownBy(() -> Mobile.of(firstNo, secondNo, threeNo))
-                .isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @DisplayName("전화번호 생성 성공")
-    @Test
-    void mobile_create_success(){
-        Mobile mobile = Mobile.of("010", "1111", "2222");
-
-        assertThat(mobile.toString()).isEqualTo("010-1111-2222");
-    }
 
     @DisplayName("세대주 생성 시 이름 누락")
     @ParameterizedTest

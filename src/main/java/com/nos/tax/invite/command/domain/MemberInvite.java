@@ -14,7 +14,7 @@ import java.util.Objects;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MemberInviteCode {
+public class MemberInvite {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,14 +32,14 @@ public class MemberInviteCode {
     @Column(nullable = false)
     private boolean isExpired;
 
-    private MemberInviteCode(HouseHold houseHold, Mobile mobile, String code) {
+    private MemberInvite(HouseHold houseHold, Mobile mobile, String code) {
         setHouseHold(houseHold);
         setMobile(mobile);
         setCode(code);
     }
 
-    public static MemberInviteCode of(HouseHold houseHold, Mobile mobile, String code){
-        return new MemberInviteCode(houseHold, mobile, code);
+    public static MemberInvite of(HouseHold houseHold, Mobile mobile, String code){
+        return new MemberInvite(houseHold, mobile, code);
     }
 
     private void setHouseHold(HouseHold houseHold) {

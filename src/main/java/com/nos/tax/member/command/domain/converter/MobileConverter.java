@@ -13,8 +13,7 @@ public class MobileConverter implements AttributeConverter<Mobile, String> {
     @Override
     public Mobile convertToEntityAttribute(String dbData) {
         if(StringUtils.hasText(dbData)){
-            String[] nums = dbData.split("-");
-            return Mobile.of(nums[0], nums[1], nums[2]);
+            return Mobile.of(dbData);
         } else {
             return null;
         }

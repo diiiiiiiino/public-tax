@@ -56,7 +56,7 @@ public class BuildingRepositoryTest {
 
         HouseHolder houseHolder = findHouseHold.getHouseHolder();
         assertThat(houseHolder.getName()).isEqualTo("세대주1");
-        assertThat(houseHolder.getMobile().toString()).isEqualTo("010-1111-1111");
+        assertThat(houseHolder.getMobile().toString()).isEqualTo("01011111111");
     }
 
     @DisplayName("Building 건물명 수정")
@@ -110,7 +110,7 @@ public class BuildingRepositoryTest {
         List<Function<Building, HouseHold>> houseHolds = new ArrayList<>();
         List<Member> members = new ArrayList<>();
         for(int i = 1; i <= 6; i++){
-            Member member = Member.of("loginId" + i, Password.of("qwer1234!@"), "세대주" + i, Mobile.of("010", String.valueOf(i).repeat(4), String.valueOf(i).repeat(4)));
+            Member member = Member.of("loginId" + i, Password.of("qwer1234!@"), "세대주" + i, Mobile.of("010" + String.valueOf(i).repeat(4) + String.valueOf(i).repeat(4)));
             members.add(member);
 
             String room = i + "01호";

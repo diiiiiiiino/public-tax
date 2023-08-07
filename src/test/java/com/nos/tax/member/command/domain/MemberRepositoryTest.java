@@ -26,7 +26,7 @@ public class MemberRepositoryTest {
     @Test
     void member_create_success() {
         Password password = Password.of("qwer1234!@#$");
-        Member member = Member.of("member123", password, "회원", Mobile.of("010", "1111", "1111"));
+        Member member = Member.of("member123", password, "회원", Mobile.of("01011111111"));
         member = memberRepository.save(member);
 
         flushAndClear(entityManager);
@@ -42,7 +42,7 @@ public class MemberRepositoryTest {
     @Test
     void member_name_update() {
         Password password = Password.of("qwer1234!@#$");
-        Member member = Member.of("member123", password, "회원", Mobile.of("010", "1111", "1111"));
+        Member member = Member.of("member123", password, "회원", Mobile.of("01011111111"));
         member = memberRepository.save(member);
 
         flushAndClear(entityManager);
@@ -62,19 +62,19 @@ public class MemberRepositoryTest {
     @Test
     void member_mobile_update() {
         Password password = Password.of("qwer1234!@#$");
-        Member member = Member.of("member123", password, "회원", Mobile.of("010", "1111", "1111"));
+        Member member = Member.of("member123", password, "회원", Mobile.of("01011111111"));
         member = memberRepository.save(member);
 
         flushAndClear(entityManager);
 
         Member findMember = memberRepository.findById(member.getId()).get();
 
-        findMember.changeMobile("010", "2222", "3333");
+        findMember.changeMobile(Mobile.of("01022223333"));
 
         flushAndClear(entityManager);
 
         findMember = memberRepository.findById(member.getId()).get();
 
-        assertThat(findMember.getMobile().toString()).isEqualTo("010-2222-3333");
+        assertThat(findMember.getMobile().toString()).isEqualTo("01022223333");
     }
 }
