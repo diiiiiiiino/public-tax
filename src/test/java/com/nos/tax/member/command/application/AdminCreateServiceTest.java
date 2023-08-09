@@ -1,92 +1,133 @@
 package com.nos.tax.member.command.application;
 
-import com.nos.tax.building.command.domain.Address;
 import com.nos.tax.building.command.domain.Building;
 import com.nos.tax.building.command.domain.repository.BuildingRepository;
-import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
-import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.member.command.application.dto.AdminCreateRequest;
 import com.nos.tax.member.command.application.dto.BuildingInfo;
 import com.nos.tax.member.command.application.dto.HouseHoldInfo;
+import com.nos.tax.member.command.application.dto.MemberCreateRequest;
 import com.nos.tax.member.command.application.service.AdminCreateService;
-import org.assertj.core.api.Assertions;
+import com.nos.tax.member.command.domain.Member;
+import com.nos.tax.member.command.domain.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.ArgumentCaptor;
+import org.mockito.BDDMockito;
 
 import java.util.List;
-import java.util.function.Function;
+import java.util.stream.Stream;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class AdminCreateServiceTest {
 
     private BuildingRepository buildingRepository;
+    private MemberRepository memberRepository;
     private AdminCreateService adminCreateService;
 
     public AdminCreateServiceTest() {
         buildingRepository = mock(BuildingRepository.class);
-        adminCreateService = new AdminCreateService(buildingRepository);
+        memberRepository = mock(MemberRepository.class);
+        adminCreateService = new AdminCreateService(buildingRepository, memberRepository);
     }
 
-    /**
-     * 건물 정보가 없는 경우
-     * 세대 목록이 없는 경우
-     */
+    @DisplayName("관리자 정보가 없는 경우")
+    @Test
+    void createAdminWithMissMemberCreateRequest() {
+        BuildingInfo buildingInfo = BuildingInfo.of("광동빌라", "서울특별시 강남구 대치동", "광동빌라 A동", "123456");;
+        List<HouseHoldInfo> houseHoldInfos = List.of(HouseHoldInfo.of("101호", false), HouseHoldInfo.of("102호", true), HouseHoldInfo.of("103호", false), HouseHoldInfo.of("104호", false));
+
+        AdminCreateRequest adminCreateRequest = AdminCreateRequest.of(null, buildingInfo, houseHoldInfos);
+
+        assertThatThrownBy(() -> adminCreateService.create(adminCreateRequest))
+                .isInstanceOf(NullPointerException.class);
+    }
+
     @DisplayName("건물 정보가 없는 경우")
     @Test
-    void create_admin_with_miss_building_info() {
-        BuildingInfo buildingInfo = null;
-        List<HouseHoldInfo> houseHoldInfos = List.of(HouseHoldInfo.of("101호"), HouseHoldInfo.of("102호"), HouseHoldInfo.of("103호"), HouseHoldInfo.of("104호"));
+    void createAdminWithMissBuildingInfo() {
+        MemberCreateRequest memberCreateRequest = MemberCreateRequest.of("loginId", "qwer1234!@", "홍길동", "01012345678", 1L,"123456");
+        List<HouseHoldInfo> houseHoldInfos = List.of(HouseHoldInfo.of("101호", false), HouseHoldInfo.of("102호", true), HouseHoldInfo.of("103호", false), HouseHoldInfo.of("104호", false));
 
-        AdminCreateRequest adminCreateRequest = AdminCreateRequest.of(buildingInfo, houseHoldInfos);
+        AdminCreateRequest adminCreateRequest = AdminCreateRequest.of(memberCreateRequest, null, houseHoldInfos);
 
-        Assertions.assertThatThrownBy(() -> adminCreateService.create(adminCreateRequest))
+        assertThatThrownBy(() -> adminCreateService.create(adminCreateRequest))
                 .isInstanceOf(NullPointerException.class);
     }
 
     @DisplayName("세대 목록이 null 또는 비어있는 경우")
     @ParameterizedTest
     @NullAndEmptySource
-    void create_admin_with_null_and_empty_households(List<HouseHoldInfo> houseHoldInfos) {
+    void createAdminWithNullAndEmptyHouseholds(List<HouseHoldInfo> houseHoldInfos) {
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("loginId", "qwer1234!@", "홍길동", "01012345678", 1L,"123456");
         BuildingInfo buildingInfo = BuildingInfo.of("광동빌라", "서울특별시 강남구 대치동", "광동빌라 A동", "123456");
 
-        AdminCreateRequest adminCreateRequest = AdminCreateRequest.of(buildingInfo, houseHoldInfos);
+        AdminCreateRequest adminCreateRequest = AdminCreateRequest.of(memberCreateRequest, buildingInfo, houseHoldInfos);
 
-        Assertions.assertThatThrownBy(() -> adminCreateService.create(adminCreateRequest))
+        assertThatThrownBy(() -> adminCreateService.create(adminCreateRequest))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("list no element");
     }
 
+    @DisplayName("관리자의 세대 선택이 없거나 1개 이상 있을 때")
+    @ParameterizedTest
+    @MethodSource("HouseHoldInfosMethodSource")
+    void createAdminWithSelectHouseHoldNoneAndOneMore(List<HouseHoldInfo> houseHoldInfos) {
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("loginId", "qwer1234!@", "홍길동", "01012345678", 1L,"123456");
+        BuildingInfo buildingInfo = BuildingInfo.of("광동빌라", "서울특별시 강남구 대치동", "광동빌라 A동", "123456");
+
+        AdminCreateRequest adminCreateRequest = AdminCreateRequest.of(memberCreateRequest, buildingInfo, houseHoldInfos);
+
+        assertThatThrownBy(() -> adminCreateService.create(adminCreateRequest))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("select just one HouseHold");
+    }
+
+    private static Stream<Arguments> HouseHoldInfosMethodSource(){
+        return Stream.of(
+                Arguments.of(List.of(HouseHoldInfo.of("101호", false), HouseHoldInfo.of("102호", false))),
+                Arguments.of(List.of(HouseHoldInfo.of("101호", true), HouseHoldInfo.of("102호", true)))
+        );
+    }
+
     @DisplayName("관리자 및 건물/세대 생성")
     @Test
-    void create_admin_success() {
+    void createAdminSuccess() {
+        MemberCreateRequest memberCreateRequest = MemberCreateRequest.of("loginId", "qwer1234!@", "홍길동", "01012345678", 1L,"123456");
         BuildingInfo buildingInfo = BuildingInfo.of("광동빌라", "서울특별시 강남구 대치동", "광동빌라 A동", "123456");
-        List<HouseHoldInfo> houseHoldInfos = List.of(HouseHoldInfo.of("101호"), HouseHoldInfo.of("102호"), HouseHoldInfo.of("103호"), HouseHoldInfo.of("104호"));
+        List<HouseHoldInfo> houseHoldInfos = List.of(HouseHoldInfo.of("101호", false), HouseHoldInfo.of("102호", true), HouseHoldInfo.of("103호", false), HouseHoldInfo.of("104호", false));
 
-        AdminCreateRequest adminCreateRequest = AdminCreateRequest.of(buildingInfo, houseHoldInfos);
+        AdminCreateRequest adminCreateRequest = AdminCreateRequest.of(memberCreateRequest, buildingInfo, houseHoldInfos);
 
-        Address address = Address.of("서울특별시 강남구 대치동", "광동빌라 A동", "123456");
-        List<Function<Building, HouseHold>> houseHolds = List.of(
-                building -> HouseHold.of("101호", building),
-                building -> HouseHold.of("102호", building),
-                building -> HouseHold.of("103호", building),
-                building -> HouseHold.of("104호", building));
+        adminCreateService.create(adminCreateRequest);
 
-        Building building = BuildingCreateHelperBuilder.builder()
-                .id(1L)
-                .buildingName("광동빌라")
-                .address(address)
-                .houseHolds(houseHolds)
-                .build();
+        ArgumentCaptor<Building> buildingCaptor = ArgumentCaptor.forClass(Building.class);
+        BDDMockito.then(buildingRepository).should().save(buildingCaptor.capture());
 
-        when(buildingRepository.save(any())).thenReturn(building);
+        ArgumentCaptor<Member> memberCaptor = ArgumentCaptor.forClass(Member.class);
+        BDDMockito.then(memberRepository).should().save(memberCaptor.capture());
 
-        Long id = adminCreateService.create(adminCreateRequest);
+        Building savedBuilding = buildingCaptor.getValue();
+        Member savedMember = memberCaptor.getValue();
 
-        Assertions.assertThat(id).isEqualTo(1L);
+        assertThat(savedBuilding.getName()).isEqualTo("광동빌라");
+        assertThat(savedBuilding.getAddress().getAddress1()).isEqualTo("서울특별시 강남구 대치동");
+        assertThat(savedBuilding.getAddress().getAddress2()).isEqualTo("광동빌라 A동");
+        assertThat(savedBuilding.getAddress().getZipNo()).isEqualTo("123456");
+        assertThat(savedBuilding.getHouseHolds()
+                .stream()
+                .filter(houseHold -> houseHold.getHouseHolder() != null)
+                .count()).isEqualTo(1);
+        assertThat(savedMember.getLoginId()).isEqualTo("loginId");
+        assertThat(savedMember.getPassword().getValue()).isEqualTo("qwer1234!@");
+        assertThat(savedMember.getMobile().toString()).isEqualTo("01012345678");
+        assertThat(savedMember.getName()).isEqualTo("홍길동");
     }
 }

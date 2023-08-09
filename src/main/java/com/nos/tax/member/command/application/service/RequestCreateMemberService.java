@@ -5,7 +5,7 @@ import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.household.command.domain.repository.HouseHoldRepository;
 import com.nos.tax.invite.command.domain.MemberInvite;
 import com.nos.tax.invite.command.domain.repository.MemberInviteCodeRepository;
-import com.nos.tax.member.command.application.dto.CreateMemberRequest;
+import com.nos.tax.member.command.application.dto.RequestCreateMemberRequest;
 import com.nos.tax.member.command.domain.Mobile;
 import com.nos.tax.util.VerifyUtil;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class RequestCreateMemberService {
     private final AlertCreateMemberService alertCreateMemberService;
     
     //todo : 트랜잭션 경계 설정
-    public void request(List<CreateMemberRequest> requests) {
+    public void request(List<RequestCreateMemberRequest> requests) {
         VerifyUtil.verifyList(requests);
 
         boolean hasNull = requests.stream()
@@ -38,14 +38,14 @@ public class RequestCreateMemberService {
         }
 
         boolean hasMobileLengthNotEleven = requests.stream()
-                .map(CreateMemberRequest::getMobile)
+                .map(RequestCreateMemberRequest::getMobile)
                 .anyMatch(mobile -> mobile.length() != 11);
         if(hasMobileLengthNotEleven){
             throw new IllegalArgumentException("mobile length is not 11");
         }
 
         List<Long> householdIds = requests.stream()
-                .map(CreateMemberRequest::getHouseHoldId)
+                .map(RequestCreateMemberRequest::getHouseHoldId)
                 .collect(Collectors.toList());
 
         List<HouseHold> houseHolds = houseHoldRepository.findAllById(householdIds);
@@ -57,7 +57,7 @@ public class RequestCreateMemberService {
         List<MemberInvite> inviteCodes = new ArrayList<>();
         for(int i = 0; i < requests.size(); i++){
             HouseHold houseHold = houseHolds.get(i);
-            CreateMemberRequest request = requests.get(i);
+            RequestCreateMemberRequest request = requests.get(i);
             String mobile = request.getMobile();
 
             inviteCodes.add(MemberInvite.of(houseHold, Mobile.of(mobile), RandomStringUtils.randomNumeric(6), LocalDateTime.now().plusMinutes(3L)));

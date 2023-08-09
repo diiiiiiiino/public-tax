@@ -1,6 +1,7 @@
 package com.nos.tax.household.command.domain;
 
 import com.nos.tax.building.command.domain.Building;
+import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.util.VerifyUtil;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -40,8 +41,17 @@ public class HouseHold {
         this.id = id;
     }
 
+    private HouseHold(String room, Building building, Member member){
+        this(room, building);
+        setHouseHolder(HouseHolder.of(member, member.getName(), member.getMobile()));
+    }
+
     public static HouseHold of(String room, Building building) {
         return new HouseHold(room, building);
+    }
+
+    public static HouseHold of(String room, Building building, Member member) {
+        return new HouseHold(room, building, member);
     }
 
     public static HouseHold of(Long id, String room, Building building) {

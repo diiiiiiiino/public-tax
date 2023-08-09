@@ -46,7 +46,7 @@ public class MemberCreateService {
         HouseHold houseHold = houseHoldRepository.findById(request.getHouseholdId())
                 .orElseThrow(() -> new NotFoundException("not found household"));
 
-        Member member = Member.of(request.getLoginId(), Password.of(request.getPassword()), request.getName(), Mobile.of(request.getMobile()));
+        Member member = MemberCreateRequest.newMember(request);
         memberRepository.save(member);
 
         houseHold.updateHouseHolder(HouseHolder.of(member, member.getName(), member.getMobile()));

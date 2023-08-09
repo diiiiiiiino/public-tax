@@ -7,8 +7,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public class HouseHoldInfo {
     String room;
+    boolean isChecked;
 
-    public static HouseHoldInfo of(String room){
-        return new HouseHoldInfo(room);
+    public static HouseHoldInfo of(String room, boolean isChecked){
+        return new HouseHoldInfo(room, isChecked);
     }
 }

@@ -23,6 +23,7 @@ public class HouseHolder {
     private Member member;
 
     private String name;
+
     @Convert(converter = MobileConverter.class)
     private Mobile mobile;
 

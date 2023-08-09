@@ -7,6 +7,11 @@ import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.member.command.application.dto.AdminCreateRequest;
 import com.nos.tax.member.command.application.dto.BuildingInfo;
 import com.nos.tax.member.command.application.dto.HouseHoldInfo;
+import com.nos.tax.member.command.application.dto.MemberCreateRequest;
+import com.nos.tax.member.command.domain.Member;
+import com.nos.tax.member.command.domain.Mobile;
+import com.nos.tax.member.command.domain.Password;
+import com.nos.tax.member.command.domain.repository.MemberRepository;
 import com.nos.tax.util.VerifyUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,27 +25,44 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class AdminCreateService {
-
     private final BuildingRepository buildingRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional
-    public Long create(AdminCreateRequest request) {
+    public void create(AdminCreateRequest request) {
+        Objects.requireNonNull(request.getMemberCreateRequest());
         Objects.requireNonNull(request.getBuildingInfo());
-        VerifyUtil.verifyList(request.getHouseHoldInfos());
+        verifyHouseHoldInfos(request.getHouseHoldInfos());
 
         BuildingInfo buildingInfo = request.getBuildingInfo();
         List<HouseHoldInfo> houseHoldInfos = request.getHouseHoldInfos();
 
+        Member member = MemberCreateRequest.newMember(request.getMemberCreateRequest());
         Address address = Address.of(buildingInfo.getAddress1(), buildingInfo.getAddress2(), buildingInfo.getZipNo());
 
         List<Function<Building, HouseHold>> households = houseHoldInfos.stream()
-                .map(houseHoldInfo -> (Function<Building, HouseHold>) (building -> HouseHold.of(houseHoldInfo.getRoom(), building)))
-                .collect(Collectors.toList());
+                .map(houseHoldInfo ->
+                        houseHoldInfo.isChecked() ?
+                        (Function<Building, HouseHold>) (building -> HouseHold.of(houseHoldInfo.getRoom(), building, member)) :
+                        (Function<Building, HouseHold>) (building -> HouseHold.of(houseHoldInfo.getRoom(), building))
+                ).collect(Collectors.toList());
 
         Building building = Building.of(buildingInfo.getName(), address, households);
 
-        building = buildingRepository.save(building);
+        memberRepository.save(member);
+        buildingRepository.save(building);
+    }
 
-        return building.getId();
+    private void verifyHouseHoldInfos(List<HouseHoldInfo> houseHoldInfos){
+        final long SELECT_HOUSEHOLD_COUNT = 1;
+        VerifyUtil.verifyList(houseHoldInfos);
+
+        long checkCount = houseHoldInfos.stream()
+                .filter(houseHoldInfo -> houseHoldInfo.isChecked())
+                .count();
+
+        if(checkCount != SELECT_HOUSEHOLD_COUNT){
+            throw new IllegalArgumentException("select just one HouseHold");
+        }
     }
 }

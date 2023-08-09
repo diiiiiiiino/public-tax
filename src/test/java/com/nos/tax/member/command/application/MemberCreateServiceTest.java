@@ -11,10 +11,13 @@ import com.nos.tax.invite.command.domain.repository.MemberInviteCodeRepository;
 import com.nos.tax.member.command.application.exception.ExpiredInviteCodeException;
 import com.nos.tax.member.command.application.dto.MemberCreateRequest;
 import com.nos.tax.member.command.application.service.MemberCreateService;
+import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.member.command.domain.Mobile;
 import com.nos.tax.member.command.domain.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.BDDMockito;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -106,8 +109,16 @@ public class MemberCreateServiceTest {
 
         memberCreateService.create(memberCreateRequest);
 
+        ArgumentCaptor<Member> memberCaptor = ArgumentCaptor.forClass(Member.class);
+        BDDMockito.then(memberRepository).should().save(memberCaptor.capture());
+
+        Member savedMember = memberCaptor.getValue();
+        assertThat(savedMember.getLoginId()).isEqualTo("loginId");
+        assertThat(savedMember.getPassword().getValue()).isEqualTo("qwer1234!@");
+        assertThat(savedMember.getMobile().toString()).isEqualTo("01012345678");
+        assertThat(savedMember.getName()).isEqualTo("홍길동");
+
         HouseHolder houseHolder = houseHold.getHouseHolder();
-        assertThat(houseHolder).isNotNull();
         assertThat(houseHolder.getMember().getLoginId()).isEqualTo("loginId");
         assertThat(houseHolder.getMember().getPassword().getValue()).isEqualTo("qwer1234!@");
         assertThat(houseHolder.getMember().getName()).isEqualTo("홍길동");
