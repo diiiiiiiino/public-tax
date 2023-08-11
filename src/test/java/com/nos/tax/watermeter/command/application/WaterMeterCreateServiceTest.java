@@ -11,6 +11,8 @@ import com.nos.tax.watermeter.command.domain.repository.WaterMeterRepository;
 import com.nos.tax.watermeter.query.WaterMeterCreateRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.BDDMockito;
 
 import java.time.YearMonth;
 import java.util.Optional;
@@ -107,8 +109,14 @@ public class WaterMeterCreateServiceTest {
         when(houseHoldRepository.findByMemberId(any())).thenReturn(Optional.of(houseHold));
         when(waterMeterRepository.save(any())).thenReturn(WaterMeter.of(1L, request.getPreviousMeter(), request.getPresentMeter(), request.getYearMonth(), houseHold));
 
-        Long id = waterMeterCreateService.create(request, member);
+        waterMeterCreateService.create(request, member);
 
-        assertThat(id).isEqualTo(1L);
+        ArgumentCaptor<WaterMeter> captor = ArgumentCaptor.forClass(WaterMeter.class);
+        BDDMockito.then(waterMeterRepository).should().save(captor.capture());
+
+        WaterMeter waterMeter = captor.getValue();
+        assertThat(waterMeter.getPreviousMeter()).isEqualTo(0);
+        assertThat(waterMeter.getPresentMeter()).isEqualTo(100);
+        assertThat(waterMeter.getYearMonth()).isEqualTo(YearMonth.of(2023, 8));
     }
 }

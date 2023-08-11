@@ -19,12 +19,10 @@ public class WaterMeterCreateService {
     private final WaterMeterRepository waterMeterRepository;
 
     @Transactional
-    public Long create(WaterMeterCreateRequest request, Member member) {
+    public void create(WaterMeterCreateRequest request, Member member) {
         HouseHold houseHold = houseHoldRepository.findByMemberId(member.getId())
                 .orElseThrow(() -> new NotFoundException("Household not found"));
 
-        WaterMeter waterMeter = waterMeterRepository.save(WaterMeter.of(request.getPreviousMeter(), request.getPresentMeter(), request.getYearMonth(), houseHold));
-
-        return waterMeter.getId();
+        waterMeterRepository.save(WaterMeter.of(request.getPreviousMeter(), request.getPresentMeter(), request.getYearMonth(), houseHold));
     }
 }
