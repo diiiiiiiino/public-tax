@@ -42,8 +42,17 @@ public class Member {
         setMobile(mobile);
     }
 
+    private Member(Long id, String loginId, Password password, String name, Mobile mobile) {
+        this(loginId, password, name, mobile);
+        setId(id);
+    }
+
     public static Member of(String loginId, Password password, String name, Mobile mobile) {
         return new Member(loginId, password, name, mobile);
+    }
+
+    public static Member of(Long id, String loginId, Password password, String name, Mobile mobile) {
+        return new Member(id, loginId, password, name, mobile);
     }
 
     public void changeName(String name) {
@@ -70,6 +79,10 @@ public class Member {
 
     public boolean passwordMatch(String password) {
         return this.password.match(password);
+    }
+
+    private void setId(Long id){
+        this.id = id;
     }
 
     private void setLoginId(String loginId) {

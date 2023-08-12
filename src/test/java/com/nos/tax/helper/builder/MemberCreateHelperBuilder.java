@@ -5,6 +5,7 @@ import com.nos.tax.member.command.domain.Mobile;
 import com.nos.tax.member.command.domain.Password;
 
 public class MemberCreateHelperBuilder {
+    private Long id;
     private Password password = Password.of("qwer1234!@#$");
     private Mobile mobile = Mobile.of("01011112222");
     private String loginId = "loginId";
@@ -12,6 +13,11 @@ public class MemberCreateHelperBuilder {
 
     public static MemberCreateHelperBuilder builder(){
         return new MemberCreateHelperBuilder();
+    }
+
+    public MemberCreateHelperBuilder id(Long id) {
+        this.id = id;
+        return this;
     }
 
     public MemberCreateHelperBuilder loginId(String loginId){
@@ -35,6 +41,6 @@ public class MemberCreateHelperBuilder {
     }
 
     public Member build(){
-        return Member.of(loginId, password, name, mobile);
+        return Member.of(id, loginId, password, name, mobile);
     }
 }

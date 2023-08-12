@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.YearMonth;
+import java.util.List;
 
 import static com.nos.tax.helper.util.JpaUtils.flushAndClear;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,7 +37,7 @@ public class WaterMeterRepositoryTest {
 
     @DisplayName("수도계량값 저장")
     @Test
-    void water_meter_create() {
+    void waterMeterCreate() {
         Building building = BuildingCreateHelperBuilder.builder().build();
 
         buildingRepository.save(building);
@@ -53,5 +54,23 @@ public class WaterMeterRepositoryTest {
         assertThat(waterMeter.getPresentMeter()).isEqualTo(760);
         assertThat(waterMeter.getUsage()).isEqualTo(110);
         assertThat(waterMeter.getYearMonth()).isEqualTo(YearMonth.of(2023, 7));
+    }
+
+    @DisplayName("세대주 ID 목록으로 수도 계량기 조회")
+    @Test
+    void findAllByHouseHoldIn() {
+        Building building = BuildingCreateHelperBuilder.builder().build();
+
+        buildingRepository.save(building);
+
+        WaterMeter waterMeter = WaterMeter.of(650, 760, YearMonth.of(2023, 7), building.getHouseHolds().get(0));
+
+        waterMeterRepository.save(waterMeter);
+
+        flushAndClear(entityManager);
+
+        List<WaterMeter> waterMeters = waterMeterRepository.findAllByHouseHoldIn(building.getHouseHolds());
+
+        assertThat(waterMeters.size()).isEqualTo(1);
     }
 }
