@@ -1,6 +1,7 @@
-package com.nos.tax.member.command.application;
+package com.nos.tax.member.command.application.service;
 
 import com.nos.tax.application.exception.NotFoundException;
+import com.nos.tax.member.command.application.dto.MemberUpdateRequest;
 import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.member.command.domain.Mobile;
 import com.nos.tax.member.command.domain.repository.MemberRepository;

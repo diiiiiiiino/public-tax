@@ -1,4 +1,4 @@
-package com.nos.tax.member.command.application;
+package com.nos.tax.member.command.application.dto;
 
 import lombok.Builder;
 import lombok.Getter;

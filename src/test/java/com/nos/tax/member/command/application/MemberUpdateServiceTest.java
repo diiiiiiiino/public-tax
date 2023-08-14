@@ -2,6 +2,8 @@ package com.nos.tax.member.command.application;
 
 import com.nos.tax.application.exception.NotFoundException;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
+import com.nos.tax.member.command.application.dto.MemberUpdateRequest;
+import com.nos.tax.member.command.application.service.MemberUpdateService;
 import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.member.command.domain.repository.MemberRepository;
 import org.assertj.core.api.Assertions;
