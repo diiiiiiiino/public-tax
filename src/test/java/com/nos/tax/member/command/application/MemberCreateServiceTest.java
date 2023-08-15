@@ -2,6 +2,8 @@ package com.nos.tax.member.command.application;
 
 import com.nos.tax.application.component.DateUtils;
 import com.nos.tax.application.exception.NotFoundException;
+import com.nos.tax.authority.command.domain.Authority;
+import com.nos.tax.authority.command.domain.enumeration.AuthorityEnum;
 import com.nos.tax.helper.builder.HouseHoldCreateHelperBuilder;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.household.command.domain.HouseHolder;
@@ -12,6 +14,7 @@ import com.nos.tax.member.command.application.dto.MemberCreateRequest;
 import com.nos.tax.member.command.application.exception.ExpiredInviteCodeException;
 import com.nos.tax.member.command.application.service.MemberCreateService;
 import com.nos.tax.member.command.domain.Member;
+import com.nos.tax.member.command.domain.MemberAuthority;
 import com.nos.tax.member.command.domain.Mobile;
 import com.nos.tax.member.command.domain.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -21,6 +24,8 @@ import org.mockito.BDDMockito;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -117,6 +122,14 @@ public class MemberCreateServiceTest {
         assertThat(savedMember.getPassword().getValue()).isEqualTo("qwer1234!@");
         assertThat(savedMember.getMobile().toString()).isEqualTo("01012345678");
         assertThat(savedMember.getName()).isEqualTo("홍길동");
+
+        Set<Authority> authoritySet = savedMember.getAuthorities()
+                .stream()
+                .map(MemberAuthority::getAuthority)
+                .collect(Collectors.toSet());
+
+        assertThat(authoritySet).hasSize(1);
+        assertThat(authoritySet).containsOnly(Authority.of(AuthorityEnum.ROLE_MEMBER));
 
         HouseHolder houseHolder = houseHold.getHouseHolder();
         assertThat(houseHolder.getMember().getLoginId()).isEqualTo("loginId");
