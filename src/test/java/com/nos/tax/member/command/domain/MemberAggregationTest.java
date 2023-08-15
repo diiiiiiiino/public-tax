@@ -1,5 +1,7 @@
 package com.nos.tax.member.command.domain;
 
+import com.nos.tax.authority.command.domain.Authority;
+import com.nos.tax.authority.command.domain.enumeration.AuthorityEnum;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
 import com.nos.tax.member.command.domain.exception.PasswordChangeException;
 import com.nos.tax.member.command.domain.exception.PasswordConditionException;
@@ -11,6 +13,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.List;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -262,6 +268,37 @@ public class MemberAggregationTest {
 
         assertThat(updatePassword.getValue()).isEqualTo(updateValue);
         assertThat(updatePassword.getValue()).isNotEqualTo(originValue);
+    }
+
+    @DisplayName("권한이 null 또는 empty")
+    @ParameterizedTest
+    @NullAndEmptySource
+    void authorityNullAndEmpty(List<Function<Member, MemberAuthority>> functions) {
+        assertThatThrownBy(() -> MemberCreateHelperBuilder.builder()
+                .functions(functions)
+                .build())
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("list no element");
+    }
+
+    @DisplayName("권한 변경 성공")
+    @Test
+    void authorityChange() {
+        Member member = MemberCreateHelperBuilder.builder().build();
+
+        List<Function<Member, MemberAuthority>> functions = List.of(
+                member1 -> MemberAuthority.of(member1, Authority.of(AuthorityEnum.ROLE_MEMBER)),
+                member1 -> MemberAuthority.of(member1, Authority.of(AuthorityEnum.ROLE_ADMIN))
+        );
+
+        member.changeAuthority(functions);
+
+        Set<Authority> authorities = member.getAuthorities()
+                .stream()
+                .map(MemberAuthority::getAuthority)
+                .collect(Collectors.toSet());
+
+        assertThat(authorities).containsAll(Set.of(Authority.of(AuthorityEnum.ROLE_MEMBER), Authority.of(AuthorityEnum.ROLE_ADMIN)));
     }
 
     private static Stream<Arguments> provideChangePasswordNullAndEmptyArguments(){

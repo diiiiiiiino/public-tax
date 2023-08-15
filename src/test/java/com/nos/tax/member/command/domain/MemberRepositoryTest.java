@@ -1,7 +1,5 @@
 package com.nos.tax.member.command.domain;
 
-import com.nos.tax.authority.command.domain.Authority;
-import com.nos.tax.authority.command.domain.enumeration.AuthorityEnum;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
 import com.nos.tax.member.command.domain.repository.MemberRepository;
 import jakarta.persistence.EntityManager;
@@ -11,9 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
-
-import java.util.List;
-import java.util.function.Function;
 
 import static com.nos.tax.helper.util.JpaUtils.flushAndClear;
 import static org.assertj.core.api.Assertions.assertThat;

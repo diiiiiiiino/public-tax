@@ -7,9 +7,7 @@ import com.nos.tax.member.command.domain.MemberAuthority;
 import com.nos.tax.member.command.domain.Mobile;
 import com.nos.tax.member.command.domain.Password;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Function;
 
 public class MemberCreateHelperBuilder {
@@ -46,6 +44,11 @@ public class MemberCreateHelperBuilder {
 
     public MemberCreateHelperBuilder mobile(Mobile mobile){
         this.mobile = mobile;
+        return this;
+    }
+
+    public MemberCreateHelperBuilder functions(List<Function<Member, MemberAuthority>> functions){
+        this.functions = functions;
         return this;
     }
 

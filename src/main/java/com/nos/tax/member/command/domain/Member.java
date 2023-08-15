@@ -1,7 +1,5 @@
 package com.nos.tax.member.command.domain;
 
-import com.nos.tax.authority.command.domain.Authority;
-import com.nos.tax.authority.command.domain.enumeration.AuthorityEnum;
 import com.nos.tax.member.command.domain.converter.MobileConverter;
 import com.nos.tax.member.command.domain.exception.PasswordChangeException;
 import com.nos.tax.util.VerifyUtil;
@@ -49,7 +47,7 @@ public class Member {
         setPassword(password);
         setName(name);
         setMobile(mobile);
-        addAuthority(functions);
+        changeAuthority(functions);
     }
 
     private Member(Long id, String loginId, Password password, String name, Mobile mobile, List<Function<Member, MemberAuthority>> functions) {
@@ -91,7 +89,7 @@ public class Member {
         return this.password.match(password);
     }
 
-    public void addAuthority(List<Function<Member, MemberAuthority>> functions){
+    public void changeAuthority(List<Function<Member, MemberAuthority>> functions){
         VerifyUtil.verifyCollection(functions);
 
         Set<MemberAuthority> authorities = new HashSet<>();
@@ -100,7 +98,7 @@ public class Member {
             authorities.add(function.apply(this));
         }
 
-        this.authorities.addAll(authorities);
+        this.authorities = authorities;
     }
 
     private void setId(Long id){

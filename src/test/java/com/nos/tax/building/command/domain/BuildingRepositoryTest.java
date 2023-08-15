@@ -1,14 +1,11 @@
 package com.nos.tax.building.command.domain;
 
-import com.nos.tax.authority.command.domain.Authority;
-import com.nos.tax.authority.command.domain.enumeration.AuthorityEnum;
 import com.nos.tax.building.command.domain.repository.BuildingRepository;
 import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.household.command.domain.HouseHolder;
 import com.nos.tax.member.command.domain.Member;
-import com.nos.tax.member.command.domain.MemberAuthority;
 import com.nos.tax.member.command.domain.Mobile;
 import com.nos.tax.member.command.domain.Password;
 import com.nos.tax.member.command.domain.repository.MemberRepository;

@@ -3,7 +3,6 @@ package com.nos.tax.util;
 import org.springframework.util.StringUtils;
 
 import java.util.Collection;
-import java.util.List;
 
 public class VerifyUtil {
     public static String verifyText(String text){
