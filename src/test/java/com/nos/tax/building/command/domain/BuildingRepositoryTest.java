@@ -1,10 +1,14 @@
 package com.nos.tax.building.command.domain;
 
+import com.nos.tax.authority.command.domain.Authority;
+import com.nos.tax.authority.command.domain.enumeration.AuthorityEnum;
 import com.nos.tax.building.command.domain.repository.BuildingRepository;
 import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
+import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.household.command.domain.HouseHolder;
 import com.nos.tax.member.command.domain.Member;
+import com.nos.tax.member.command.domain.MemberAuthority;
 import com.nos.tax.member.command.domain.Mobile;
 import com.nos.tax.member.command.domain.Password;
 import com.nos.tax.member.command.domain.repository.MemberRepository;
@@ -109,8 +113,14 @@ public class BuildingRepositoryTest {
     private Building createBuilding() {
         List<Function<Building, HouseHold>> houseHolds = new ArrayList<>();
         List<Member> members = new ArrayList<>();
+
         for(int i = 1; i <= 6; i++){
-            Member member = Member.of("loginId" + i, Password.of("qwer1234!@"), "세대주" + i, Mobile.of("010" + String.valueOf(i).repeat(4) + String.valueOf(i).repeat(4)));
+            Member member = MemberCreateHelperBuilder.builder()
+                    .loginId("loginId" + i)
+                    .password(Password.of("qwer1234!@"))
+                    .name("세대주" + i)
+                    .mobile(Mobile.of("010" + String.valueOf(i).repeat(4) + String.valueOf(i).repeat(4)))
+                    .build();
             members.add(member);
 
             String room = i + "01호";

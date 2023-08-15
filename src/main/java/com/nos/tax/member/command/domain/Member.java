@@ -1,5 +1,7 @@
 package com.nos.tax.member.command.domain;
 
+import com.nos.tax.authority.command.domain.Authority;
+import com.nos.tax.authority.command.domain.enumeration.AuthorityEnum;
 import com.nos.tax.member.command.domain.converter.MobileConverter;
 import com.nos.tax.member.command.domain.exception.PasswordChangeException;
 import com.nos.tax.util.VerifyUtil;
@@ -8,7 +10,11 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.function.Function;
 
 @Entity
 @Getter
@@ -35,24 +41,28 @@ public class Member {
     @Convert(converter = MobileConverter.class)
     private Mobile mobile;
 
-    private Member(String loginId, Password password, String name, Mobile mobile) {
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "member")
+    private Set<MemberAuthority> authorities = new HashSet<>();
+
+    private Member(String loginId, Password password, String name, Mobile mobile, List<Function<Member, MemberAuthority>> functions) {
         setLoginId(loginId);
         setPassword(password);
         setName(name);
         setMobile(mobile);
+        addAuthority(functions);
     }
 
-    private Member(Long id, String loginId, Password password, String name, Mobile mobile) {
-        this(loginId, password, name, mobile);
+    private Member(Long id, String loginId, Password password, String name, Mobile mobile, List<Function<Member, MemberAuthority>> functions) {
+        this(loginId, password, name, mobile, functions);
         setId(id);
     }
 
-    public static Member of(String loginId, Password password, String name, Mobile mobile) {
-        return new Member(loginId, password, name, mobile);
+    public static Member of(String loginId, Password password, String name, Mobile mobile, List<Function<Member, MemberAuthority>> functions) {
+        return new Member(loginId, password, name, mobile, functions);
     }
 
-    public static Member of(Long id, String loginId, Password password, String name, Mobile mobile) {
-        return new Member(id, loginId, password, name, mobile);
+    public static Member of(Long id, String loginId, Password password, String name, Mobile mobile, List<Function<Member, MemberAuthority>> functions) {
+        return new Member(id, loginId, password, name, mobile, functions);
     }
 
     public void changeName(String name) {
@@ -79,6 +89,18 @@ public class Member {
 
     public boolean passwordMatch(String password) {
         return this.password.match(password);
+    }
+
+    public void addAuthority(List<Function<Member, MemberAuthority>> functions){
+        VerifyUtil.verifyCollection(functions);
+
+        Set<MemberAuthority> authorities = new HashSet<>();
+
+        for(Function<Member, MemberAuthority> function : functions){
+            authorities.add(function.apply(this));
+        }
+
+        this.authorities.addAll(authorities);
     }
 
     private void setId(Long id){

@@ -2,6 +2,7 @@ package com.nos.tax.util;
 
 import org.springframework.util.StringUtils;
 
+import java.util.Collection;
 import java.util.List;
 
 public class VerifyUtil {
@@ -28,8 +29,8 @@ public class VerifyUtil {
         return value;
     }
 
-    public static void verifyList(List<?> list){
-        if(list == null || list.size() == 0){
+    public static void verifyCollection(Collection<?> collection){
+        if(collection == null || collection.size() == 0){
             throw new IllegalArgumentException("list no element");
         }
     }

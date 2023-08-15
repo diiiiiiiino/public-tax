@@ -1,5 +1,8 @@
 package com.nos.tax.member.command.domain;
 
+import com.nos.tax.authority.command.domain.Authority;
+import com.nos.tax.authority.command.domain.enumeration.AuthorityEnum;
+import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
 import com.nos.tax.member.command.domain.repository.MemberRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -8,6 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
+
+import java.util.List;
+import java.util.function.Function;
 
 import static com.nos.tax.helper.util.JpaUtils.flushAndClear;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,8 +31,7 @@ public class MemberRepositoryTest {
     @DisplayName("회원 저장")
     @Test
     void member_create_success() {
-        Password password = Password.of("qwer1234!@#$");
-        Member member = Member.of("member123", password, "회원", Mobile.of("01011111111"));
+        Member member = MemberCreateHelperBuilder.builder().build();
         member = memberRepository.save(member);
 
         flushAndClear(entityManager);
@@ -41,8 +46,9 @@ public class MemberRepositoryTest {
     @DisplayName("회원 이름 변경")
     @Test
     void member_name_update() {
-        Password password = Password.of("qwer1234!@#$");
-        Member member = Member.of("member123", password, "회원", Mobile.of("01011111111"));
+        Member member = MemberCreateHelperBuilder.builder()
+                .name("김하성")
+                .build();
         member = memberRepository.save(member);
 
         flushAndClear(entityManager);
@@ -61,8 +67,7 @@ public class MemberRepositoryTest {
     @DisplayName("회원 전화번호 변경")
     @Test
     void member_mobile_update() {
-        Password password = Password.of("qwer1234!@#$");
-        Member member = Member.of("member123", password, "회원", Mobile.of("01011111111"));
+        Member member = MemberCreateHelperBuilder.builder().build();
         member = memberRepository.save(member);
 
         flushAndClear(entityManager);

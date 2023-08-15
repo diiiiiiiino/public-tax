@@ -29,7 +29,7 @@ public class RequestCreateMemberService {
     
     //todo : 트랜잭션 경계 설정
     public void request(List<RequestCreateMemberRequest> requests) {
-        VerifyUtil.verifyList(requests);
+        VerifyUtil.verifyCollection(requests);
 
         boolean hasNull = requests.stream()
                 .anyMatch(request -> !StringUtils.hasText(request.getMobile()) || Objects.isNull(request.getHouseHoldId()));

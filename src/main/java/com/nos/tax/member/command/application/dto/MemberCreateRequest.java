@@ -1,10 +1,16 @@
 package com.nos.tax.member.command.application.dto;
 
+import com.nos.tax.authority.command.domain.Authority;
+import com.nos.tax.authority.command.domain.enumeration.AuthorityEnum;
 import com.nos.tax.member.command.domain.Member;
+import com.nos.tax.member.command.domain.MemberAuthority;
 import com.nos.tax.member.command.domain.Mobile;
 import com.nos.tax.member.command.domain.Password;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import java.util.List;
+import java.util.function.Function;
 
 @Getter
 @AllArgsConstructor
@@ -21,6 +27,14 @@ public class MemberCreateRequest {
     }
 
     public static Member newMember(MemberCreateRequest request){
-        return Member.of(request.getLoginId(), Password.of(request.getPassword()), request.getName(), Mobile.of(request.getMobile()));
+        List<Function<Member, MemberAuthority>> functions = List.of(member -> MemberAuthority.of(member, Authority.of(AuthorityEnum.ROLE_MEMBER)));
+        return Member.of(request.getLoginId(), Password.of(request.getPassword()), request.getName(), Mobile.of(request.getMobile()), functions);
+    }
+
+    public static Member newAdmin(MemberCreateRequest request){
+        List<Function<Member, MemberAuthority>> functions = List.of(
+                member -> MemberAuthority.of(member, Authority.of(AuthorityEnum.ROLE_ADMIN)),
+                member -> MemberAuthority.of(member, Authority.of(AuthorityEnum.ROLE_MEMBER)));
+        return Member.of(request.getLoginId(), Password.of(request.getPassword()), request.getName(), Mobile.of(request.getMobile()), functions);
     }
 }

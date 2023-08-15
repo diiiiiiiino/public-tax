@@ -1,10 +1,14 @@
 package com.nos.tax.login.command.application;
 
+import com.nos.tax.authority.command.domain.Authority;
+import com.nos.tax.authority.command.domain.enumeration.AuthorityEnum;
+import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
 import com.nos.tax.login.command.application.service.LoginRequest;
 import com.nos.tax.login.command.application.service.LoginServiceImpl;
 import com.nos.tax.login.command.domain.LoginRecord;
 import com.nos.tax.login.command.domain.LoginRecordRepository;
 import com.nos.tax.member.command.domain.Member;
+import com.nos.tax.member.command.domain.MemberAuthority;
 import com.nos.tax.member.command.domain.Mobile;
 import com.nos.tax.member.command.domain.Password;
 import com.nos.tax.member.command.domain.exception.LoginFailedException;
@@ -14,7 +18,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -54,8 +60,7 @@ public class LoginServiceTest {
         loginRequest.setLoginId("loginId");
         loginRequest.setPassword(pw);
 
-        Password password = Password.of("qwer1234!@#$");
-        Member member = Member.of("loginId", password, "회원", Mobile.of("01011111111"));
+        Member member = MemberCreateHelperBuilder.builder().build();
 
         when(memberRepository.findByLoginId(anyString())).thenReturn(Optional.of(member));
 
@@ -71,8 +76,7 @@ public class LoginServiceTest {
         loginRequest.setLoginId("loginId");
         loginRequest.setPassword("qwer1234!@#$");
 
-        Password password = Password.of("qwer1234!@#$");
-        Member member = Member.of("loginId", password, "회원", Mobile.of("01011111111"));
+        Member member = MemberCreateHelperBuilder.builder().build();
         when(memberRepository.findByLoginId(anyString())).thenReturn(Optional.of(member));
 
         loginService.login(loginRequest);

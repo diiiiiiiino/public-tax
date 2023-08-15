@@ -35,25 +35,25 @@ public class AdminCreateService {
         BuildingInfo buildingInfo = request.getBuildingInfo();
         List<HouseHoldInfo> houseHoldInfos = request.getHouseHoldInfos();
 
-        Member member = MemberCreateRequest.newMember(request.getMemberCreateRequest());
+        Member admin = MemberCreateRequest.newAdmin(request.getMemberCreateRequest());
         Address address = Address.of(buildingInfo.getAddress1(), buildingInfo.getAddress2(), buildingInfo.getZipNo());
 
         List<Function<Building, HouseHold>> households = houseHoldInfos.stream()
                 .map(houseHoldInfo ->
                         houseHoldInfo.isChecked() ?
-                        (Function<Building, HouseHold>) (building -> HouseHold.of(houseHoldInfo.getRoom(), building, member)) :
+                        (Function<Building, HouseHold>) (building -> HouseHold.of(houseHoldInfo.getRoom(), building, admin)) :
                         (Function<Building, HouseHold>) (building -> HouseHold.of(houseHoldInfo.getRoom(), building))
                 ).collect(Collectors.toList());
 
         Building building = Building.of(buildingInfo.getName(), address, households);
 
-        memberRepository.save(member);
+        memberRepository.save(admin);
         buildingRepository.save(building);
     }
 
     private void verifyHouseHoldInfos(List<HouseHoldInfo> houseHoldInfos){
         final long SELECT_HOUSEHOLD_COUNT = 1;
-        VerifyUtil.verifyList(houseHoldInfos);
+        VerifyUtil.verifyCollection(houseHoldInfos);
 
         long checkCount = houseHoldInfos.stream()
                 .filter(houseHoldInfo -> houseHoldInfo.isChecked())
