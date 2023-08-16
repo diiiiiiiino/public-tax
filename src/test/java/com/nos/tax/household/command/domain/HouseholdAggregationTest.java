@@ -3,14 +3,12 @@ package com.nos.tax.household.command.domain;
 import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
 import com.nos.tax.helper.builder.HouseHolderCreateHelperBuilder;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
+import com.nos.tax.household.command.domain.enumeration.HouseHoldState;
 import com.nos.tax.member.command.domain.Member;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
-
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -32,7 +30,7 @@ public class HouseholdAggregationTest {
                 .isInstanceOf(NullPointerException.class);
     }
 
-    @DisplayName("세대주  생성 성공")
+    @DisplayName("세대주 생성 성공")
     @Test
     void householder_create_success() {
         HouseHolder houseHolder = HouseHolderCreateHelperBuilder.builder().build();
@@ -54,6 +52,7 @@ public class HouseholdAggregationTest {
         HouseHold houseHold = HouseHold.of("101호", BuildingCreateHelperBuilder.builder().build());
 
         assertThat(houseHold.getRoom()).isEqualTo("101호");
+        assertThat(houseHold.getHouseHoldState()).isEqualTo(HouseHoldState.EMPTY);
     }
 
     @DisplayName("세대 세대주 변경")
@@ -64,18 +63,7 @@ public class HouseholdAggregationTest {
         Member member = MemberCreateHelperBuilder.builder().build();
         HouseHolder houseHolder = HouseHolder.of(member, member.getName(), member.getMobile());
 
-        houseHold.updateHouseHolder(houseHolder);
+        houseHold.moveInHouse(houseHolder);
         assertThat(houseHold.getHouseHolder()).isNotNull();
-    }
-
-    private static Stream<Arguments> provideArgsForMobile(){
-        return Stream.of(
-                Arguments.of("", "1111", "2222"),
-                Arguments.of(null, "1111", "2222"),
-                Arguments.of("010", "", "2222"),
-                Arguments.of("010", null, "2222"),
-                Arguments.of("010", "1111", ""),
-                Arguments.of("010", "1111", null)
-        );
     }
 }

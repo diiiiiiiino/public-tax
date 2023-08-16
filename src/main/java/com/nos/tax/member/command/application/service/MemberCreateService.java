@@ -47,6 +47,6 @@ public class MemberCreateService {
         Member member = MemberCreateRequest.newMember(request);
         memberRepository.save(member);
 
-        houseHold.updateHouseHolder(HouseHolder.of(member, member.getName(), member.getMobile()));
+        houseHold.moveInHouse(HouseHolder.of(member, member.getName(), member.getMobile()));
     }
 }

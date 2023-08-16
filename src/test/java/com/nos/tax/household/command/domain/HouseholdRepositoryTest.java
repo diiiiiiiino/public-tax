@@ -1,14 +1,12 @@
 package com.nos.tax.household.command.domain;
 
-import com.nos.tax.authority.command.domain.Authority;
-import com.nos.tax.authority.command.domain.enumeration.AuthorityEnum;
 import com.nos.tax.building.command.domain.Building;
 import com.nos.tax.building.command.domain.repository.BuildingRepository;
 import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
+import com.nos.tax.household.command.domain.enumeration.HouseHoldState;
 import com.nos.tax.household.command.domain.repository.HouseHoldRepository;
 import com.nos.tax.member.command.domain.Member;
-import com.nos.tax.member.command.domain.MemberAuthority;
 import com.nos.tax.member.command.domain.Mobile;
 import com.nos.tax.member.command.domain.Password;
 import com.nos.tax.member.command.domain.repository.MemberRepository;
@@ -50,6 +48,7 @@ public class HouseholdRepositoryTest {
 
         assertThat(houseHold).isNotNull();
         assertThat(houseHold.getRoom()).isEqualTo("103호");
+        assertThat(houseHold.getHouseHoldState()).isEqualTo(HouseHoldState.EMPTY);
     }
 
     @DisplayName("세대에 세대주 수정")
@@ -61,8 +60,6 @@ public class HouseholdRepositoryTest {
 
         houseHold = houseHoldRepository.findById(houseHold.getId()).get();
 
-        List<Function<Member, MemberAuthority>> functions = List.of(member -> MemberAuthority.of(member, Authority.of(AuthorityEnum.ROLE_MEMBER)));
-
         Member member = MemberCreateHelperBuilder.builder()
                 .loginId("skull0202")
                 .password(Password.of("qwer1234!"))
@@ -73,12 +70,15 @@ public class HouseholdRepositoryTest {
 
         HouseHolder houseHolder = HouseHolder.of(member, member.getName(), member.getMobile());
 
-        houseHold.updateHouseHolder(houseHolder);
+        houseHold.moveInHouse(houseHolder);
 
         flushAndClear(entityManager);
 
+        houseHold = houseHoldRepository.findById(houseHold.getId()).get();
+
         assertThat(houseHold.getHouseHolder().getName()).isEqualTo("스컬");
         assertThat(houseHold.getHouseHolder().getMobile().toString()).isEqualTo("01012121313");
+        assertThat(houseHold.getHouseHoldState()).isEqualTo(HouseHoldState.LIVE);
     }
 
     private HouseHold createHouseHold(){

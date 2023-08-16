@@ -2,11 +2,13 @@ package com.nos.tax.helper.builder;
 
 import com.nos.tax.building.command.domain.Building;
 import com.nos.tax.household.command.domain.HouseHold;
+import com.nos.tax.member.command.domain.Member;
 
 public class HouseHoldCreateHelperBuilder {
     private Long id = 1L;
     private String room = "101호";
     private Building building = BuildingCreateHelperBuilder.builder().build();
+    private Member member;
 
     public static HouseHoldCreateHelperBuilder builder(){
         return new HouseHoldCreateHelperBuilder();
@@ -27,7 +29,13 @@ public class HouseHoldCreateHelperBuilder {
         return this;
     }
 
+    public HouseHoldCreateHelperBuilder member(Member member){
+        this.member = member;
+        return this;
+    }
+
     public HouseHold build(){
-        return HouseHold.of(id, room, building);
+        return member == null ? HouseHold.of(id, room, building)
+                : HouseHold.of(id, room, building, member);
     }
 }

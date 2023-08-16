@@ -132,7 +132,7 @@ public class BuildingRepositoryTest {
         for(int i = 0; i < houseHolds1.size(); i++){
             Member member = members.get(i);
             HouseHold houseHold = houseHolds1.get(i);
-            houseHold.updateHouseHolder(HouseHolder.of(member, member.getName(), member.getMobile()));
+            houseHold.moveInHouse(HouseHolder.of(member, member.getName(), member.getMobile()));
         }
 
         flushAndClear(entityManager);
