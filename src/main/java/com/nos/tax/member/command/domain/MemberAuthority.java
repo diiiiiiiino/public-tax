@@ -36,7 +36,7 @@ public class MemberAuthority {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MemberAuthority that = (MemberAuthority) o;
-        return id.equals(that.id) && member.equals(that.member) && authority.equals(that.authority);
+        return Objects.equals(id, that.id) && Objects.equals(member, that.member) && Objects.equals(authority, that.authority);
     }
 
     @Override

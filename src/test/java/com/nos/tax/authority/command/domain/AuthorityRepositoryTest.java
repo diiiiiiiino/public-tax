@@ -1,5 +1,6 @@
 package com.nos.tax.authority.command.domain;
 
+import com.nos.tax.authority.command.domain.enumeration.AuthorityEnum;
 import com.nos.tax.authority.command.domain.repositoy.AuthorityRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,16 @@ public class AuthorityRepositoryTest {
     @Test
     void findAllByIsActive() {
         List<Authority> authorities = authorityRepository.findAllByIsActive(true);
+
+        assertThat(authorities).hasSize(2);
+    }
+
+    @DisplayName("권한 이름 목록으로 조회")
+    @Test
+    void findAllByNameInAndIsActive() {
+        List<String> names = List.of(AuthorityEnum.ROLE_ADMIN.getName(), AuthorityEnum.ROLE_MEMBER.getName());
+
+        List<Authority> authorities = authorityRepository.findAllByNameInAndIsActive(names, true);
 
         assertThat(authorities).hasSize(2);
     }

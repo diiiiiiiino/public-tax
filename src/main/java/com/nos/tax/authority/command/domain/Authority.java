@@ -20,7 +20,7 @@ public class Authority {
     private String name;
 
     @Column(name = "active_yn")
-    private boolean isActive;
+    private boolean isActive = true;
 
     private Authority(String name) {
         setName(name);
@@ -52,7 +52,7 @@ public class Authority {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Authority authority = (Authority) o;
-        return isActive == authority.isActive && id.equals(authority.id) && name.equals(authority.name);
+        return isActive == authority.isActive && Objects.equals(id, authority.id) && name.equals(authority.name);
     }
 
     @Override
