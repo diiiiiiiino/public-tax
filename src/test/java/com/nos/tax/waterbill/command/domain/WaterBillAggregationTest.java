@@ -1,6 +1,7 @@
 package com.nos.tax.waterbill.command.domain;
 
 import com.nos.tax.building.command.domain.Building;
+import com.nos.tax.common.exception.ValidationException;
 import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.waterbill.command.domain.enumeration.WaterBillState;
@@ -32,7 +33,7 @@ public class WaterBillAggregationTest {
         HouseHold houseHold = building.getHouseHolds().get(0);
 
         assertThatThrownBy(() -> WaterBillDetail.of(-1000, 0, houseHold, null))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ValidationException.class)
                 .hasMessage("no negative");
     }
 
@@ -60,7 +61,7 @@ public class WaterBillAggregationTest {
         Building building = createBuilding();
 
         assertThatThrownBy(() -> WaterBill.of(building, -77920, YearMonth.of(2023, 7)))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ValidationException.class)
                 .hasMessage("no negative");
     }
 

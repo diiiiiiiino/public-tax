@@ -1,9 +1,9 @@
 package com.nos.tax.login.command.application.service;
 
+import com.nos.tax.login.command.application.exception.LoginFailedException;
 import com.nos.tax.login.command.domain.LoginRecord;
 import com.nos.tax.login.command.domain.LoginRecordRepository;
 import com.nos.tax.member.command.domain.Member;
-import com.nos.tax.member.command.domain.exception.LoginFailedException;
 import com.nos.tax.member.command.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

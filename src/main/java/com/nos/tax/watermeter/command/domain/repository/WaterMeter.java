@@ -1,5 +1,6 @@
 package com.nos.tax.watermeter.command.domain.repository;
 
+import com.nos.tax.common.exception.ValidationException;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.util.VerifyUtil;
 import com.nos.tax.waterbill.command.domain.converter.YearMonthConverter;
@@ -73,7 +74,7 @@ public class WaterMeter {
 
     private void checkPresentMeterBiggerThanPreviousMeter(int presentMeter) {
         if(this.previousMeter > presentMeter){
-            throw new IllegalArgumentException("Present meter smaller than previous meter");
+            throw new ValidationException("Present meter smaller than previous meter");
         }
     }
 }

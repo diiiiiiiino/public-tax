@@ -1,11 +1,10 @@
-package com.nos.tax.member.command.application;
+package com.nos.tax.member.command.application.service;
 
-import com.nos.tax.application.exception.NotFoundException;
 import com.nos.tax.authority.command.domain.Authority;
 import com.nos.tax.authority.command.domain.enumeration.AuthorityEnum;
 import com.nos.tax.authority.command.domain.repositoy.AuthorityRepository;
+import com.nos.tax.common.exception.NotFoundException;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
-import com.nos.tax.member.command.application.service.AdminChangeService;
 import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.member.command.domain.MemberAuthority;
 import com.nos.tax.member.command.domain.repository.MemberRepository;

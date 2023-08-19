@@ -2,9 +2,11 @@ package com.nos.tax.member.command.domain;
 
 import com.nos.tax.authority.command.domain.Authority;
 import com.nos.tax.authority.command.domain.enumeration.AuthorityEnum;
+import com.nos.tax.common.exception.ValidationException;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
-import com.nos.tax.member.command.domain.exception.PasswordChangeException;
 import com.nos.tax.member.command.domain.exception.PasswordConditionException;
+import com.nos.tax.member.command.domain.exception.PasswordNotMatchedException;
+import com.nos.tax.member.command.domain.exception.UpdatePasswordSameException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -39,7 +41,7 @@ public class MemberAggregationTest {
     @NullAndEmptySource
     void password_is_null_or_empty_string(String password) {
         assertThatThrownBy(() -> Password.of(password))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ValidationException.class)
                 .hasMessage("Has No Text");
     }
 
@@ -75,7 +77,7 @@ public class MemberAggregationTest {
     @NullAndEmptySource
     void mobile_create_with_null_and_empty_num(String value) {
         assertThatThrownBy(() -> Mobile.of(value))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ValidationException.class);
     }
 
     @DisplayName("전화번호 생성 시 첫번째 번호가 정해진 길이와 다를 경우")
@@ -83,7 +85,7 @@ public class MemberAggregationTest {
     @ValueSource(strings = {"0101111111", "010"})
     void mobile_create_different_firstNum_and_length(String value) {
         assertThatThrownBy(() -> Mobile.of(value))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ValidationException.class)
                 .hasMessage("mobile length is different set length");
     }
 
@@ -103,7 +105,7 @@ public class MemberAggregationTest {
         Member member = MemberCreateHelperBuilder.builder().build();
 
         assertThatThrownBy(() -> member.changeName(name))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ValidationException.class)
                 .hasMessage("Has No Text");
     }
 
@@ -124,7 +126,7 @@ public class MemberAggregationTest {
         Member member = MemberCreateHelperBuilder.builder().build();
 
         assertThatThrownBy(() -> member.changeMobile(Mobile.of(mobile)))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ValidationException.class)
                 .hasMessage("Has No Text");
     }
 
@@ -145,7 +147,7 @@ public class MemberAggregationTest {
         Member member = MemberCreateHelperBuilder.builder().build();
 
         assertThatThrownBy(() -> member.changePassword(originPassword, updatePassword))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ValidationException.class)
                 .hasMessage("Has No Text");
     }
 
@@ -157,8 +159,8 @@ public class MemberAggregationTest {
         Member member = MemberCreateHelperBuilder.builder().build();
 
         assertThatThrownBy(() -> member.changePassword(value, updateValue))
-                .isInstanceOf(PasswordChangeException.class)
-                .hasMessage("password is not the same");
+                .isInstanceOf(PasswordNotMatchedException.class)
+                .hasMessage("password is not matched");
     }
 
     @DisplayName("회원 비밀번호 변경 시 변경할 비밀번호가 길이가 길이가 8~16자리가 아닐 때")
@@ -188,7 +190,7 @@ public class MemberAggregationTest {
                 .build();
 
         assertThatThrownBy(() -> member.changePassword(value, updateValue))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ValidationException.class)
                 .hasMessage("Has No Text");
     }
 
@@ -203,7 +205,7 @@ public class MemberAggregationTest {
                 .build();
 
         assertThatThrownBy(() -> member.changePassword(originValue, value))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ValidationException.class)
                 .hasMessage("Has No Text");
     }
 
@@ -248,7 +250,7 @@ public class MemberAggregationTest {
                 .build();
 
         assertThatThrownBy(() -> member.changePassword(originValue, updateValue))
-                .isInstanceOf(PasswordChangeException.class)
+                .isInstanceOf(UpdatePasswordSameException.class)
                 .hasMessage("origin and update password same");
     }
 
@@ -277,7 +279,7 @@ public class MemberAggregationTest {
         assertThatThrownBy(() -> MemberCreateHelperBuilder.builder()
                 .functions(functions)
                 .build())
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ValidationException.class)
                 .hasMessage("list no element");
     }
 

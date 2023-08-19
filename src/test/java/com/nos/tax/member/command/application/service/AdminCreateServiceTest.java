@@ -1,12 +1,12 @@
-package com.nos.tax.member.command.application;
+package com.nos.tax.member.command.application.service;
 
 import com.nos.tax.building.command.domain.Building;
 import com.nos.tax.building.command.domain.repository.BuildingRepository;
+import com.nos.tax.common.exception.ValidationException;
 import com.nos.tax.member.command.application.dto.AdminCreateRequest;
 import com.nos.tax.member.command.application.dto.BuildingInfo;
 import com.nos.tax.member.command.application.dto.HouseHoldInfo;
 import com.nos.tax.member.command.application.dto.MemberCreateRequest;
-import com.nos.tax.member.command.application.service.AdminCreateService;
 import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.member.command.domain.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -71,7 +71,7 @@ public class AdminCreateServiceTest {
         AdminCreateRequest adminCreateRequest = AdminCreateRequest.of(memberCreateRequest, buildingInfo, houseHoldInfos);
 
         assertThatThrownBy(() -> adminCreateService.create(adminCreateRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ValidationException.class)
                 .hasMessage("list no element");
     }
 
@@ -85,7 +85,7 @@ public class AdminCreateServiceTest {
         AdminCreateRequest adminCreateRequest = AdminCreateRequest.of(memberCreateRequest, buildingInfo, houseHoldInfos);
 
         assertThatThrownBy(() -> adminCreateService.create(adminCreateRequest))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ValidationException.class)
                 .hasMessage("select just one HouseHold");
     }
 

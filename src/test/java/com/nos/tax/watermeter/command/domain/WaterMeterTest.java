@@ -1,6 +1,7 @@
 package com.nos.tax.watermeter.command.domain;
 
 import com.nos.tax.building.command.domain.Building;
+import com.nos.tax.common.exception.ValidationException;
 import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
 import com.nos.tax.watermeter.command.domain.repository.WaterMeter;
 import org.junit.jupiter.api.DisplayName;
@@ -33,7 +34,7 @@ public class WaterMeterTest {
     void water_previous_meter_value_negative_when_generating_water_bill_details() {
         Building building = BuildingCreateHelperBuilder.builder().build();
         assertThatThrownBy(() -> WaterMeter.of(-10, 100, YearMonth.of(2023, 7), building.getHouseHolds().get(0)))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ValidationException.class)
                 .hasMessage("no negative");
     }
 
@@ -42,7 +43,7 @@ public class WaterMeterTest {
     void water_present_meter_value_negative_when_generating_water_bill_details() {
         Building building = BuildingCreateHelperBuilder.builder().build();
         assertThatThrownBy(() -> WaterMeter.of(0, -100, YearMonth.of(2023, 7), building.getHouseHolds().get(0)))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ValidationException.class)
                 .hasMessage("no negative");
     }
 
@@ -51,7 +52,7 @@ public class WaterMeterTest {
     void previous_meter_bigger_than_present_meter() {
         Building building = BuildingCreateHelperBuilder.builder().build();
         assertThatThrownBy(() -> WaterMeter.of(100, 50, YearMonth.of(2023, 7), building.getHouseHolds().get(0)))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ValidationException.class)
                 .hasMessage("Present meter smaller than previous meter");
     }
 

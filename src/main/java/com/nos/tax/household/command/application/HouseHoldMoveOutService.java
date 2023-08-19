@@ -1,6 +1,6 @@
 package com.nos.tax.household.command.application;
 
-import com.nos.tax.application.exception.NotFoundException;
+import com.nos.tax.common.exception.NotFoundException;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.household.command.domain.enumeration.HouseHoldState;
 import com.nos.tax.household.command.domain.repository.HouseHoldRepository;

@@ -1,7 +1,10 @@
 package com.nos.tax.member.command.domain.exception;
 
-public class PasswordNotMatchedException extends RuntimeException {
+import com.nos.tax.common.exception.ApplicationException;
+import com.nos.tax.common.http.ErrorCode;
+
+public class PasswordNotMatchedException extends ApplicationException {
     public PasswordNotMatchedException(String message) {
-        super(message);
+        super(message, ErrorCode.PASSWORD_NOT_MATCHED);
     }
 }

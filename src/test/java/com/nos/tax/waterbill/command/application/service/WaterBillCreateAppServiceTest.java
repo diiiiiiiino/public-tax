@@ -1,8 +1,8 @@
 package com.nos.tax.waterbill.command.application.service;
 
-import com.nos.tax.application.exception.NotFoundException;
 import com.nos.tax.building.command.domain.Building;
 import com.nos.tax.building.command.domain.repository.BuildingRepository;
+import com.nos.tax.common.exception.NotFoundException;
 import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
 import com.nos.tax.member.command.domain.Member;

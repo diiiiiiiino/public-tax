@@ -1,9 +1,8 @@
-package com.nos.tax.member.command.application;
+package com.nos.tax.member.command.application.service;
 
-import com.nos.tax.application.component.DateUtils;
-import com.nos.tax.application.exception.NotFoundException;
 import com.nos.tax.authority.command.domain.Authority;
 import com.nos.tax.authority.command.domain.enumeration.AuthorityEnum;
+import com.nos.tax.common.component.DateUtils;
 import com.nos.tax.helper.builder.HouseHoldCreateHelperBuilder;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.household.command.domain.HouseHolder;
@@ -12,7 +11,8 @@ import com.nos.tax.invite.command.domain.MemberInvite;
 import com.nos.tax.invite.command.domain.repository.MemberInviteCodeRepository;
 import com.nos.tax.member.command.application.dto.MemberCreateRequest;
 import com.nos.tax.member.command.application.exception.ExpiredInviteCodeException;
-import com.nos.tax.member.command.application.service.MemberCreateService;
+import com.nos.tax.member.command.application.exception.HouseHoldNotFoundException;
+import com.nos.tax.member.command.application.exception.InviteCodeNotFoundException;
 import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.member.command.domain.MemberAuthority;
 import com.nos.tax.member.command.domain.Mobile;
@@ -58,7 +58,7 @@ public class MemberCreateServiceTest {
         when(memberInviteCodeRepository.findByCode(anyString())).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> memberCreateService.create(memberCreateRequest))
-                .isInstanceOf(NotFoundException.class)
+                .isInstanceOf(InviteCodeNotFoundException.class)
                 .hasMessage("not found inviteCode");
     }
 
@@ -93,7 +93,7 @@ public class MemberCreateServiceTest {
         when(houseHoldRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> memberCreateService.create(memberCreateRequest))
-                .isInstanceOf(NotFoundException.class)
+                .isInstanceOf(HouseHoldNotFoundException.class)
                 .hasMessage("not found household");
     }
 

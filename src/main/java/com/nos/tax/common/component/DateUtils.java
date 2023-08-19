@@ -1,4 +1,4 @@
-package com.nos.tax.application.component;
+package com.nos.tax.common.component;
 
 import org.springframework.stereotype.Component;
 

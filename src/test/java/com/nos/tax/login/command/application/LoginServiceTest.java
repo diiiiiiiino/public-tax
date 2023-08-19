@@ -1,12 +1,12 @@
 package com.nos.tax.login.command.application;
 
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
+import com.nos.tax.login.command.application.exception.LoginFailedException;
 import com.nos.tax.login.command.application.service.LoginRequest;
 import com.nos.tax.login.command.application.service.LoginServiceImpl;
 import com.nos.tax.login.command.domain.LoginRecord;
 import com.nos.tax.login.command.domain.LoginRecordRepository;
 import com.nos.tax.member.command.domain.Member;
-import com.nos.tax.member.command.domain.exception.LoginFailedException;
 import com.nos.tax.member.command.domain.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

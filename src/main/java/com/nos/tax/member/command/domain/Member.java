@@ -1,7 +1,8 @@
 package com.nos.tax.member.command.domain;
 
 import com.nos.tax.member.command.domain.converter.MobileConverter;
-import com.nos.tax.member.command.domain.exception.PasswordChangeException;
+import com.nos.tax.member.command.domain.exception.PasswordNotMatchedException;
+import com.nos.tax.member.command.domain.exception.UpdatePasswordSameException;
 import com.nos.tax.util.VerifyUtil;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -75,11 +76,11 @@ public class Member {
         VerifyUtil.verifyText(originPassword);
 
         if(!this.password.match(originPassword)){
-            throw new PasswordChangeException("password is not the same");
+            throw new PasswordNotMatchedException("password is not matched");
         }
 
         if(this.password.match(updatePassword)){
-            throw new PasswordChangeException("origin and update password same");
+            throw new UpdatePasswordSameException("origin and update password same");
         }
 
         setPassword(Password.of(updatePassword));

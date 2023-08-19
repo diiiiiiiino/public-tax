@@ -1,6 +1,6 @@
 package com.nos.tax.household.command.application;
 
-import com.nos.tax.application.exception.NotFoundException;
+import com.nos.tax.common.exception.NotFoundException;
 import com.nos.tax.helper.builder.HouseHoldCreateHelperBuilder;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
 import com.nos.tax.household.command.domain.HouseHold;

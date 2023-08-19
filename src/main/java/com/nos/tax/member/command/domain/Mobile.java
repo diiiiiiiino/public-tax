@@ -1,5 +1,6 @@
 package com.nos.tax.member.command.domain;
 
+import com.nos.tax.common.exception.ValidationException;
 import com.nos.tax.util.VerifyUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -30,7 +31,7 @@ public class Mobile {
 
     private void verifyLength(String value){
         if(value.length() != LENGTH){
-            throw new IllegalArgumentException("mobile length is different set length");
+            throw new ValidationException("mobile length is different set length");
         }
     }
 

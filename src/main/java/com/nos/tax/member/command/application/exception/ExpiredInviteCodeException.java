@@ -1,11 +1,10 @@
 package com.nos.tax.member.command.application.exception;
 
-public class ExpiredInviteCodeException extends RuntimeException {
-    public ExpiredInviteCodeException(String message) {
-        super(message);
-    }
+import com.nos.tax.common.exception.ApplicationException;
+import com.nos.tax.common.http.ErrorCode;
 
-    public ExpiredInviteCodeException(String message, Throwable cause) {
-        super(message, cause);
+public class ExpiredInviteCodeException extends ApplicationException {
+    public ExpiredInviteCodeException(String message) {
+        super(message, ErrorCode.INVITE_CODE_EXPIRED);
     }
 }

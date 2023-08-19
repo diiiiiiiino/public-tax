@@ -1,7 +1,6 @@
 package com.nos.tax.member.command.application.service;
 
-import com.nos.tax.application.component.DateUtils;
-import com.nos.tax.application.exception.NotFoundException;
+import com.nos.tax.common.component.DateUtils;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.household.command.domain.HouseHolder;
 import com.nos.tax.household.command.domain.repository.HouseHoldRepository;
@@ -9,6 +8,8 @@ import com.nos.tax.invite.command.domain.MemberInvite;
 import com.nos.tax.invite.command.domain.repository.MemberInviteCodeRepository;
 import com.nos.tax.member.command.application.dto.MemberCreateRequest;
 import com.nos.tax.member.command.application.exception.ExpiredInviteCodeException;
+import com.nos.tax.member.command.application.exception.HouseHoldNotFoundException;
+import com.nos.tax.member.command.application.exception.InviteCodeNotFoundException;
 import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.member.command.domain.repository.MemberRepository;
 import com.nos.tax.util.VerifyUtil;
@@ -35,14 +36,14 @@ public class MemberCreateService {
         Objects.requireNonNull(request.getHouseholdId());
 
         MemberInvite memberInvite = memberInviteCodeRepository.findByCode(request.getInviteCode())
-                .orElseThrow(() -> new NotFoundException("not found inviteCode"));
+                .orElseThrow(() -> new InviteCodeNotFoundException("not found inviteCode"));
 
         if(memberInvite.isExpired(dateUtils.today())){
             throw new ExpiredInviteCodeException("expired inviteCode");
         }
 
         HouseHold houseHold = houseHoldRepository.findById(request.getHouseholdId())
-                .orElseThrow(() -> new NotFoundException("not found household"));
+                .orElseThrow(() -> new HouseHoldNotFoundException("not found household"));
 
         Member member = MemberCreateRequest.newMember(request);
         memberRepository.save(member);
