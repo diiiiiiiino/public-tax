@@ -1,6 +1,6 @@
 package com.nos.tax.household.command.domain;
 
-import com.nos.tax.common.exception.ValidationException;
+import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
 import com.nos.tax.helper.builder.HouseHolderCreateHelperBuilder;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
@@ -21,7 +21,7 @@ public class HouseholdAggregationTest {
     @NullAndEmptySource
     void householder_create_with_null_and_empty_name(String name){
         assertThatThrownBy(() -> HouseHolderCreateHelperBuilder.builder().name(name).build())
-                .isInstanceOf(ValidationException.class);
+                .isInstanceOf(ValidationErrorException.class);
     }
 
     @DisplayName("세대주 생성 시 Mobile 밸류 누락")
@@ -44,7 +44,7 @@ public class HouseholdAggregationTest {
     @NullAndEmptySource
     void household_create_with_null_and_empty_room(String room) {
         assertThatThrownBy(() -> HouseHold.of(room, BuildingCreateHelperBuilder.builder().build()))
-                .isInstanceOf(ValidationException.class);
+                .isInstanceOf(ValidationErrorException.class);
     }
 
     @DisplayName("세대 생성 성공")

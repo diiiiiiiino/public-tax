@@ -1,9 +1,10 @@
 package com.nos.tax.member.command.application.service;
 
-import com.nos.tax.common.exception.ValidationException;
+import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
 import com.nos.tax.member.command.application.dto.PasswordChangeRequest;
 import com.nos.tax.member.command.application.exception.MemberNotFoundException;
+import com.nos.tax.member.command.application.validator.PasswordChangeRequestValidator;
 import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.member.command.domain.repository.MemberRepository;
 import org.assertj.core.api.Assertions;
@@ -22,11 +23,13 @@ import static org.mockito.Mockito.when;
 public class PasswordChangeServiceTest {
 
     private MemberRepository memberRepository;
+    private PasswordChangeRequestValidator passwordChangeRequestValidator;
     private PasswordChangeService passwordChangeService;
 
     public PasswordChangeServiceTest() {
         memberRepository = mock(MemberRepository.class);
-        passwordChangeService = new PasswordChangeService(memberRepository);
+        passwordChangeRequestValidator = new PasswordChangeRequestValidator();
+        passwordChangeService = new PasswordChangeService(memberRepository, passwordChangeRequestValidator);
     }
 
     @DisplayName("회원 정보가 존재하지 않을 경우")
@@ -89,7 +92,7 @@ public class PasswordChangeServiceTest {
         Member member = MemberCreateHelperBuilder.builder().build();
 
         Assertions.assertThatThrownBy(() -> passwordChangeService.change(member, request))
-                .isInstanceOf(ValidationException.class)
-                .hasMessage("Has No Text");
+                .isInstanceOf(ValidationErrorException.class)
+                .hasMessage("Request has invalid values");
     }
 }

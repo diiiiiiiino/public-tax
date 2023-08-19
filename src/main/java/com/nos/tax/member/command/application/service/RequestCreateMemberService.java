@@ -1,7 +1,7 @@
 package com.nos.tax.member.command.application.service;
 
 import com.nos.tax.common.exception.NotFoundException;
-import com.nos.tax.common.exception.ValidationException;
+import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.household.command.domain.repository.HouseHoldRepository;
 import com.nos.tax.invite.command.domain.MemberInvite;
@@ -35,14 +35,14 @@ public class RequestCreateMemberService {
         boolean hasNull = requests.stream()
                 .anyMatch(request -> !StringUtils.hasText(request.getMobile()) || Objects.isNull(request.getHouseHoldId()));
         if(hasNull){
-            throw new ValidationException("list has null or empty value");
+            throw new ValidationErrorException("list has null or empty value");
         }
 
         boolean hasMobileLengthNotEleven = requests.stream()
                 .map(RequestCreateMemberRequest::getMobile)
                 .anyMatch(mobile -> mobile.length() != 11);
         if(hasMobileLengthNotEleven){
-            throw new ValidationException("mobile length is not 11");
+            throw new ValidationErrorException("mobile length is not 11");
         }
 
         List<Long> householdIds = requests.stream()

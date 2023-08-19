@@ -1,9 +1,10 @@
 package com.nos.tax.member.command.application.service;
 
-import com.nos.tax.common.exception.ValidationException;
+import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
-import com.nos.tax.member.command.application.dto.MemberUpdateRequest;
+import com.nos.tax.member.command.application.dto.MemberInfoChangeRequest;
 import com.nos.tax.member.command.application.exception.MemberNotFoundException;
+import com.nos.tax.member.command.application.validator.MemberInfoChangeRequestValidator;
 import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.member.command.domain.repository.MemberRepository;
 import org.assertj.core.api.Assertions;
@@ -22,17 +23,19 @@ import static org.mockito.Mockito.when;
 public class MemberInfoChangeServiceTest {
 
     private MemberRepository memberRepository;
+    private MemberInfoChangeRequestValidator validator;
     private MemberInfoChangeService memberInfoChangeService;
 
     public MemberInfoChangeServiceTest() {
         memberRepository = mock(MemberRepository.class);
-        memberInfoChangeService = new MemberInfoChangeService(memberRepository);
+        validator = new MemberInfoChangeRequestValidator();
+        memberInfoChangeService = new MemberInfoChangeService(memberRepository, validator);
     }
 
     @DisplayName("회원 정보가 존재하지 않을 경우")
     @Test
     void memberNotFound() {
-        MemberUpdateRequest request = MemberUpdateRequest.builder()
+        MemberInfoChangeRequest request = MemberInfoChangeRequest.builder()
                 .name("홍길동")
                 .mobile("01012345678")
                 .build();
@@ -48,7 +51,7 @@ public class MemberInfoChangeServiceTest {
     @ParameterizedTest
     @NullAndEmptySource
     void changeNameIsNullOrEmpty(String name) {
-        MemberUpdateRequest request = MemberUpdateRequest.builder()
+        MemberInfoChangeRequest request = MemberInfoChangeRequest.builder()
                 .name(name)
                 .mobile("01012345678")
                 .build();
@@ -60,7 +63,7 @@ public class MemberInfoChangeServiceTest {
     @ParameterizedTest
     @NullAndEmptySource
     void changeMobileIsNullOrEmpty(String mobile) {
-        MemberUpdateRequest request = MemberUpdateRequest.builder()
+        MemberInfoChangeRequest request = MemberInfoChangeRequest.builder()
                 .name("홍길동")
                 .mobile(mobile)
                 .build();
@@ -71,7 +74,7 @@ public class MemberInfoChangeServiceTest {
     @DisplayName("회원정보 변경")
     @Test
     void changeMemberInfo() {
-        MemberUpdateRequest request = MemberUpdateRequest.builder()
+        MemberInfoChangeRequest request = MemberInfoChangeRequest.builder()
                 .name("홍길동")
                 .mobile("01012345678")
                 .build();
@@ -86,11 +89,11 @@ public class MemberInfoChangeServiceTest {
         assertThat(member.getMobile().toString()).isEqualTo("01012345678");
     }
 
-    private void assertChangeParameter(MemberUpdateRequest request){
+    private void assertChangeParameter(MemberInfoChangeRequest request){
         Member member = MemberCreateHelperBuilder.builder().build();
 
         Assertions.assertThatThrownBy(() -> memberInfoChangeService.change(member, request))
-                .isInstanceOf(ValidationException.class)
-                .hasMessage("Has No Text");
+                .isInstanceOf(ValidationErrorException.class)
+                .hasMessage("Request has invalid values");
     }
 }

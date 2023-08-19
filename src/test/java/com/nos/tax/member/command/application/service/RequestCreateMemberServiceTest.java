@@ -1,7 +1,7 @@
 package com.nos.tax.member.command.application.service;
 
 import com.nos.tax.common.exception.NotFoundException;
-import com.nos.tax.common.exception.ValidationException;
+import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.helper.builder.HouseHoldCreateHelperBuilder;
 import com.nos.tax.household.command.domain.repository.HouseHoldRepository;
 import com.nos.tax.invite.command.domain.repository.MemberInviteCodeRepository;
@@ -39,7 +39,7 @@ public class RequestCreateMemberServiceTest {
     @NullAndEmptySource
     void request_null_and_empty(List<RequestCreateMemberRequest> requests) {
         assertThatThrownBy(() -> requestCreateMemberService.request(requests))
-                .isInstanceOf(ValidationException.class)
+                .isInstanceOf(ValidationErrorException.class)
                 .hasMessage("list no element");
     }
 
@@ -48,7 +48,7 @@ public class RequestCreateMemberServiceTest {
     @MethodSource("nullAndEmptyCreateMemberRequestList")
     void include_null_and_empty_value(List<RequestCreateMemberRequest> requests) {
         assertThatThrownBy(() -> requestCreateMemberService.request(requests))
-                .isInstanceOf(ValidationException.class)
+                .isInstanceOf(ValidationErrorException.class)
                 .hasMessage("list has null or empty value");
     }
 
@@ -57,7 +57,7 @@ public class RequestCreateMemberServiceTest {
     @MethodSource("mobileLengthNotElevenList")
     void mobileLengthIsNotEleven(List<RequestCreateMemberRequest> requests) {
         assertThatThrownBy(() -> requestCreateMemberService.request(requests))
-                .isInstanceOf(ValidationException.class)
+                .isInstanceOf(ValidationErrorException.class)
                 .hasMessage("mobile length is not 11");
     }
 

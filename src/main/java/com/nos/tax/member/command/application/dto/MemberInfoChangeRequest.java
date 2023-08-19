@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class MemberUpdateRequest {
+public class MemberInfoChangeRequest {
     private String name;
     private String mobile;
 }

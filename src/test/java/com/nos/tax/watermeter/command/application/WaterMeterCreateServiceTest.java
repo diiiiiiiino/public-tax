@@ -1,7 +1,7 @@
 package com.nos.tax.watermeter.command.application;
 
 import com.nos.tax.common.exception.NotFoundException;
-import com.nos.tax.common.exception.ValidationException;
+import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.helper.builder.HouseHoldCreateHelperBuilder;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
 import com.nos.tax.household.command.domain.HouseHold;
@@ -45,7 +45,7 @@ public class WaterMeterCreateServiceTest {
         when(houseHoldRepository.findByMemberId(any())).thenReturn(Optional.of(HouseHoldCreateHelperBuilder.builder().build()));
 
         assertThatThrownBy(() -> waterMeterCreateService.create(waterMeterCreateRequest, member))
-                .isInstanceOf(ValidationException.class)
+                .isInstanceOf(ValidationErrorException.class)
                 .hasMessage("no negative");
     }
 
@@ -58,7 +58,7 @@ public class WaterMeterCreateServiceTest {
         when(houseHoldRepository.findByMemberId(any())).thenReturn(Optional.of(HouseHoldCreateHelperBuilder.builder().build()));
 
         assertThatThrownBy(() -> waterMeterCreateService.create(waterMeterCreateRequest, member))
-                .isInstanceOf(ValidationException.class)
+                .isInstanceOf(ValidationErrorException.class)
                 .hasMessage("no negative");
     }
 
@@ -71,7 +71,7 @@ public class WaterMeterCreateServiceTest {
         when(houseHoldRepository.findByMemberId(any())).thenReturn(Optional.of(HouseHoldCreateHelperBuilder.builder().build()));
 
         assertThatThrownBy(() -> waterMeterCreateService.create(waterMeterCreateRequest, member))
-                .isInstanceOf(ValidationException.class)
+                .isInstanceOf(ValidationErrorException.class)
                 .hasMessage("Present meter smaller than previous meter");
     }
 

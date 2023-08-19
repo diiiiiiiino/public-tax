@@ -2,7 +2,7 @@ package com.nos.tax.member.command.application.service;
 
 import com.nos.tax.building.command.domain.Building;
 import com.nos.tax.building.command.domain.repository.BuildingRepository;
-import com.nos.tax.common.exception.ValidationException;
+import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.member.command.application.dto.AdminCreateRequest;
 import com.nos.tax.member.command.application.dto.BuildingInfo;
 import com.nos.tax.member.command.application.dto.HouseHoldInfo;
@@ -71,7 +71,7 @@ public class AdminCreateServiceTest {
         AdminCreateRequest adminCreateRequest = AdminCreateRequest.of(memberCreateRequest, buildingInfo, houseHoldInfos);
 
         assertThatThrownBy(() -> adminCreateService.create(adminCreateRequest))
-                .isInstanceOf(ValidationException.class)
+                .isInstanceOf(ValidationErrorException.class)
                 .hasMessage("list no element");
     }
 
@@ -85,7 +85,7 @@ public class AdminCreateServiceTest {
         AdminCreateRequest adminCreateRequest = AdminCreateRequest.of(memberCreateRequest, buildingInfo, houseHoldInfos);
 
         assertThatThrownBy(() -> adminCreateService.create(adminCreateRequest))
-                .isInstanceOf(ValidationException.class)
+                .isInstanceOf(ValidationErrorException.class)
                 .hasMessage("select just one HouseHold");
     }
 

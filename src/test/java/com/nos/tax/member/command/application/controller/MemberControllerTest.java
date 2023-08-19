@@ -1,9 +1,12 @@
 package com.nos.tax.member.command.application.controller;
 
-import com.nos.tax.common.exception.ValidationException;
+import com.nos.tax.common.exception.ValidationCode;
+import com.nos.tax.common.exception.ValidationError;
+import com.nos.tax.common.exception.ValidationErrorException;
+import com.nos.tax.common.http.ErrorCode;
 import com.nos.tax.helper.BaseControllerTest;
 import com.nos.tax.member.command.application.dto.MemberCreateRequest;
-import com.nos.tax.member.command.application.dto.MemberUpdateRequest;
+import com.nos.tax.member.command.application.dto.MemberInfoChangeRequest;
 import com.nos.tax.member.command.application.dto.PasswordChangeRequest;
 import com.nos.tax.member.command.application.exception.ExpiredInviteCodeException;
 import com.nos.tax.member.command.application.exception.HouseHoldNotFoundException;
@@ -22,11 +25,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(MemberController.class)
 public class MemberControllerTest extends BaseControllerTest {
@@ -40,22 +47,6 @@ public class MemberControllerTest extends BaseControllerTest {
     @MockBean
     private PasswordChangeService passwordChangeService;
 
-    @DisplayName("회원 정보 수정 시 유효성 에러")
-    @Test
-    void whenMemberUpdateThenInvalidRequest() throws Exception {
-        MemberUpdateRequest request = MemberUpdateRequest.builder()
-                .name("홍길동")
-                .mobile("01012345678")
-                .build();
-
-        doThrow(new ValidationException("Has No Text"))
-                .when(memberInfoChangeService).change(any(Member.class), any(MemberUpdateRequest.class));
-
-        mockMvc.perform(patch("/member")
-                        .content(writeValueAsString(request))
-                        .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isBadRequest());
-    }
 
     @DisplayName("회원 생성 시 초대코드 미조회")
     @Test
@@ -68,7 +59,8 @@ public class MemberControllerTest extends BaseControllerTest {
         mockMvc.perform(post("/member")
                         .content(writeValueAsString(memberCreateRequest))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
     @DisplayName("회원 생성 시 초대코드 만료")
@@ -82,7 +74,8 @@ public class MemberControllerTest extends BaseControllerTest {
         mockMvc.perform(post("/member")
                         .content(writeValueAsString(memberCreateRequest))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
     @DisplayName("회원 생성 시 세대 미조회")
@@ -96,7 +89,8 @@ public class MemberControllerTest extends BaseControllerTest {
         mockMvc.perform(post("/member")
                         .content(writeValueAsString(memberCreateRequest))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
     @DisplayName("회원 생성 성공")
@@ -107,19 +101,44 @@ public class MemberControllerTest extends BaseControllerTest {
         mockMvc.perform(post("/member")
                         .content(writeValueAsString(memberCreateRequest))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
+
+    @DisplayName("회원 정보 수정 시 유효성 에러")
+    @Test
+    void whenMemberUpdateThenInvalidRequest() throws Exception {
+        MemberInfoChangeRequest request = MemberInfoChangeRequest.builder()
+                .name("홍길동")
+                .mobile("01012345678")
+                .build();
+
+        List<ValidationError> errors = new ArrayList<>();
+        errors.add(ValidationError.of("memberName", ValidationCode.NO_TEXT.getValue()));
+        errors.add(ValidationError.of("memberMobile", ValidationCode.NO_TEXT.getValue()));
+
+        doThrow(new ValidationErrorException("Request has invalid values", errors))
+                .when(memberInfoChangeService).change(any(Member.class), any(MemberInfoChangeRequest.class));
+
+        mockMvc.perform(patch("/member")
+                        .content(writeValueAsString(request))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.errors").isNotEmpty())
+                .andDo(print());
     }
 
     @DisplayName("회원 정보 수정 시 회원 미조회")
     @Test
     void whenMemberUpdateThenMemberNotFound() throws Exception {
-        MemberUpdateRequest request = MemberUpdateRequest.builder()
+        MemberInfoChangeRequest request = MemberInfoChangeRequest.builder()
                 .name("홍길동")
                 .mobile("01012345678")
                 .build();
 
         doThrow(new MemberNotFoundException("Member not found"))
-                .when(memberInfoChangeService).change(any(Member.class), any(MemberUpdateRequest.class));
+                .when(memberInfoChangeService).change(any(Member.class), any(MemberInfoChangeRequest.class));
 
         mockMvc.perform(patch("/member")
                 .content(writeValueAsString(request))
@@ -135,13 +154,19 @@ public class MemberControllerTest extends BaseControllerTest {
                 .newPassword("qwer1234@@")
                 .build();
 
-        doThrow(new ValidationException("Has No Text"))
+        List<ValidationError> errors = new ArrayList<>();
+        errors.add(ValidationError.of("memberOrgPassword", ValidationCode.NO_TEXT.getValue()));
+
+        doThrow(new ValidationErrorException("Has No Text", errors))
                 .when(passwordChangeService).change(any(Member.class), any(PasswordChangeRequest.class));
 
         mockMvc.perform(patch("/member/password")
                         .content(writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.errors").isNotEmpty())
+                .andDo(print());
     }
 
     @DisplayName("회원 비밀번호 수정 시 회원 미조회")
@@ -158,7 +183,8 @@ public class MemberControllerTest extends BaseControllerTest {
         mockMvc.perform(patch("/member/password")
                         .content(writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
     @DisplayName("회원 비밀번호 수정 시 비밀번호가 틀렸을 경우")
@@ -175,7 +201,8 @@ public class MemberControllerTest extends BaseControllerTest {
         mockMvc.perform(patch("/member/password")
                         .content(writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
     @DisplayName("회원 비밀번호 수정 시 기존 비밀번호와 변경 비밀번호가 같을때")
@@ -192,7 +219,8 @@ public class MemberControllerTest extends BaseControllerTest {
         mockMvc.perform(patch("/member/password")
                         .content(writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
     @DisplayName("회원 비밀번호 수정 성공")
@@ -206,6 +234,7 @@ public class MemberControllerTest extends BaseControllerTest {
         mockMvc.perform(patch("/member/password")
                         .content(writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 }

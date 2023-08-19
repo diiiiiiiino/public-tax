@@ -3,7 +3,7 @@ package com.nos.tax.member.command.application.service;
 import com.nos.tax.building.command.domain.Address;
 import com.nos.tax.building.command.domain.Building;
 import com.nos.tax.building.command.domain.repository.BuildingRepository;
-import com.nos.tax.common.exception.ValidationException;
+import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.member.command.application.dto.AdminCreateRequest;
 import com.nos.tax.member.command.application.dto.BuildingInfo;
@@ -61,7 +61,7 @@ public class AdminCreateService {
                 .count();
 
         if(checkCount != SELECT_HOUSEHOLD_COUNT){
-            throw new ValidationException("select just one HouseHold");
+            throw new ValidationErrorException("select just one HouseHold");
         }
     }
 }

@@ -3,7 +3,7 @@ package com.nos.tax.waterbill.command.application.service;
 import com.nos.tax.building.command.domain.Building;
 import com.nos.tax.building.command.domain.repository.BuildingRepository;
 import com.nos.tax.common.exception.NotFoundException;
-import com.nos.tax.common.exception.ValidationException;
+import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
 import com.nos.tax.member.command.domain.Member;
@@ -52,7 +52,7 @@ public class WaterBillCreateServiceTest {
         when(buildingRepository.findByMember(any())).thenReturn(Optional.of(building));
 
         assertThatThrownBy(() -> waterBillCreateService.create(admin, -999, YearMonth.of(2023, 7)))
-                .isInstanceOf(ValidationException.class)
+                .isInstanceOf(ValidationErrorException.class)
                 .hasMessage("no negative");
     }
 

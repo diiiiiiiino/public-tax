@@ -1,6 +1,6 @@
 package com.nos.tax.member.command.infra;
 
-import com.nos.tax.common.exception.ValidationException;
+import com.nos.tax.common.exception.ValidationErrorException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -21,7 +21,7 @@ public class AlertCreateMemberServiceImplTest {
         String inviteCode = "123456";
 
         Assertions.assertThatThrownBy(() -> alertCreateMemberServiceImpl.alert(mobile, inviteCode))
-                .isInstanceOf(ValidationException.class)
+                .isInstanceOf(ValidationErrorException.class)
                 .hasMessage("Has No Text");
     }
 
@@ -32,7 +32,7 @@ public class AlertCreateMemberServiceImplTest {
         String mobile = "01012345678";
 
         Assertions.assertThatThrownBy(() -> alertCreateMemberServiceImpl.alert(mobile, inviteCode))
-                .isInstanceOf(ValidationException.class)
+                .isInstanceOf(ValidationErrorException.class)
                 .hasMessage("Has No Text");
     }
 }
