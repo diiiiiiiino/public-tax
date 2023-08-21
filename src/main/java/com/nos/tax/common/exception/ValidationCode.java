@@ -7,7 +7,8 @@ public enum ValidationCode {
     NULL("null"),
     EMPTY("empty"),
     NEGATIVE("negative"),
-    NO_TEXT("no text");
+    NO_TEXT("no text"),
+    LENGTH("length");
 
     private String value;
 

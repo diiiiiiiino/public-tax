@@ -11,6 +11,9 @@ import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.nos.tax.common.enumeration.TextLengthRange.MEMBER_NAME;
+import static com.nos.tax.common.enumeration.TextLengthRange.MOBILE;
+
 @Validator
 @MemberInfoChangeRequestQualifier
 public class MemberInfoChangeRequestValidator implements RequestValidator<MemberInfoChangeRequest> {
@@ -19,10 +22,24 @@ public class MemberInfoChangeRequestValidator implements RequestValidator<Member
         if(request == null){
             errors.add(ValidationError.of("request", ValidationCode.NULL.getValue()));
         } else {
-            if(!StringUtils.hasText(request.getName()))
+            String name = request.getName();
+            String mobile = request.getMobile();
+
+            if(!StringUtils.hasText(name)){
                 errors.add(ValidationError.of("memberName", ValidationCode.NO_TEXT.getValue()));
-            if(!StringUtils.hasText(request.getMobile()))
+            } else {
+                int length = name.length();
+                if(MEMBER_NAME.getMin() > length || MEMBER_NAME.getMax() < length)
+                    errors.add(ValidationError.of("memberName", ValidationCode.LENGTH.getValue()));
+            }
+
+            if(!StringUtils.hasText(mobile)){
                 errors.add(ValidationError.of("memberMobile", ValidationCode.NO_TEXT.getValue()));
+            } else {
+                int length = mobile.length();
+                if(MOBILE.getMin() > length || MOBILE.getMax() < length)
+                    errors.add(ValidationError.of("memberMobile", ValidationCode.LENGTH.getValue()));
+            }
         }
 
         return errors;

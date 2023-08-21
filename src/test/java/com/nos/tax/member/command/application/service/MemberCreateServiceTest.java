@@ -60,13 +60,14 @@ public class MemberCreateServiceTest {
     @DisplayName("생성 요청 파라미터 유효성 오류")
     @Test
     void requestValueInvalid() {
-        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("", "qwer1234!@", "홍길동", null, null, "123456");
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("", "qwer12!", "홍길동", null, null, "123456");
 
         assertThatThrownBy(() -> memberCreateService.create(memberCreateRequest))
                 .isInstanceOf(ValidationErrorException.class)
                 .hasMessage("Request has invalid values")
                 .hasFieldOrPropertyWithValue("errors", List.of(
                         ValidationError.of("memberLoginId", ValidationCode.NO_TEXT.getValue()),
+                        ValidationError.of("memberPassword", ValidationCode.LENGTH.getValue()),
                         ValidationError.of("memberMobile", ValidationCode.NO_TEXT.getValue()),
                         ValidationError.of("memberHouseHoldId", ValidationCode.EMPTY.getValue())
                 ));

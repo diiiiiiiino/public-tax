@@ -1,7 +1,10 @@
 package com.nos.tax.member.command.application.service;
 
+import com.nos.tax.common.exception.ValidationCode;
+import com.nos.tax.common.exception.ValidationError;
 import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
+import com.nos.tax.member.command.application.dto.MemberInfoChangeRequest;
 import com.nos.tax.member.command.application.dto.PasswordChangeRequest;
 import com.nos.tax.member.command.application.exception.MemberNotFoundException;
 import com.nos.tax.member.command.application.validator.PasswordChangeRequestValidator;
@@ -13,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,6 +36,25 @@ public class PasswordChangeServiceTest {
         passwordChangeService = new PasswordChangeService(memberRepository, passwordChangeRequestValidator);
     }
 
+    @DisplayName("변경 요청 파라미터 유효성 오류")
+    @Test
+    void requestValueInvalid() {
+        PasswordChangeRequest request = PasswordChangeRequest.builder()
+                .orgPassword("")
+                .newPassword("bc14!@")
+                .build();
+
+        Member member = MemberCreateHelperBuilder.builder().build();
+
+        Assertions.assertThatThrownBy(() -> passwordChangeService.change(member, request))
+                .isInstanceOf(ValidationErrorException.class)
+                .hasMessage("Request has invalid values")
+                .hasFieldOrPropertyWithValue("errors", List.of(
+                        ValidationError.of("memberOrgPassword", ValidationCode.NO_TEXT.getValue()),
+                        ValidationError.of("memberNewPassword", ValidationCode.LENGTH.getValue())
+                ));
+    }
+
     @DisplayName("회원 정보가 존재하지 않을 경우")
     @Test
     void memberNotFound() {
@@ -45,30 +68,6 @@ public class PasswordChangeServiceTest {
         Assertions.assertThatThrownBy(() -> passwordChangeService.change(member, request))
                 .isInstanceOf(MemberNotFoundException.class)
                 .hasMessage("Member not found");
-    }
-
-    @DisplayName("기존 비밀번호가 null 또는 빈 문자열일 경우")
-    @ParameterizedTest
-    @NullAndEmptySource
-    void changeOrgPasswordIsNullOrEmpty(String orgPassword) {
-        PasswordChangeRequest request = PasswordChangeRequest.builder()
-                .orgPassword(orgPassword)
-                .newPassword("abcd1234!@")
-                .build();
-
-        assertChangeParameter(request);
-    }
-
-    @DisplayName("변경할 비밀번호가 null 또는 빈 문자열일 경우")
-    @ParameterizedTest
-    @NullAndEmptySource
-    void changeNewPasswordIsNullOrEmpty(String newPassword) {
-        PasswordChangeRequest request = PasswordChangeRequest.builder()
-                .orgPassword("qwer1234!@#$")
-                .newPassword(newPassword)
-                .build();
-
-        assertChangeParameter(request);
     }
 
     @DisplayName("비밀번호 변경")
@@ -86,13 +85,5 @@ public class PasswordChangeServiceTest {
         passwordChangeService.change(member, request);
 
         assertThat(member.getPassword().getValue()).isEqualTo("qwer1234!!");
-    }
-
-    private void assertChangeParameter(PasswordChangeRequest request){
-        Member member = MemberCreateHelperBuilder.builder().build();
-
-        Assertions.assertThatThrownBy(() -> passwordChangeService.change(member, request))
-                .isInstanceOf(ValidationErrorException.class)
-                .hasMessage("Request has invalid values");
     }
 }

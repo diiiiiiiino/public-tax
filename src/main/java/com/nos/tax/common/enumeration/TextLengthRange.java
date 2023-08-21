@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum TextLengthRange {
     MEMBER_NAME(1, 15),
-    MEMBER_LOGIN(1, 15),
+    LOGIN_ID(1, 15),
     PASSWORD(8, 16),
     HOUSEHOLD_ROOM(1, 6),
     MEMBER_INVITE_CODE(6, 6),

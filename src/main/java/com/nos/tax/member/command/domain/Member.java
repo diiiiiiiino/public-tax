@@ -15,7 +15,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 
-import static com.nos.tax.common.enumeration.TextLengthRange.MEMBER_LOGIN;
 import static com.nos.tax.common.enumeration.TextLengthRange.MEMBER_NAME;
 
 @Entity
@@ -120,7 +119,7 @@ public class Member {
     }
 
     private void setName(String name) {
-        this.name = VerifyUtil.verifyTextLength(name, "memberName", MEMBER_LOGIN.getMin(), MEMBER_LOGIN.getMax());
+        this.name = VerifyUtil.verifyTextLength(name, "memberName", MEMBER_NAME.getMin(), MEMBER_NAME.getMax());
     }
 
     private void setMobile(Mobile mobile) {
