@@ -46,7 +46,8 @@ public class AdminCreateServiceTest {
         AdminCreateRequest adminCreateRequest = AdminCreateRequest.of(null, buildingInfo, houseHoldInfos);
 
         assertThatThrownBy(() -> adminCreateService.create(adminCreateRequest))
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(ValidationErrorException.class)
+                .hasMessage("request is null");
     }
 
     @DisplayName("건물 정보가 없는 경우")
@@ -58,7 +59,8 @@ public class AdminCreateServiceTest {
         AdminCreateRequest adminCreateRequest = AdminCreateRequest.of(memberCreateRequest, null, houseHoldInfos);
 
         assertThatThrownBy(() -> adminCreateService.create(adminCreateRequest))
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(ValidationErrorException.class)
+                .hasMessage("buildingInfo is null");
     }
 
     @DisplayName("세대 목록이 null 또는 비어있는 경우")
@@ -72,7 +74,7 @@ public class AdminCreateServiceTest {
 
         assertThatThrownBy(() -> adminCreateService.create(adminCreateRequest))
                 .isInstanceOf(ValidationErrorException.class)
-                .hasMessage("list no element");
+                .hasMessage("houseHoldInfos no element");
     }
 
     @DisplayName("관리자의 세대 선택이 없거나 1개 이상 있을 때")

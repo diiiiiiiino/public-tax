@@ -3,7 +3,6 @@ package com.nos.tax.member.command.application.controller;
 import com.nos.tax.common.exception.ValidationCode;
 import com.nos.tax.common.exception.ValidationError;
 import com.nos.tax.common.exception.ValidationErrorException;
-import com.nos.tax.common.http.ErrorCode;
 import com.nos.tax.helper.BaseControllerTest;
 import com.nos.tax.member.command.application.dto.MemberCreateRequest;
 import com.nos.tax.member.command.application.dto.MemberInfoChangeRequest;
@@ -17,6 +16,7 @@ import com.nos.tax.member.command.application.service.MemberInfoChangeService;
 import com.nos.tax.member.command.application.service.PasswordChangeService;
 import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.member.command.domain.exception.PasswordNotMatchedException;
+import com.nos.tax.member.command.domain.exception.PasswordOutOfConditionException;
 import com.nos.tax.member.command.domain.exception.UpdatePasswordSameException;
 import com.nos.tax.member.command.presentation.MemberController;
 import org.junit.jupiter.api.DisplayName;
@@ -47,6 +47,42 @@ public class MemberControllerTest extends BaseControllerTest {
     @MockBean
     private PasswordChangeService passwordChangeService;
 
+    @DisplayName("회원 생성 시 유효성 체크")
+    @Test
+    void whenMemberCreateThenInvalidRequest() throws Exception {
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("loginId", "qwer1234!@", "홍길동", "01012345678", 1L, "123456");
+
+        List<ValidationError> errors = new ArrayList<>();
+        errors.add(ValidationError.of("memberLoginId", ValidationCode.NO_TEXT.getValue()));
+        errors.add(ValidationError.of("memberPassword", ValidationCode.NO_TEXT.getValue()));
+        errors.add(ValidationError.of("houseHoldId", ValidationCode.NULL.getValue()));
+
+        doThrow(new ValidationErrorException("Request has invalid values", errors))
+                .when(memberCreateService).create(any(MemberCreateRequest.class));
+
+        mockMvc.perform(post("/member")
+                        .content(writeValueAsString(memberCreateRequest))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.errors").isNotEmpty())
+                .andDo(print());
+    }
+
+    @DisplayName("회원 생성 시 비밀번호 정책에 맞지 않을 때")
+    @Test
+    void passwordInvalid() throws Exception {
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("loginId", "qwer1234", "홍길동", "01012345678", 1L, "123456");
+
+        doThrow(new PasswordOutOfConditionException("Has no special characters"))
+                .when(memberCreateService).create(any(MemberCreateRequest.class));
+
+        mockMvc.perform(post("/member")
+                        .content(writeValueAsString(memberCreateRequest))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    }
 
     @DisplayName("회원 생성 시 초대코드 미조회")
     @Test
@@ -157,7 +193,7 @@ public class MemberControllerTest extends BaseControllerTest {
         List<ValidationError> errors = new ArrayList<>();
         errors.add(ValidationError.of("memberOrgPassword", ValidationCode.NO_TEXT.getValue()));
 
-        doThrow(new ValidationErrorException("Has No Text", errors))
+        doThrow(new ValidationErrorException("has no text", errors))
                 .when(passwordChangeService).change(any(Member.class), any(PasswordChangeRequest.class));
 
         mockMvc.perform(patch("/member/password")

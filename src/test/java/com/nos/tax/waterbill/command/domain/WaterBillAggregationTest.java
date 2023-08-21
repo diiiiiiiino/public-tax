@@ -23,7 +23,8 @@ public class WaterBillAggregationTest {
     @Test
     void household_id_missing_when_generating_water_bill_details() {
         assertThatThrownBy(() -> WaterBillDetail.of(0, 0, null, null))
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(ValidationErrorException.class)
+                .hasMessage("waterBillDetailHouseHold is null");
     }
 
     @DisplayName("수도 요금 상세 납부금액이 음수 일 때")
@@ -34,7 +35,7 @@ public class WaterBillAggregationTest {
 
         assertThatThrownBy(() -> WaterBillDetail.of(-1000, 0, houseHold, null))
                 .isInstanceOf(ValidationErrorException.class)
-                .hasMessage("no negative");
+                .hasMessage("waterBillDetailAmount no negative");
     }
 
     @DisplayName("수도 요금 상세 납부금액 입력 성공")
@@ -52,7 +53,8 @@ public class WaterBillAggregationTest {
     @Test
     void missing_buildings_when_generating_water_bills() {
         assertThatThrownBy(() -> WaterBill.of(null, 77920, YearMonth.of(2023, 7)))
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(ValidationErrorException.class)
+                .hasMessage("waterBillBuilding is null");
     }
 
     @DisplayName("수도 요금 생성 시 총 사용액이 음수 일 때")
@@ -62,14 +64,15 @@ public class WaterBillAggregationTest {
 
         assertThatThrownBy(() -> WaterBill.of(building, -77920, YearMonth.of(2023, 7)))
                 .isInstanceOf(ValidationErrorException.class)
-                .hasMessage("no negative");
+                .hasMessage("waterBillTotalAmount no negative");
     }
 
     @DisplayName("수도 요금 생성 시 요금 정산 년월일 누락")
     @Test
     void missing_date_when_generating_water_bills() {
         assertThatThrownBy(() -> WaterBill.of(null, 77920, null))
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(ValidationErrorException.class)
+                .hasMessage("waterBillBuilding is null");
     }
 
     @DisplayName("수도 요금 생성 성공")

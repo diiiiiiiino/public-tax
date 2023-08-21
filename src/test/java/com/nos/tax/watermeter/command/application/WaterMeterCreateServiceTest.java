@@ -46,7 +46,7 @@ public class WaterMeterCreateServiceTest {
 
         assertThatThrownBy(() -> waterMeterCreateService.create(waterMeterCreateRequest, member))
                 .isInstanceOf(ValidationErrorException.class)
-                .hasMessage("no negative");
+                .hasMessage("waterMeterPreviousMeter no negative");
     }
 
     @DisplayName("이번 달 수도 계량 값이 음수인 경우")
@@ -59,7 +59,7 @@ public class WaterMeterCreateServiceTest {
 
         assertThatThrownBy(() -> waterMeterCreateService.create(waterMeterCreateRequest, member))
                 .isInstanceOf(ValidationErrorException.class)
-                .hasMessage("no negative");
+                .hasMessage("waterMeterPreviousMeter no negative");
     }
 
     @DisplayName("이번 달 수도 계량 값이 저번 달 수동 계량 값보다 작은 경우")
@@ -84,7 +84,8 @@ public class WaterMeterCreateServiceTest {
         when(houseHoldRepository.findByMemberId(any())).thenReturn(Optional.of(HouseHoldCreateHelperBuilder.builder().build()));
 
         assertThatThrownBy(() -> waterMeterCreateService.create(waterMeterCreateRequest, member))
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(ValidationErrorException.class)
+                .hasMessage("waterMeterYearMonth is null");
     }
 
     @DisplayName("회원이 관리하는 세대가 없을 경우")

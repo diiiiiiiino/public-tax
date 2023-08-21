@@ -40,7 +40,7 @@ public class RequestCreateMemberServiceTest {
     void request_null_and_empty(List<RequestCreateMemberRequest> requests) {
         assertThatThrownBy(() -> requestCreateMemberService.request(requests))
                 .isInstanceOf(ValidationErrorException.class)
-                .hasMessage("list no element");
+                .hasMessage("requests no element");
     }
 
     @DisplayName("회원 생성 요청에 null 또는 빈 문자열이 포함되어 있을 때")

@@ -3,6 +3,9 @@ package com.nos.tax.member.command.application.service;
 import com.nos.tax.authority.command.domain.Authority;
 import com.nos.tax.authority.command.domain.enumeration.AuthorityEnum;
 import com.nos.tax.common.component.DateUtils;
+import com.nos.tax.common.exception.ValidationCode;
+import com.nos.tax.common.exception.ValidationError;
+import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.helper.builder.HouseHoldCreateHelperBuilder;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.household.command.domain.HouseHolder;
@@ -13,6 +16,7 @@ import com.nos.tax.member.command.application.dto.MemberCreateRequest;
 import com.nos.tax.member.command.application.exception.ExpiredInviteCodeException;
 import com.nos.tax.member.command.application.exception.HouseHoldNotFoundException;
 import com.nos.tax.member.command.application.exception.InviteCodeNotFoundException;
+import com.nos.tax.member.command.application.validator.MemberCreateRequestValidator;
 import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.member.command.domain.MemberAuthority;
 import com.nos.tax.member.command.domain.Mobile;
@@ -23,6 +27,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.BDDMockito;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -40,6 +45,7 @@ public class MemberCreateServiceTest {
     private MemberInviteCodeRepository memberInviteCodeRepository;
     private HouseHoldRepository houseHoldRepository;
     private MemberRepository memberRepository;
+    private MemberCreateRequestValidator validator;
     private MemberCreateService memberCreateService;
 
     public MemberCreateServiceTest() {
@@ -47,7 +53,23 @@ public class MemberCreateServiceTest {
         memberInviteCodeRepository = mock(MemberInviteCodeRepository.class);
         houseHoldRepository = mock(HouseHoldRepository.class);
         memberRepository = mock(MemberRepository.class);
-        memberCreateService = new MemberCreateService(dateUtils, memberInviteCodeRepository, houseHoldRepository, memberRepository);
+        validator = new MemberCreateRequestValidator();
+        memberCreateService = new MemberCreateService(dateUtils, memberInviteCodeRepository, houseHoldRepository, memberRepository, validator);
+    }
+
+    @DisplayName("생성 요청 파라미터 유효성 오류")
+    @Test
+    void requestValueInvalid() {
+        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("", "qwer1234!@", "홍길동", null, null, "123456");
+
+        assertThatThrownBy(() -> memberCreateService.create(memberCreateRequest))
+                .isInstanceOf(ValidationErrorException.class)
+                .hasMessage("Request has invalid values")
+                .hasFieldOrPropertyWithValue("errors", List.of(
+                        ValidationError.of("memberLoginId", ValidationCode.NO_TEXT.getValue()),
+                        ValidationError.of("memberMobile", ValidationCode.NO_TEXT.getValue()),
+                        ValidationError.of("memberHouseHoldId", ValidationCode.EMPTY.getValue())
+                ));
     }
 
     @DisplayName("초대 코드가 존재하지 않는 경우")

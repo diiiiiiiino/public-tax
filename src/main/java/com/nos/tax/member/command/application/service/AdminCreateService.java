@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -29,8 +28,8 @@ public class AdminCreateService {
 
     @Transactional
     public void create(AdminCreateRequest request) {
-        Objects.requireNonNull(request.getMemberCreateRequest());
-        Objects.requireNonNull(request.getBuildingInfo());
+        VerifyUtil.verifyNull(request.getMemberCreateRequest(), "request");
+        VerifyUtil.verifyNull(request.getBuildingInfo(), "buildingInfo");
         verifyHouseHoldInfos(request.getHouseHoldInfos());
 
         BuildingInfo buildingInfo = request.getBuildingInfo();
@@ -54,7 +53,7 @@ public class AdminCreateService {
 
     private void verifyHouseHoldInfos(List<HouseHoldInfo> houseHoldInfos){
         final long SELECT_HOUSEHOLD_COUNT = 1;
-        VerifyUtil.verifyCollection(houseHoldInfos);
+        VerifyUtil.verifyCollection(houseHoldInfos, "houseHoldInfos");
 
         long checkCount = houseHoldInfos.stream()
                 .filter(houseHoldInfo -> houseHoldInfo.isChecked())

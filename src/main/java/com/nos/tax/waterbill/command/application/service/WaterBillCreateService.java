@@ -4,6 +4,7 @@ import com.nos.tax.building.command.domain.Building;
 import com.nos.tax.building.command.domain.repository.BuildingRepository;
 import com.nos.tax.common.exception.NotFoundException;
 import com.nos.tax.member.command.domain.Member;
+import com.nos.tax.util.VerifyUtil;
 import com.nos.tax.waterbill.command.domain.WaterBill;
 import com.nos.tax.waterbill.command.domain.exception.WaterBillDuplicateException;
 import com.nos.tax.waterbill.command.domain.repository.WaterBillRepository;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.YearMonth;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +32,7 @@ public class WaterBillCreateService {
      */
     @Transactional
     public WaterBill create(Member admin, int totalAmount, YearMonth calculateYm) {
-        Objects.requireNonNull(admin);
+        VerifyUtil.verifyNull(admin, "admin");
 
         Building building = buildingRepository.findByMember(admin.getId())
                 .orElseThrow(() -> new NotFoundException("Building is not found"));

@@ -28,7 +28,8 @@ public class HouseholdAggregationTest {
     @Test
     void householder_create_with_null_mobile() {
         assertThatThrownBy(() -> HouseHolderCreateHelperBuilder.builder().mobile(null).build())
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(ValidationErrorException.class)
+                .hasMessage("houseHolderMobile is null");
     }
 
     @DisplayName("세대주 생성 성공")

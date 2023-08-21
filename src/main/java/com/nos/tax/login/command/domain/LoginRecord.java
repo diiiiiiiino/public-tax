@@ -1,6 +1,7 @@
 package com.nos.tax.login.command.domain;
 
 import com.nos.tax.member.command.domain.Member;
+import com.nos.tax.util.VerifyUtil;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -72,7 +73,7 @@ public class LoginRecord {
     }
 
     private void setMember(Member member) {
-        this.member = Objects.requireNonNull(member);
+        this.member = VerifyUtil.verifyNull(member, "loginRecordMember");
     }
 
     private void setUserAgent(String userAgent) {
@@ -80,6 +81,6 @@ public class LoginRecord {
     }
 
     private void setLoginTime(LocalDateTime loginTime) {
-        this.loginTime = Objects.requireNonNull(loginTime);
+        this.loginTime = VerifyUtil.verifyNull(loginTime, "loginRecordLoginTime");
     }
 }

@@ -1,6 +1,7 @@
 package com.nos.tax.waterbill.command.domain.service;
 
 import com.nos.tax.building.command.domain.Building;
+import com.nos.tax.util.VerifyUtil;
 import com.nos.tax.waterbill.command.domain.WaterBill;
 import com.nos.tax.waterbill.command.domain.WaterBillDetail;
 import com.nos.tax.waterbill.command.domain.exception.WaterBillCalculateConditionException;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class WaterBillCalculateService {
@@ -25,9 +25,9 @@ public class WaterBillCalculateService {
      * @throws WaterBillStateException - 수도 요금 계산 상태가 완료되었을 경우
      */
     public void calculate(Building building, WaterBill waterBill, List<WaterMeter> waterMeters) {
-        Objects.requireNonNull(building);
-        Objects.requireNonNull(waterBill);
-        Objects.requireNonNull(waterMeters);
+        VerifyUtil.verifyNull(building, "building");
+        VerifyUtil.verifyNull(waterBill, "waterBill");
+        VerifyUtil.verifyNull(waterMeters, "waterMeters");
 
         if(building.getHouseHolds().size() != waterMeters.size()){
             throw new WaterBillCalculateConditionException("Water meter not all entered");

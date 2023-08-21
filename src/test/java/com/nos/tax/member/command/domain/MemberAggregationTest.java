@@ -4,14 +4,12 @@ import com.nos.tax.authority.command.domain.Authority;
 import com.nos.tax.authority.command.domain.enumeration.AuthorityEnum;
 import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
-import com.nos.tax.member.command.domain.exception.PasswordConditionException;
 import com.nos.tax.member.command.domain.exception.PasswordNotMatchedException;
+import com.nos.tax.member.command.domain.exception.PasswordOutOfConditionException;
 import com.nos.tax.member.command.domain.exception.UpdatePasswordSameException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -19,7 +17,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -32,8 +29,8 @@ public class MemberAggregationTest {
     @ValueSource(strings = { "1234567", "12345678912345678" })
     void password_digits_are_not_8_to_16_digits(String password) {
         assertThatThrownBy(() -> Password.of(password))
-                .isInstanceOf(PasswordConditionException.class)
-                .hasMessage("length condition not matched");
+                .isInstanceOf(PasswordOutOfConditionException.class)
+                .hasMessage("Length condition not matched");
     }
 
     @DisplayName("비밀번호가 null이거나 빈 문자열일 때")
@@ -42,7 +39,7 @@ public class MemberAggregationTest {
     void password_is_null_or_empty_string(String password) {
         assertThatThrownBy(() -> Password.of(password))
                 .isInstanceOf(ValidationErrorException.class)
-                .hasMessage("Has No Text");
+                .hasMessage("password has no text");
     }
 
     @DisplayName("비밀번호에 영문이 포함되어 있지 않을 때")
@@ -50,8 +47,8 @@ public class MemberAggregationTest {
     @ValueSource(strings = { "비밀번호1234!@#$", "12341234!@#$", "가나다라마바차카" })
     void when_the_password_does_not_contain_english_characters(String password) {
         assertThatThrownBy(() -> Password.of(password))
-                .isInstanceOf(PasswordConditionException.class)
-                .hasMessage("Has No Alphabet");
+                .isInstanceOf(PasswordOutOfConditionException.class)
+                .hasMessage("Has no alphabet");
     }
 
     @DisplayName("비밀번호에 숫자가 포함되어 있지 않을 때")
@@ -59,8 +56,8 @@ public class MemberAggregationTest {
     @ValueSource(strings = { "abcdefgh!!@@", "aaaabbbbbe", "!@!@@#@$aa" })
     void password_doesnt_contain_numbers(String value) {
         assertThatThrownBy(() -> Password.of(value))
-                .isInstanceOf(PasswordConditionException.class)
-                .hasMessage("Has No Digit");
+                .isInstanceOf(PasswordOutOfConditionException.class)
+                .hasMessage("Has no digit");
     }
 
     @DisplayName("비밀번호 생성 성공")
@@ -106,7 +103,7 @@ public class MemberAggregationTest {
 
         assertThatThrownBy(() -> member.changeName(name))
                 .isInstanceOf(ValidationErrorException.class)
-                .hasMessage("Has No Text");
+                .hasMessage("memberName has no text");
     }
 
     @DisplayName("회원 이름 변경 성공")
@@ -127,7 +124,7 @@ public class MemberAggregationTest {
 
         assertThatThrownBy(() -> member.changeMobile(Mobile.of(mobile)))
                 .isInstanceOf(ValidationErrorException.class)
-                .hasMessage("Has No Text");
+                .hasMessage("mobile has no text");
     }
 
     @DisplayName("회원 전화번호 변경 성공")
@@ -138,17 +135,6 @@ public class MemberAggregationTest {
         member.changeMobile(Mobile.of("01033334444"));
 
         assertThat(member.getMobile().toString()).isEqualTo("01033334444");
-    }
-
-    @DisplayName("회원 비밀번호 변경 시 null이나 빈 문자열 전달 시 실패")
-    @ParameterizedTest
-    @MethodSource("provideChangePasswordNullAndEmptyArguments")
-    void failed_to_deliver_null_when_changing_member_password(String originPassword, String updatePassword) {
-        Member member = MemberCreateHelperBuilder.builder().build();
-
-        assertThatThrownBy(() -> member.changePassword(originPassword, updatePassword))
-                .isInstanceOf(ValidationErrorException.class)
-                .hasMessage("Has No Text");
     }
 
     @DisplayName("회원 비밀번호 변경 시 기존 비밀번호가 일치하지 않을 때")
@@ -175,8 +161,8 @@ public class MemberAggregationTest {
                 .build();
 
         assertThatThrownBy(() -> member.changePassword(originValue, value))
-                .isInstanceOf(PasswordConditionException.class)
-                .hasMessage("length condition not matched");
+                .isInstanceOf(PasswordOutOfConditionException.class)
+                .hasMessage("Length condition not matched");
     }
 
     @DisplayName("회원 비밀번호 변경 시 기존 비밀번호가 null이거나 빈 문자열일 때")
@@ -191,7 +177,7 @@ public class MemberAggregationTest {
 
         assertThatThrownBy(() -> member.changePassword(value, updateValue))
                 .isInstanceOf(ValidationErrorException.class)
-                .hasMessage("Has No Text");
+                .hasMessage("memberOriginPassword has no text");
     }
 
     @DisplayName("회원 비밀번호 변경 시 변경할 비밀번호가 null이거나 빈 문자열일 때")
@@ -206,7 +192,7 @@ public class MemberAggregationTest {
 
         assertThatThrownBy(() -> member.changePassword(originValue, value))
                 .isInstanceOf(ValidationErrorException.class)
-                .hasMessage("Has No Text");
+                .hasMessage("memberUpdatePassword has no text");
     }
 
     @DisplayName("회원 비밀번호 변경 시 변경할 비밀번호에 영문이 포함되어 있지 않을 때")
@@ -220,8 +206,8 @@ public class MemberAggregationTest {
                 .build();
 
         assertThatThrownBy(() -> member.changePassword(originValue, value))
-                .isInstanceOf(PasswordConditionException.class)
-                .hasMessage("Has No Alphabet");
+                .isInstanceOf(PasswordOutOfConditionException.class)
+                .hasMessage("Has no alphabet");
     }
 
     @DisplayName("회원 비밀번호 변경 시 변경할 비밀번호에 숫자가 포함되어 있지 않을 때")
@@ -235,8 +221,8 @@ public class MemberAggregationTest {
                 .build();
 
         assertThatThrownBy(() -> member.changePassword(originValue, value))
-                .isInstanceOf(PasswordConditionException.class)
-                .hasMessage("Has No Digit");
+                .isInstanceOf(PasswordOutOfConditionException.class)
+                .hasMessage("Has no digit");
     }
 
     @DisplayName("회원 비밀번호 변경 시 기존 비밀번호와 변경할 비밀번호가 같을 때")
@@ -280,7 +266,7 @@ public class MemberAggregationTest {
                 .functions(functions)
                 .build())
                 .isInstanceOf(ValidationErrorException.class)
-                .hasMessage("list no element");
+                .hasMessage("memberAuthorities no element");
     }
 
     @DisplayName("권한 변경 성공")
@@ -301,13 +287,5 @@ public class MemberAggregationTest {
                 .collect(Collectors.toSet());
 
         assertThat(authorities).containsAll(Set.of(Authority.of(AuthorityEnum.ROLE_MEMBER), Authority.of(AuthorityEnum.ROLE_ADMIN)));
-    }
-
-    private static Stream<Arguments> provideChangePasswordNullAndEmptyArguments(){
-        return Stream.of(
-                Arguments.of(null, "qwer1234!@#$"),
-                Arguments.of("", "qwer1234!@#$"),
-                Arguments.of("qwer1234!@#$", null),
-                Arguments.of("qwer1234!@#$", ""));
     }
 }

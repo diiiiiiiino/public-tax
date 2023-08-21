@@ -6,32 +6,40 @@ import org.springframework.util.StringUtils;
 import java.util.Collection;
 
 public class VerifyUtil {
-    public static String verifyText(String text){
+    public static String verifyText(String text, String name){
         if(!StringUtils.hasText(text))
-            throw new ValidationErrorException("Has No Text");
+            throw new ValidationErrorException(name + " has no text");
 
         return text;
     }
 
-    public static int verifyNegative(int value){
+    public static int verifyNegative(int value, String name){
         if(value < 0){
-            throw new ValidationErrorException("no negative");
+            throw new ValidationErrorException(name + " no negative");
         }
 
         return value;
     }
 
-    public static long verifyNegative(long value){
+    public static long verifyNegative(long value, String name){
         if(value < 0){
-            throw new ValidationErrorException("no negative");
+            throw new ValidationErrorException(name + " no negative");
         }
 
         return value;
     }
 
-    public static void verifyCollection(Collection<?> collection){
+    public static <T> T verifyNull(T obj, String name){
+        if(obj == null){
+            throw new ValidationErrorException(name + " is null");
+        }
+
+        return obj;
+    }
+
+    public static void verifyCollection(Collection<?> collection, String name){
         if(collection == null || collection.size() == 0){
-            throw new ValidationErrorException("list no element");
+            throw new ValidationErrorException(name + " no element");
         }
     }
 }

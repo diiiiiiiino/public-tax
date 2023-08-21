@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Getter
 @Entity
@@ -96,15 +95,15 @@ public class WaterBill {
     }
 
     private void setBuilding(Building building) {
-        this.building = Objects.requireNonNull(building);
+        this.building = VerifyUtil.verifyNull(building, "waterBillBuilding");
     }
 
     private void setTotalAmount(int totalAmount) {
-        VerifyUtil.verifyNegative(totalAmount);
+        VerifyUtil.verifyNegative(totalAmount, "waterBillTotalAmount");
         this.totalAmount = totalAmount;
     }
 
     private void setCalculateYm(YearMonth calculateYm) {
-        this.calculateYm = Objects.requireNonNull(calculateYm);
+        this.calculateYm = VerifyUtil.verifyNull(calculateYm, "waterBillCalculateYm");
     }
 }

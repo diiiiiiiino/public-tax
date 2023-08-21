@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Getter
 @Entity
@@ -49,18 +48,18 @@ public class MemberInvite {
     }
 
     private void setHouseHold(HouseHold houseHold) {
-        this.houseHold = Objects.requireNonNull(houseHold);
+        this.houseHold = VerifyUtil.verifyNull(houseHold, "houseHold");
     }
 
     private void setMobile(Mobile mobile) {
-        this.mobile = Objects.requireNonNull(mobile);
+        this.mobile = VerifyUtil.verifyNull(mobile, "mobile");
     }
 
     private void setCode(String code) {
-        this.code = VerifyUtil.verifyText(code);
+        this.code = VerifyUtil.verifyText(code, "memberInviteCode");
     }
 
     private void setExpireDate(LocalDateTime expireDateTime) {
-        this.expireDateTime = Objects.requireNonNull(expireDateTime);
+        this.expireDateTime = VerifyUtil.verifyNull(expireDateTime, "expireDateTime");
     }
 }

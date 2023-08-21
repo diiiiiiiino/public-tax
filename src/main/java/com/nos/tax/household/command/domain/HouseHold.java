@@ -72,7 +72,7 @@ public class HouseHold {
     }
 
     public void moveInHouse(HouseHolder houseHolder) {
-        Objects.requireNonNull(houseHolder);
+        VerifyUtil.verifyNull(houseHolder, "houseHolder");
         setHouseHolder(houseHolder);
     }
     
@@ -85,12 +85,12 @@ public class HouseHold {
     }
 
     private void setState(HouseHoldState houseHoldState){
-        Objects.requireNonNull(houseHoldState);
+        VerifyUtil.verifyNull(houseHoldState, "houseHoldState");
         this.houseHoldState = houseHoldState;
     }
 
     private void setRoom(String room) {
-        this.room = VerifyUtil.verifyText(room);
+        this.room = VerifyUtil.verifyText(room, "houseHoldRoom");
     }
 
     private void setHouseHolder(HouseHolder houseHolder) {
@@ -99,7 +99,7 @@ public class HouseHold {
     }
 
     private void setBuilding(Building building){
-        this.building = Objects.requireNonNull(building);
+        this.building = VerifyUtil.verifyNull(building, "houseHoldBuilding");
     }
 
     @Override

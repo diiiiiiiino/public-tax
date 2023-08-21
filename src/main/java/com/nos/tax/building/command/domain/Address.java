@@ -33,15 +33,15 @@ public class Address {
     }
 
     private void setAddress1(String address1) {
-        this.address1 = VerifyUtil.verifyText(address1);
+        this.address1 = VerifyUtil.verifyText(address1, "address1");
     }
 
     private void setAddress2(String address2) {
-        this.address2 = VerifyUtil.verifyText(address2);
+        this.address2 = VerifyUtil.verifyText(address2, "address2");
     }
 
     private void setZipNo(String zipNo) {
-        this.zipNo = VerifyUtil.verifyText(zipNo);
+        this.zipNo = VerifyUtil.verifyText(zipNo, "zipNo");
     }
 
     @Override

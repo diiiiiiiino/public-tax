@@ -1,5 +1,6 @@
 package com.nos.tax.waterbill.command.domain;
 
+import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.helper.WaterBillCalculateHelper;
 import com.nos.tax.waterbill.command.domain.enumeration.WaterBillState;
 import com.nos.tax.waterbill.command.domain.exception.WaterBillCalculateConditionException;
@@ -28,7 +29,8 @@ public class WaterBillCalculateServiceTest {
         WaterBillCalculateHelper testObj = WaterBillCalculateHelper.WaterBillCalculateHelperBuilder.builder().build();
 
         assertThatThrownBy(() -> waterBillCalculateService.calculate(null, testObj.getWaterBill(), testObj.getMeters()))
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(ValidationErrorException.class)
+                .hasMessage("building is null");
     }
 
     @DisplayName("수도요금 계산 시 수도요금이 null인 경우")
@@ -37,7 +39,8 @@ public class WaterBillCalculateServiceTest {
         WaterBillCalculateHelper testObj = WaterBillCalculateHelper.WaterBillCalculateHelperBuilder.builder().build();
 
         assertThatThrownBy(() -> waterBillCalculateService.calculate(testObj.getBuilding(), null, testObj.getMeters()))
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(ValidationErrorException.class)
+                .hasMessage("waterBill is null");
     }
 
     @DisplayName("수도요금 계산 시 수도계량값이 null인 경우")
@@ -46,7 +49,8 @@ public class WaterBillCalculateServiceTest {
         WaterBillCalculateHelper testObj = WaterBillCalculateHelper.WaterBillCalculateHelperBuilder.builder().build();
 
         assertThatThrownBy(() -> waterBillCalculateService.calculate(testObj.getBuilding(), testObj.getWaterBill(), null))
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(ValidationErrorException.class)
+                .hasMessage("waterMeters is null");
     }
 
     @DisplayName("수도요금 계산 시 모든 세대주의 수도 계량값이 입력되지 않았을 때")

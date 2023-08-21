@@ -73,7 +73,8 @@ public class Member {
     }
 
     public void changePassword(String originPassword, String updatePassword) {
-        VerifyUtil.verifyText(originPassword);
+        VerifyUtil.verifyText(originPassword, "memberOriginPassword");
+        VerifyUtil.verifyText(updatePassword, "memberUpdatePassword");
 
         if(!this.password.match(originPassword)){
             throw new PasswordNotMatchedException("password is not matched");
@@ -91,7 +92,7 @@ public class Member {
     }
 
     public void changeAuthority(List<Function<Member, MemberAuthority>> functions){
-        VerifyUtil.verifyCollection(functions);
+        VerifyUtil.verifyCollection(functions, "memberAuthorities");
 
         Set<MemberAuthority> authorities = new HashSet<>();
 
@@ -107,19 +108,19 @@ public class Member {
     }
 
     private void setLoginId(String loginId) {
-        this.loginId = VerifyUtil.verifyText(loginId);
+        this.loginId = VerifyUtil.verifyText(loginId, "memberLoginId");
     }
 
     private void setPassword(Password password){
-        this.password = Objects.requireNonNull(password);
+        this.password = VerifyUtil.verifyNull(password, "memberPassword");
     }
 
     private void setName(String name) {
-        this.name = VerifyUtil.verifyText(name);
+        this.name = VerifyUtil.verifyText(name, "memberName");
     }
 
     private void setMobile(Mobile mobile) {
-        this.mobile = Objects.requireNonNull(mobile);
+        this.mobile = VerifyUtil.verifyNull(mobile, "memberMobile");
     }
 
     @Override

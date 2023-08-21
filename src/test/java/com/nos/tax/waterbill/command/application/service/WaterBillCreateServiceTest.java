@@ -40,7 +40,8 @@ public class WaterBillCreateServiceTest {
     void admin_is_null() {
         Member member = null;
         assertThatThrownBy(() -> waterBillCreateService.create(member, 77000, YearMonth.of(2023, 7)))
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(ValidationErrorException.class)
+                .hasMessage("admin is null");
     }
 
     @DisplayName("총 수도요금이 음수일 때")
@@ -53,7 +54,7 @@ public class WaterBillCreateServiceTest {
 
         assertThatThrownBy(() -> waterBillCreateService.create(admin, -999, YearMonth.of(2023, 7)))
                 .isInstanceOf(ValidationErrorException.class)
-                .hasMessage("no negative");
+                .hasMessage("waterBillTotalAmount no negative");
     }
 
     @DisplayName("정산 년월이 null일 때")
@@ -66,7 +67,8 @@ public class WaterBillCreateServiceTest {
         when(buildingRepository.findByMember(any())).thenReturn(Optional.of(building));
 
         assertThatThrownBy(() -> waterBillCreateService.create(admin, 60000, yearMonth))
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(ValidationErrorException.class)
+                .hasMessage("waterBillCalculateYm is null");
     }
 
     @DisplayName("관리자의 건물이 조회되지 않을 때")

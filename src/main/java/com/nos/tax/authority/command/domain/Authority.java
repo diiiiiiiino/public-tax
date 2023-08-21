@@ -39,7 +39,7 @@ public class Authority {
     }
 
     private void setName(String name) {
-        VerifyUtil.verifyText(name);
+        VerifyUtil.verifyText(name, "authorityName");
         this.name = name;
     }
 

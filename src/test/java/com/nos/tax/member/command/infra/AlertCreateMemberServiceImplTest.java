@@ -22,7 +22,7 @@ public class AlertCreateMemberServiceImplTest {
 
         Assertions.assertThatThrownBy(() -> alertCreateMemberServiceImpl.alert(mobile, inviteCode))
                 .isInstanceOf(ValidationErrorException.class)
-                .hasMessage("Has No Text");
+                .hasMessage("memberMobile has no text");
     }
 
     @DisplayName("초대코드가 null 또는 빈 문자열일때")
@@ -33,6 +33,6 @@ public class AlertCreateMemberServiceImplTest {
 
         Assertions.assertThatThrownBy(() -> alertCreateMemberServiceImpl.alert(mobile, inviteCode))
                 .isInstanceOf(ValidationErrorException.class)
-                .hasMessage("Has No Text");
+                .hasMessage("memberInviteCode has no text");
     }
 }

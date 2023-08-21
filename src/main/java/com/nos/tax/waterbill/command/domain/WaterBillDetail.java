@@ -11,8 +11,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Objects;
-
 @Getter
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -39,7 +37,7 @@ public class WaterBillDetail {
     }
 
     private void setAmount(int amount) {
-        this.amount = VerifyUtil.verifyNegative(amount);
+        this.amount = VerifyUtil.verifyNegative(amount, "waterBillDetailAmount");
     }
 
     private void setDifference(int difference) {
@@ -47,7 +45,7 @@ public class WaterBillDetail {
     }
 
     private void setHouseHold(HouseHold houseHold) {
-        this.houseHold = Objects.requireNonNull(houseHold);
+        this.houseHold = VerifyUtil.verifyNull(houseHold, "waterBillDetailHouseHold");
     }
 
     private void setWaterMeter(WaterMeter waterMeter) {

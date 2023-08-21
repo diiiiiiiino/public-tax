@@ -10,6 +10,7 @@ public enum ErrorCode {
     HOUSEHOLD_NOT_FOUND(HttpStatus.NOT_FOUND, "HouseHoldNotFound"),
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MemberNotFound"),
     PASSWORD_NOT_MATCHED(HttpStatus.BAD_REQUEST, "PasswordNotMatched"),
+    PASSWORD_OUT_OF_CONDITION(HttpStatus.BAD_REQUEST, "PasswordOutOfCondition"),
     UPDATE_PASSWORD_SAME(HttpStatus.BAD_REQUEST, "UpdatePasswordSame"),
     INVALID_VALUE(HttpStatus.BAD_REQUEST, "InvalidValue");
 

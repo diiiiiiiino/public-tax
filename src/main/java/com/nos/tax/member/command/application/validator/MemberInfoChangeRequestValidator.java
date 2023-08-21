@@ -2,15 +2,18 @@ package com.nos.tax.member.command.application.validator;
 
 import com.nos.tax.common.exception.ValidationCode;
 import com.nos.tax.common.exception.ValidationError;
+import com.nos.tax.common.validator.RequestValidator;
+import com.nos.tax.common.validator.Validator;
 import com.nos.tax.member.command.application.dto.MemberInfoChangeRequest;
-import org.springframework.stereotype.Component;
+import com.nos.tax.member.command.application.validator.annotation.MemberInfoChangeRequestQualifier;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
-public class MemberInfoChangeRequestValidator {
+@Validator
+@MemberInfoChangeRequestQualifier
+public class MemberInfoChangeRequestValidator implements RequestValidator<MemberInfoChangeRequest> {
     public List<ValidationError> validate(MemberInfoChangeRequest request){
         List<ValidationError> errors = new ArrayList<>();
         if(request == null){

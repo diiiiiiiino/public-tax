@@ -38,15 +38,15 @@ public class HouseHolder {
     }
 
     private void setName(String name) {
-        this.name = VerifyUtil.verifyText(name);
+        this.name = VerifyUtil.verifyText(name, "houseHolderName");
     }
 
     private void setMobile(Mobile mobile) {
-        this.mobile = Objects.requireNonNull(mobile);
+        this.mobile = VerifyUtil.verifyNull(mobile, "houseHolderMobile");
     }
 
     private void setMember(Member member) {
-        this.member = Objects.requireNonNull(member);
+        this.member = VerifyUtil.verifyNull(member, "houseHolderMember");
     }
 
     @Override

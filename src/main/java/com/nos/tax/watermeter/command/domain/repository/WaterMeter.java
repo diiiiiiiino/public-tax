@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.YearMonth;
-import java.util.Objects;
 
 @Getter
 @Entity
@@ -54,22 +53,22 @@ public class WaterMeter {
     }
 
     private void setPreviousMeter(int previousMeter) {
-        this.previousMeter = VerifyUtil.verifyNegative(previousMeter);
+        this.previousMeter = VerifyUtil.verifyNegative(previousMeter, "waterMeterPreviousMeter");
     }
 
     private void setPresentMeter(int presentMeter) {
-        VerifyUtil.verifyNegative(presentMeter);
+        VerifyUtil.verifyNegative(presentMeter, "waterMeterPreviousMeter");
         checkPresentMeterBiggerThanPreviousMeter(presentMeter);
         this.presentMeter = presentMeter;
         calculateUsage();
     }
 
     private void setYearMonth(YearMonth yearMonth) {
-        this.yearMonth = Objects.requireNonNull(yearMonth);
+        this.yearMonth = VerifyUtil.verifyNull(yearMonth, "waterMeterYearMonth");
     }
 
     private void setHouseHold(HouseHold houseHold) {
-        this.houseHold = Objects.requireNonNull(houseHold);
+        this.houseHold = VerifyUtil.verifyNull(houseHold, "waterMeterHouseHold");
     }
 
     private void checkPresentMeterBiggerThanPreviousMeter(int presentMeter) {

@@ -19,14 +19,16 @@ public class WaterMeterTest {
     void when_the_year_month_is_null_when_generating_water_metering_data() {
         Building building = BuildingCreateHelperBuilder.builder().build();
         assertThatThrownBy(() -> WaterMeter.of(10, 100, null, building.getHouseHolds().get(0)))
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(ValidationErrorException.class)
+                .hasMessage("waterMeterYearMonth is null");
     }
 
     @DisplayName("수도 계량 데이터 생성 시 세대주가 null일 때")
     @Test
     void when_the_household_is_null_when_generating_water_metering_data() {
         assertThatThrownBy(() -> WaterMeter.of(10, 100, YearMonth.of(2023, 7), null))
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(ValidationErrorException.class)
+                .hasMessage("waterMeterHouseHold is null");
     }
 
     @DisplayName("수도 계량 데이터 생성 시 전월 수도 계량기 값 음수 일 때")
@@ -35,7 +37,7 @@ public class WaterMeterTest {
         Building building = BuildingCreateHelperBuilder.builder().build();
         assertThatThrownBy(() -> WaterMeter.of(-10, 100, YearMonth.of(2023, 7), building.getHouseHolds().get(0)))
                 .isInstanceOf(ValidationErrorException.class)
-                .hasMessage("no negative");
+                .hasMessage("waterMeterPreviousMeter no negative");
     }
 
     @DisplayName("수도 계량 데이터 생성 시 금월 수도 계량기 값 음수 일 때")
@@ -44,7 +46,7 @@ public class WaterMeterTest {
         Building building = BuildingCreateHelperBuilder.builder().build();
         assertThatThrownBy(() -> WaterMeter.of(0, -100, YearMonth.of(2023, 7), building.getHouseHolds().get(0)))
                 .isInstanceOf(ValidationErrorException.class)
-                .hasMessage("no negative");
+                .hasMessage("waterMeterPreviousMeter no negative");
     }
 
     @DisplayName("수도 계량 데이터 금월 계량기 입력 시 전월보다 작을 경우")

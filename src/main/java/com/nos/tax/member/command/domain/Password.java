@@ -1,6 +1,6 @@
 package com.nos.tax.member.command.domain;
 
-import com.nos.tax.member.command.domain.exception.PasswordConditionException;
+import com.nos.tax.member.command.domain.exception.PasswordOutOfConditionException;
 import com.nos.tax.util.VerifyUtil;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -24,7 +24,7 @@ public class Password {
     }
 
     private void setValue(String value) {
-        VerifyUtil.verifyText(value);
+        VerifyUtil.verifyText(value, "password");
         confirmPasswordLength(value);
         confirmPasswordIncludingEnglish(value);
         confirmPasswordIncludingDigit(value);
@@ -35,7 +35,7 @@ public class Password {
     private void confirmPasswordLength(String value) {
         int length = value.length();
         if (length < 8 || length > 16) {
-            throw new PasswordConditionException("length condition not matched");
+            throw new PasswordOutOfConditionException("Length condition not matched");
         }
     }
 
@@ -49,7 +49,7 @@ public class Password {
         }
 
         if(!hasAlphabet){
-            throw new PasswordConditionException("Has No Alphabet");
+            throw new PasswordOutOfConditionException("Has no alphabet");
         }
     }
 
@@ -63,13 +63,13 @@ public class Password {
         }
 
         if(!hasDigit){
-            throw new PasswordConditionException("Has No Digit");
+            throw new PasswordOutOfConditionException("Has no digit");
         }
     }
 
     private void confirmPasswordIncludingSpecialCharacter(String value) {
         if(!value.matches(".*[~`!@#$%^&*()\\-_+=|\\\\\\[\\]{};:'\",<.>/?]+.*")){
-            throw new PasswordConditionException("Has no special characters");
+            throw new PasswordOutOfConditionException("Has no special characters");
         }
     }
 

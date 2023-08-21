@@ -1,5 +1,6 @@
 package com.nos.tax.login.command.domain;
 
+import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
 import com.nos.tax.member.command.domain.Member;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +17,8 @@ public class LoginRecordTest {
     @Test
     void member_is_null_when_creating_login_history() {
         assertThatThrownBy(() -> LoginRecord.builder(null, LocalDateTime.now()).build())
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(ValidationErrorException.class)
+                .hasMessage("loginRecordMember is null");
     }
 
     @DisplayName("로그인 기록 생성 시 로그인 시간이 null인 경우")
@@ -25,7 +27,8 @@ public class LoginRecordTest {
         Member member = MemberCreateHelperBuilder.builder().build();
 
         assertThatThrownBy(() -> LoginRecord.builder(member, null).build())
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(ValidationErrorException.class)
+                .hasMessage("loginRecordLoginTime is null");
     }
 
     @DisplayName("필수 속성으로만 로그인 기록 생성 성공")

@@ -43,7 +43,8 @@ public class BuildingAggregationTest {
         Assertions.assertThatThrownBy(() -> BuildingCreateHelperBuilder.builder()
                         .address(null)
                         .build())
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(ValidationErrorException.class)
+                .hasMessage("buildingAddress is null");
     }
 
     @DisplayName("건물 엔티티 생성 시 비어있는 세대 목록을 생성할 경우")
@@ -52,7 +53,7 @@ public class BuildingAggregationTest {
         Assertions.assertThatThrownBy(() -> BuildingCreateHelperBuilder.builder()
                         .houseHolds(List.of())
                         .build())
-                .isInstanceOf(NullPointerException.class)
+                .isInstanceOf(ValidationErrorException.class)
                 .hasMessage("no buildingFunctions");
     }
 
@@ -119,7 +120,7 @@ public class BuildingAggregationTest {
         List<HouseHold> newHouseHolds = List.of();
 
         assertThatThrownBy(() -> building.addHouseHolds(newHouseHolds))
-                .isInstanceOf(NullPointerException.class);
+                .isInstanceOf(ValidationErrorException.class);
     }
 
     @DisplayName("건물 세대 추가 성공")

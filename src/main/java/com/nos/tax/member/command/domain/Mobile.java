@@ -24,7 +24,7 @@ public class Mobile {
     }
 
     private void setValue(String value){
-        VerifyUtil.verifyText(value);
+        VerifyUtil.verifyText(value, "mobile");
         verifyLength(value);
         this.value = value;
     }

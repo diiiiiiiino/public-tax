@@ -1,5 +1,6 @@
 package com.nos.tax.building.command.domain;
 
+import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.util.VerifyUtil;
 import jakarta.persistence.*;
@@ -68,11 +69,11 @@ public class Building {
     }
 
     private void setName(String name) {
-        this.name = VerifyUtil.verifyText(name);
+        this.name = VerifyUtil.verifyText(name, "buildingName");
     }
 
     private void setAddress(Address address) {
-        this.address = Objects.requireNonNull(address);
+        this.address = VerifyUtil.verifyNull(address, "buildingAddress");
     }
 
     private void setHouseHolds(List<HouseHold> houseHolds) {
@@ -93,13 +94,13 @@ public class Building {
 
     private void verifyAtLeastOneOrMoreHouseHold(List<HouseHold> houseHolds){
         if(houseHolds == null || houseHolds.isEmpty()){
-            throw new NullPointerException("no HouseHold");
+            throw new ValidationErrorException("no HouseHold");
         }
     }
 
     private void verifyAtLeastOneOrMoreBuildingFunctions(List<Function<Building, HouseHold>> buildingFunctions){
         if(buildingFunctions == null || buildingFunctions.isEmpty()){
-            throw new NullPointerException("no buildingFunctions");
+            throw new ValidationErrorException("no buildingFunctions");
         }
     }
 
