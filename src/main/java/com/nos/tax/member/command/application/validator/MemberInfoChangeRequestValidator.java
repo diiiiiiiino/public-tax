@@ -18,7 +18,7 @@ public class MemberInfoChangeRequestValidator implements RequestValidator<Member
         List<ValidationError> errors = new ArrayList<>();
         if(request == null){
             errors.add(ValidationError.of("request", ValidationCode.NULL.getValue()));
-        } else{
+        } else {
             if(!StringUtils.hasText(request.getName()))
                 errors.add(ValidationError.of("memberName", ValidationCode.NO_TEXT.getValue()));
             if(!StringUtils.hasText(request.getMobile()))

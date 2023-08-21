@@ -24,6 +24,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +53,7 @@ public class MemberControllerTest extends BaseControllerTest {
     @DisplayName("회원 생성 시 유효성 체크")
     @Test
     void whenMemberCreateThenInvalidRequest() throws Exception {
-        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("loginId", "qwer1234!@", "홍길동", "01012345678", 1L, "123456");
+        MemberCreateRequest request = new MemberCreateRequest("loginId", "qwer1234!@", "홍길동", "01012345678", 1L, "123456");
 
         List<ValidationError> errors = new ArrayList<>();
         errors.add(ValidationError.of("memberLoginId", ValidationCode.NO_TEXT.getValue()));
@@ -60,85 +63,62 @@ public class MemberControllerTest extends BaseControllerTest {
         doThrow(new ValidationErrorException("Request has invalid values", errors))
                 .when(memberCreateService).create(any(MemberCreateRequest.class));
 
-        mockMvc.perform(post("/member")
-                        .content(writeValueAsString(memberCreateRequest))
-                        .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isBadRequest())
+        perform(post("/member"), request, status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.errors").isNotEmpty())
                 .andDo(print());
     }
 
-    @DisplayName("회원 생성 시 비밀번호 정책에 맞지 않을 때")
-    @Test
-    void passwordInvalid() throws Exception {
-        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("loginId", "qwer1234", "홍길동", "01012345678", 1L, "123456");
-
-        doThrow(new PasswordOutOfConditionException("Has no special characters"))
-                .when(memberCreateService).create(any(MemberCreateRequest.class));
-
-        mockMvc.perform(post("/member")
-                        .content(writeValueAsString(memberCreateRequest))
-                        .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-    }
-
     @DisplayName("회원 생성 시 초대코드 미조회")
     @Test
     void inviteCodeNotFound() throws Exception {
-        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("loginId", "qwer1234!@", "홍길동", "01012345678", 1L, "123456");
+        MemberCreateRequest request = new MemberCreateRequest("loginId", "qwer1234!@", "홍길동", "01012345678", 1L, "123456");
 
         doThrow(new InviteCodeNotFoundException("not found inviteCode"))
                 .when(memberCreateService).create(any(MemberCreateRequest.class));
 
-        mockMvc.perform(post("/member")
-                        .content(writeValueAsString(memberCreateRequest))
-                        .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isNotFound())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+        perform(post("/member"), request, status().isNotFound());
     }
 
     @DisplayName("회원 생성 시 초대코드 만료")
     @Test
     void inviteCodeExpired() throws Exception {
-        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("loginId", "qwer1234!@", "홍길동", "01012345678", 1L, "123456");
+        MemberCreateRequest request = new MemberCreateRequest("loginId", "qwer1234!@", "홍길동", "01012345678", 1L, "123456");
 
         doThrow(new ExpiredInviteCodeException("expired inviteCode"))
                 .when(memberCreateService).create(any(MemberCreateRequest.class));
 
-        mockMvc.perform(post("/member")
-                        .content(writeValueAsString(memberCreateRequest))
-                        .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+        perform(post("/member"), request, status().isBadRequest());
     }
 
     @DisplayName("회원 생성 시 세대 미조회")
     @Test
     void houseHoldNotFound() throws Exception {
-        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("loginId", "qwer1234!@", "홍길동", "01012345678", 1L, "123456");
+        MemberCreateRequest request = new MemberCreateRequest("loginId", "qwer1234!@", "홍길동", "01012345678", 1L, "123456");
 
         doThrow(new HouseHoldNotFoundException("not found houseHold"))
                 .when(memberCreateService).create(any(MemberCreateRequest.class));
 
-        mockMvc.perform(post("/member")
-                        .content(writeValueAsString(memberCreateRequest))
-                        .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isNotFound())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+        perform(post("/member"), request, status().isNotFound());
+    }
+
+    @DisplayName("회원 생성 시 비밀번호 정책에 맞지 않을 때")
+    @Test
+    void passwordInvalid() throws Exception {
+        MemberCreateRequest request = new MemberCreateRequest("loginId", "qwer1234", "홍길동", "01012345678", 1L, "123456");
+
+        doThrow(new PasswordOutOfConditionException("Has no special characters"))
+                .when(memberCreateService).create(any(MemberCreateRequest.class));
+
+        perform(post("/member"), request, status().isBadRequest());
     }
 
     @DisplayName("회원 생성 성공")
     @Test
     void memberCreateSuccess() throws Exception {
-        MemberCreateRequest memberCreateRequest = new MemberCreateRequest("loginId", "qwer1234!@", "홍길동", "01012345678", 1L, "123456");
+        MemberCreateRequest request = new MemberCreateRequest("loginId", "qwer1234!@", "홍길동", "01012345678", 1L, "123456");
 
-        mockMvc.perform(post("/member")
-                        .content(writeValueAsString(memberCreateRequest))
-                        .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+        perform(post("/member"), request, status().isOk());
     }
 
     @DisplayName("회원 정보 수정 시 유효성 에러")
@@ -156,10 +136,7 @@ public class MemberControllerTest extends BaseControllerTest {
         doThrow(new ValidationErrorException("Request has invalid values", errors))
                 .when(memberInfoChangeService).change(any(Member.class), any(MemberInfoChangeRequest.class));
 
-        mockMvc.perform(patch("/member")
-                        .content(writeValueAsString(request))
-                        .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isBadRequest())
+        perform(patch("/member"), request, status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.errors").isNotEmpty())
                 .andDo(print());
@@ -176,10 +153,7 @@ public class MemberControllerTest extends BaseControllerTest {
         doThrow(new MemberNotFoundException("Member not found"))
                 .when(memberInfoChangeService).change(any(Member.class), any(MemberInfoChangeRequest.class));
 
-        mockMvc.perform(patch("/member")
-                .content(writeValueAsString(request))
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isNotFound());
+        perform(patch("/member"), request, status().isNotFound());
     }
 
     @DisplayName("회원 비밀번호 수정 시 유효성 에러")
@@ -196,11 +170,7 @@ public class MemberControllerTest extends BaseControllerTest {
         doThrow(new ValidationErrorException("has no text", errors))
                 .when(passwordChangeService).change(any(Member.class), any(PasswordChangeRequest.class));
 
-        mockMvc.perform(patch("/member/password")
-                        .content(writeValueAsString(request))
-                        .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        perform(patch("/member/password"), request, status().isBadRequest())
                 .andExpect(jsonPath("$.errors").isNotEmpty())
                 .andDo(print());
     }
@@ -216,11 +186,7 @@ public class MemberControllerTest extends BaseControllerTest {
         doThrow(new MemberNotFoundException("Member not found"))
                 .when(passwordChangeService).change(any(Member.class), any(PasswordChangeRequest.class));
 
-        mockMvc.perform(patch("/member/password")
-                        .content(writeValueAsString(request))
-                        .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isNotFound())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+        perform(patch("/member/password"), request, status().isNotFound());
     }
 
     @DisplayName("회원 비밀번호 수정 시 비밀번호가 틀렸을 경우")
@@ -234,11 +200,7 @@ public class MemberControllerTest extends BaseControllerTest {
         doThrow(new PasswordNotMatchedException("password is not matched"))
                 .when(passwordChangeService).change(any(Member.class), any(PasswordChangeRequest.class));
 
-        mockMvc.perform(patch("/member/password")
-                        .content(writeValueAsString(request))
-                        .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+        perform(patch("/member/password"), request, status().isBadRequest());
     }
 
     @DisplayName("회원 비밀번호 수정 시 기존 비밀번호와 변경 비밀번호가 같을때")
@@ -252,11 +214,7 @@ public class MemberControllerTest extends BaseControllerTest {
         doThrow(new UpdatePasswordSameException("origin and update password same"))
                 .when(passwordChangeService).change(any(Member.class), any(PasswordChangeRequest.class));
 
-        mockMvc.perform(patch("/member/password")
-                        .content(writeValueAsString(request))
-                        .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+        perform(patch("/member/password"), request, status().isBadRequest());
     }
 
     @DisplayName("회원 비밀번호 수정 성공")
@@ -267,10 +225,14 @@ public class MemberControllerTest extends BaseControllerTest {
                 .newPassword("qwer1234@@")
                 .build();
 
-        mockMvc.perform(patch("/member/password")
+        perform(patch("/member/password"), request, status().isOk());
+    }
+
+    private ResultActions perform(MockHttpServletRequestBuilder requestBuilder, Object request, ResultMatcher matcher) throws Exception {
+        return mockMvc.perform(requestBuilder
                         .content(writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk())
+                .andExpect(matcher)
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 }

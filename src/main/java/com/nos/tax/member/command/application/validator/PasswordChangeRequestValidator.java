@@ -18,7 +18,7 @@ public class PasswordChangeRequestValidator implements RequestValidator<Password
         List<ValidationError> errors = new ArrayList<>();
         if(request == null){
             errors.add(ValidationError.of("request", ValidationCode.NULL.getValue()));
-        } else{
+        } else {
             if(!StringUtils.hasText(request.getOrgPassword()))
                 errors.add(ValidationError.of("memberOrgPassword", ValidationCode.NO_TEXT.getValue()));
             if(!StringUtils.hasText(request.getNewPassword()))
