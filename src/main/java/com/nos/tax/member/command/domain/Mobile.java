@@ -1,6 +1,5 @@
 package com.nos.tax.member.command.domain;
 
-import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.util.VerifyUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -8,11 +7,11 @@ import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 
+import static com.nos.tax.common.enumeration.TextLengthRange.MOBILE;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Mobile {
-    private final int LENGTH = 11;
-
     private String value;
 
     private Mobile(String value) {
@@ -24,15 +23,8 @@ public class Mobile {
     }
 
     private void setValue(String value){
-        VerifyUtil.verifyText(value, "mobile");
-        verifyLength(value);
+        VerifyUtil.verifyTextLength(value, "mobile", MOBILE.getMin(), MOBILE.getMax());
         this.value = value;
-    }
-
-    private void verifyLength(String value){
-        if(value.length() != LENGTH){
-            throw new ValidationErrorException("mobile length is different set length");
-        }
     }
 
     @Override

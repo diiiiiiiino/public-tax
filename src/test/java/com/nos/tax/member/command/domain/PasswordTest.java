@@ -1,22 +1,11 @@
 package com.nos.tax.member.command.domain;
 
-import com.nos.tax.authority.command.domain.Authority;
-import com.nos.tax.authority.command.domain.enumeration.AuthorityEnum;
 import com.nos.tax.common.exception.ValidationErrorException;
-import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
-import com.nos.tax.member.command.domain.exception.PasswordNotMatchedException;
 import com.nos.tax.member.command.domain.exception.PasswordOutOfConditionException;
-import com.nos.tax.member.command.domain.exception.UpdatePasswordSameException;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
-
-import java.util.List;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

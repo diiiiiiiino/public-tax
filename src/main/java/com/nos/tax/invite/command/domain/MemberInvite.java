@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+import static com.nos.tax.common.enumeration.TextLengthRange.MEMBER_INVITE_CODE;
+
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -56,7 +58,7 @@ public class MemberInvite {
     }
 
     private void setCode(String code) {
-        this.code = VerifyUtil.verifyText(code, "memberInviteCode");
+        this.code = VerifyUtil.verifyTextLength(code, "memberInviteCode", MEMBER_INVITE_CODE.getMin(), MEMBER_INVITE_CODE.getMax());
     }
 
     private void setExpireDate(LocalDateTime expireDateTime) {

@@ -11,13 +11,14 @@ import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 
+import static com.nos.tax.common.enumeration.TextLengthRange.HOUSEHOLD_ROOM;
+
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class HouseHold {
-
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Building building;
@@ -90,7 +91,7 @@ public class HouseHold {
     }
 
     private void setRoom(String room) {
-        this.room = VerifyUtil.verifyText(room, "houseHoldRoom");
+        this.room = VerifyUtil.verifyTextLength(room, "houseHoldRoom", HOUSEHOLD_ROOM.getMin(), HOUSEHOLD_ROOM.getMax());
     }
 
     private void setHouseHolder(HouseHolder houseHolder) {

@@ -13,6 +13,18 @@ public class VerifyUtil {
         return text;
     }
 
+    public static String verifyTextLength(String text, String name, int min, int max){
+        verifyText(text, name);
+
+        int length = text.length();
+
+        if(min > length || max < length){
+            throw new ValidationErrorException(name + " is not less than " + min + " and not more than " + max + " digits");
+        }
+
+        return text;
+    }
+
     public static int verifyNegative(int value, String name){
         if(value < 0){
             throw new ValidationErrorException(name + " no negative");

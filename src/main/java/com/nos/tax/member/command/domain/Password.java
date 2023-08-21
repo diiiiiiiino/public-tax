@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 
+import static com.nos.tax.common.enumeration.TextLengthRange.PASSWORD;
+
 @Getter
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -34,7 +36,7 @@ public class Password {
 
     private void confirmPasswordLength(String value) {
         int length = value.length();
-        if (length < 8 || length > 16) {
+        if (length < PASSWORD.getMin() || length > PASSWORD.getMax()) {
             throw new PasswordOutOfConditionException("Length condition not matched");
         }
     }

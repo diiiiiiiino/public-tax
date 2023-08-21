@@ -14,11 +14,12 @@ import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 
+import static com.nos.tax.common.enumeration.TextLengthRange.MEMBER_NAME;
+
 @Getter
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class HouseHolder {
-
     @OneToOne(fetch = FetchType.LAZY)
     private Member member;
 
@@ -38,7 +39,7 @@ public class HouseHolder {
     }
 
     private void setName(String name) {
-        this.name = VerifyUtil.verifyText(name, "houseHolderName");
+        this.name = VerifyUtil.verifyTextLength(name, "houseHolderName", MEMBER_NAME.getMin(), MEMBER_NAME.getMax());
     }
 
     private void setMobile(Mobile mobile) {

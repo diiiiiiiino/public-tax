@@ -15,6 +15,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 
+import static com.nos.tax.common.enumeration.TextLengthRange.MEMBER_LOGIN;
+import static com.nos.tax.common.enumeration.TextLengthRange.MEMBER_NAME;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -108,7 +111,8 @@ public class Member {
     }
 
     private void setLoginId(String loginId) {
-        this.loginId = VerifyUtil.verifyText(loginId, "memberLoginId");
+        VerifyUtil.verifyTextLength(loginId, "memberLoginId", MEMBER_NAME.getMin(), MEMBER_NAME.getMax());
+        this.loginId = loginId;
     }
 
     private void setPassword(Password password){
@@ -116,7 +120,7 @@ public class Member {
     }
 
     private void setName(String name) {
-        this.name = VerifyUtil.verifyText(name, "memberName");
+        this.name = VerifyUtil.verifyTextLength(name, "memberName", MEMBER_LOGIN.getMin(), MEMBER_LOGIN.getMax());
     }
 
     private void setMobile(Mobile mobile) {
