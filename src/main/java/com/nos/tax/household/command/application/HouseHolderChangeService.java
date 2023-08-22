@@ -5,6 +5,7 @@ import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.household.command.domain.HouseHolder;
 import com.nos.tax.household.command.domain.enumeration.HouseHoldState;
 import com.nos.tax.household.command.domain.repository.HouseHoldRepository;
+import com.nos.tax.member.command.application.exception.HouseHoldNotFoundException;
 import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.member.command.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class HouseHolderChangeService {
     @Transactional
     public void change(Long houseHoldId, Long memberId) {
         HouseHold houseHold = houseHoldRepository.findByIdAndHouseHoldState(houseHoldId, HouseHoldState.EMPTY)
-                .orElseThrow(() -> new NotFoundException("HouseHold not found"));
+                .orElseThrow(() -> new HouseHoldNotFoundException("HouseHold not found"));
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundException("Member not found"));

@@ -18,7 +18,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class WaterBillCreateAppService {
+public class WaterBillCalculateAppService {
 
     private final BuildingRepository buildingRepository;
     private final WaterBillRepository waterBillRepository;

@@ -1,10 +1,16 @@
 package com.nos.tax.waterbill.command.application.service;
 
+import com.nos.tax.building.command.application.BuildingNotFoundException;
 import com.nos.tax.building.command.domain.Building;
 import com.nos.tax.building.command.domain.repository.BuildingRepository;
 import com.nos.tax.common.exception.NotFoundException;
+import com.nos.tax.common.exception.ValidationError;
+import com.nos.tax.common.exception.ValidationErrorException;
+import com.nos.tax.common.validator.RequestValidator;
 import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.util.VerifyUtil;
+import com.nos.tax.waterbill.command.application.dto.WaterBillCreateRequest;
+import com.nos.tax.waterbill.command.application.validator.annotation.WaterBillCreateRequestQualifier;
 import com.nos.tax.waterbill.command.domain.WaterBill;
 import com.nos.tax.waterbill.command.domain.exception.WaterBillDuplicateException;
 import com.nos.tax.waterbill.command.domain.repository.WaterBillRepository;
@@ -13,36 +19,44 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.YearMonth;
+import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class WaterBillCreateService {
 
     private final BuildingRepository buildingRepository;
     private final WaterBillRepository waterBillRepository;
+    private final RequestValidator validator;
+
+    public WaterBillCreateService(BuildingRepository buildingRepository, WaterBillRepository waterBillRepository, @WaterBillCreateRequestQualifier RequestValidator validator) {
+        this.buildingRepository = buildingRepository;
+        this.waterBillRepository = waterBillRepository;
+        this.validator = validator;
+    }
 
     /**
      * 정산 담당자가 수도요금 정산 데이터 생성
      *
      * @param admin
-     * @param totalAmount
-     * @param calculateYm
+     * @param request
      * @return WaterBill
-     * @throws
      */
     @Transactional
-    public WaterBill create(Member admin, int totalAmount, YearMonth calculateYm) {
-        VerifyUtil.verifyNull(admin, "admin");
+    public WaterBill create(Member admin, WaterBillCreateRequest request) {
+        List<ValidationError> errors = validator.validate(request);
+        if(!errors.isEmpty()){
+            throw new ValidationErrorException("Request has invalid values", errors);
+        }
 
         Building building = buildingRepository.findByMember(admin.getId())
-                .orElseThrow(() -> new NotFoundException("Building is not found"));
+                .orElseThrow(() -> new BuildingNotFoundException("Building not found"));
 
-        waterBillRepository.findByBuildingAndCalculateYm(building, calculateYm)
+        waterBillRepository.findByBuildingAndCalculateYm(building, request.getCalculateYm())
                 .ifPresent((waterBill) -> {
                     throw new WaterBillDuplicateException(waterBill.getCalculateYm().toString() + " WaterBill is exists");
                 });
 
-        WaterBill waterBill = WaterBill.of(building, totalAmount, calculateYm);
+        WaterBill waterBill = WaterBill.of(building, request.getTotalAmount(), request.getCalculateYm());
         return waterBillRepository.save(waterBill);
     }
 }

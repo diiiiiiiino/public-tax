@@ -1,11 +1,13 @@
-package com.nos.tax.household.command.application;
+package com.nos.tax.household.command.application.service;
 
 import com.nos.tax.common.exception.NotFoundException;
 import com.nos.tax.helper.builder.HouseHoldCreateHelperBuilder;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
+import com.nos.tax.household.command.application.HouseHoldMoveOutService;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.household.command.domain.enumeration.HouseHoldState;
 import com.nos.tax.household.command.domain.repository.HouseHoldRepository;
+import com.nos.tax.member.command.application.exception.HouseHoldNotFoundException;
 import com.nos.tax.member.command.domain.Member;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -35,7 +37,7 @@ public class HouseHoldMoveOutServiceTest {
         Long houseHoldId = 1L;
 
         Assertions.assertThatThrownBy(() -> houseHoldMoveOutService.leave(houseHoldId))
-                .isInstanceOf(NotFoundException.class)
+                .isInstanceOf(HouseHoldNotFoundException.class)
                 .hasMessage("HouseHold not found");
     }
 

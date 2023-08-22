@@ -25,20 +25,20 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class WaterBillCreateAppServiceTest {
+public class WaterBillCalculateAppServiceTest {
 
-    private WaterBillCreateAppService waterBillCreateAppService;
+    private WaterBillCalculateAppService waterBillCalculateAppService;
     private BuildingRepository buildingRepository;
     private WaterBillRepository waterBillRepository;
     private final WaterMeterRepository waterMeterRepository;
     private final WaterBillCalculateService waterBillCalculateService;
 
-    public WaterBillCreateAppServiceTest() {
+    public WaterBillCalculateAppServiceTest() {
         buildingRepository = mock(BuildingRepository.class);
         waterBillRepository = mock(WaterBillRepository.class);
         waterMeterRepository = mock(WaterMeterRepository.class);
         waterBillCalculateService = new WaterBillCalculateService();
-        waterBillCreateAppService = new WaterBillCreateAppService(buildingRepository, waterBillRepository, waterMeterRepository, waterBillCalculateService);
+        waterBillCalculateAppService = new WaterBillCalculateAppService(buildingRepository, waterBillRepository, waterMeterRepository, waterBillCalculateService);
     }
 
     @DisplayName("관리자가 관리하는 건물이 존재하지 않을때")
@@ -50,7 +50,7 @@ public class WaterBillCreateAppServiceTest {
                 .name("관리자")
                 .build();
 
-        assertThatThrownBy(() -> waterBillCreateAppService.calculate(member, YearMonth.of(2023, 8)))
+        assertThatThrownBy(() -> waterBillCalculateAppService.calculate(member, YearMonth.of(2023, 8)))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage("Building not found");
     }
@@ -68,7 +68,7 @@ public class WaterBillCreateAppServiceTest {
 
         when(buildingRepository.findByMember(anyLong())).thenReturn(Optional.of(building));
 
-        assertThatThrownBy(() -> waterBillCreateAppService.calculate(member, YearMonth.of(2023, 8)))
+        assertThatThrownBy(() -> waterBillCalculateAppService.calculate(member, YearMonth.of(2023, 8)))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage("WaterBill not found");
     }
@@ -89,7 +89,7 @@ public class WaterBillCreateAppServiceTest {
         when(waterBillRepository.findByBuildingAndCalculateYm(any(Building.class), any(YearMonth.class))).thenReturn(Optional.of(waterBill));
         when(waterMeterRepository.findAllByHouseHoldIn(anyIterable())).thenReturn(List.of(WaterMeter.of(0, 100, YearMonth.of(2023, 8), building.getHouseHolds().get(0))));
 
-        waterBillCreateAppService.calculate(member, YearMonth.of(2023, 8));
+        waterBillCalculateAppService.calculate(member, YearMonth.of(2023, 8));
 
         assertThat(waterBill.getWaterBillDetails().size()).isEqualTo(1);
         assertThat(waterBill.getUnitAmount()).isEqualTo(500.0);
