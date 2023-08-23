@@ -17,22 +17,24 @@ import java.util.List;
 public class PasswordChangeService {
 
     private final MemberRepository memberRepository;
-    private final RequestValidator validator;
+    private final RequestValidator<PasswordChangeRequest> validator;
 
     public PasswordChangeService(MemberRepository memberRepository,
-                                 @PasswordChangeRequestQualifier RequestValidator validator) {
+                                 @PasswordChangeRequestQualifier RequestValidator<PasswordChangeRequest> validator) {
         this.memberRepository = memberRepository;
         this.validator = validator;
     }
 
     @Transactional
-    public void change(Member member, PasswordChangeRequest request) {
+    public void change(Long memberId, PasswordChangeRequest request) {
         List<ValidationError> errors = validator.validate(request);
+        RequestValidator.validateId(memberId, "memberId", errors);
+
         if(!errors.isEmpty()){
             throw new ValidationErrorException("Request has invalid values", errors);
         }
 
-        member = memberRepository.findById(member.getId())
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("Member not found"));
 
         member.changePassword(request.getOrgPassword(), request.getNewPassword());

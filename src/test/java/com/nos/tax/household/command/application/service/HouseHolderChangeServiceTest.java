@@ -1,6 +1,9 @@
 package com.nos.tax.household.command.application.service;
 
 import com.nos.tax.common.exception.NotFoundException;
+import com.nos.tax.common.exception.ValidationCode;
+import com.nos.tax.common.exception.ValidationError;
+import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.helper.builder.HouseHoldCreateHelperBuilder;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
 import com.nos.tax.household.command.application.HouseHolderChangeService;
@@ -16,9 +19,11 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
@@ -34,6 +39,18 @@ public class HouseHolderChangeServiceTest {
         houseHoldRepository = mock(HouseHoldRepository.class);
         memberRepository = mock(MemberRepository.class);
         householderChangeService = new HouseHolderChangeService(houseHoldRepository, memberRepository);
+    }
+
+    @DisplayName("세대주 변경 시 파라미터 유효성 오류")
+    @Test
+    void requestValueInvalid() {
+        assertThatThrownBy(() -> householderChangeService.change(null, null))
+                .isInstanceOf(ValidationErrorException.class)
+                .hasMessage("Request has invalid values")
+                .hasFieldOrPropertyWithValue("errors", List.of(
+                        ValidationError.of("houseHoldId", ValidationCode.NULL.getValue()),
+                        ValidationError.of("memberId", ValidationCode.NULL.getValue())
+                ));
     }
 
     @DisplayName("세대가 조회되지 않을 때")

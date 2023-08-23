@@ -1,6 +1,5 @@
 package com.nos.tax.household.command.presentaion;
 
-import com.nos.tax.common.exception.NotFoundException;
 import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.common.http.Response;
 import com.nos.tax.household.command.application.HouseHoldMoveOutService;
@@ -8,7 +7,6 @@ import com.nos.tax.household.command.application.HouseHolderChangeService;
 import com.nos.tax.member.command.application.exception.HouseHoldNotFoundException;
 import com.nos.tax.member.command.application.exception.MemberNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

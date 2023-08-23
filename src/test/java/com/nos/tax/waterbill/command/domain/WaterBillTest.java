@@ -5,7 +5,8 @@ import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.waterbill.command.domain.enumeration.WaterBillState;
-import com.nos.tax.waterbill.command.domain.exception.WaterBillStateException;
+import com.nos.tax.waterbill.command.domain.exception.WaterBillNotCalculateStateException;
+import com.nos.tax.waterbill.command.domain.exception.WaterBillNotReadyStateException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -74,7 +75,7 @@ public class WaterBillTest {
         waterBill.updateCalculateState();
 
         assertThatThrownBy(() -> waterBill.updateCalculateState())
-                .isInstanceOf(WaterBillStateException.class)
+                .isInstanceOf(WaterBillNotReadyStateException.class)
                 .hasMessage("You can only calculate the water bill when you are ready");
     }
 
@@ -89,7 +90,7 @@ public class WaterBillTest {
         waterBill.updateCompleteState();
 
         assertThatThrownBy(() -> waterBill.updateCalculateState())
-                .isInstanceOf(WaterBillStateException.class)
+                .isInstanceOf(WaterBillNotReadyStateException.class)
                 .hasMessage("You can only calculate the water bill when you are ready");
     }
 
@@ -100,8 +101,8 @@ public class WaterBillTest {
         WaterBill waterBill = WaterBill.of(building, 77920, YearMonth.of(2023, 7));
 
         assertThatThrownBy(() -> waterBill.updateCompleteState())
-                .isInstanceOf(WaterBillStateException.class)
-                .hasMessage("The unit amount cannot be changed when the water rate is calculating");
+                .isInstanceOf(WaterBillNotCalculateStateException.class)
+                .hasMessage("You must be in a calculated state to change to a completed state");
     }
 
     @DisplayName("수도 요금 계산 상태에서 완료 상태로 변경")
@@ -128,8 +129,8 @@ public class WaterBillTest {
         waterBill.updateCompleteState();
 
         assertThatThrownBy(() -> waterBill.updateCompleteState())
-                .isInstanceOf(WaterBillStateException.class)
-                .hasMessage("The unit amount cannot be changed when the water rate is calculating");
+                .isInstanceOf(WaterBillNotCalculateStateException.class)
+                .hasMessage("You must be in a calculated state to change to a completed state");
     }
 
     private Building createBuilding(){

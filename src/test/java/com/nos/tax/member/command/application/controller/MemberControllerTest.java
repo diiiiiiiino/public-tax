@@ -14,7 +14,6 @@ import com.nos.tax.member.command.application.exception.MemberNotFoundException;
 import com.nos.tax.member.command.application.service.MemberCreateService;
 import com.nos.tax.member.command.application.service.MemberInfoChangeService;
 import com.nos.tax.member.command.application.service.PasswordChangeService;
-import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.member.command.domain.exception.PasswordNotMatchedException;
 import com.nos.tax.member.command.domain.exception.PasswordOutOfConditionException;
 import com.nos.tax.member.command.domain.exception.UpdatePasswordSameException;
@@ -77,7 +76,8 @@ public class MemberControllerTest extends BaseControllerTest {
         doThrow(new InviteCodeNotFoundException("not found inviteCode"))
                 .when(memberCreateService).create(any(MemberCreateRequest.class));
 
-        perform(post("/member"), request, status().isNotFound());
+        perform(post("/member"), request, status().isNotFound())
+                .andExpect(jsonPath("$.errorCode").value("InviteCodeNotFound"));
     }
 
     @DisplayName("회원 생성 시 초대코드 만료")
@@ -88,7 +88,8 @@ public class MemberControllerTest extends BaseControllerTest {
         doThrow(new ExpiredInviteCodeException("expired inviteCode"))
                 .when(memberCreateService).create(any(MemberCreateRequest.class));
 
-        perform(post("/member"), request, status().isBadRequest());
+        perform(post("/member"), request, status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("InviteCodeExpired"));
     }
 
     @DisplayName("회원 생성 시 세대 미조회")
@@ -99,7 +100,8 @@ public class MemberControllerTest extends BaseControllerTest {
         doThrow(new HouseHoldNotFoundException("not found houseHold"))
                 .when(memberCreateService).create(any(MemberCreateRequest.class));
 
-        perform(post("/member"), request, status().isNotFound());
+        perform(post("/member"), request, status().isNotFound())
+                .andExpect(jsonPath("$.errorCode").value("HouseHoldNotFound"));
     }
 
     @DisplayName("회원 생성 시 비밀번호 정책에 맞지 않을 때")
@@ -110,7 +112,8 @@ public class MemberControllerTest extends BaseControllerTest {
         doThrow(new PasswordOutOfConditionException("Has no special characters"))
                 .when(memberCreateService).create(any(MemberCreateRequest.class));
 
-        perform(post("/member"), request, status().isBadRequest());
+        perform(post("/member"), request, status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("PasswordOutOfCondition"));
     }
 
     @DisplayName("회원 생성 성공")
@@ -134,7 +137,7 @@ public class MemberControllerTest extends BaseControllerTest {
         errors.add(ValidationError.of("memberMobile", ValidationCode.NO_TEXT.getValue()));
 
         doThrow(new ValidationErrorException("Request has invalid values", errors))
-                .when(memberInfoChangeService).change(any(Member.class), any(MemberInfoChangeRequest.class));
+                .when(memberInfoChangeService).change(any(), any(MemberInfoChangeRequest.class));
 
         perform(patch("/member"), request, status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -151,9 +154,10 @@ public class MemberControllerTest extends BaseControllerTest {
                 .build();
 
         doThrow(new MemberNotFoundException("Member not found"))
-                .when(memberInfoChangeService).change(any(Member.class), any(MemberInfoChangeRequest.class));
+                .when(memberInfoChangeService).change(any(), any(MemberInfoChangeRequest.class));
 
-        perform(patch("/member"), request, status().isNotFound());
+        perform(patch("/member"), request, status().isNotFound())
+                .andExpect(jsonPath("$.errorCode").value("MemberNotFound"));
     }
 
     @DisplayName("회원 비밀번호 수정 시 유효성 에러")
@@ -168,7 +172,7 @@ public class MemberControllerTest extends BaseControllerTest {
         errors.add(ValidationError.of("memberOrgPassword", ValidationCode.NO_TEXT.getValue()));
 
         doThrow(new ValidationErrorException("has no text", errors))
-                .when(passwordChangeService).change(any(Member.class), any(PasswordChangeRequest.class));
+                .when(passwordChangeService).change(any(), any(PasswordChangeRequest.class));
 
         perform(patch("/member/password"), request, status().isBadRequest())
                 .andExpect(jsonPath("$.errors").isNotEmpty())
@@ -184,9 +188,10 @@ public class MemberControllerTest extends BaseControllerTest {
                 .build();
 
         doThrow(new MemberNotFoundException("Member not found"))
-                .when(passwordChangeService).change(any(Member.class), any(PasswordChangeRequest.class));
+                .when(passwordChangeService).change(any(), any(PasswordChangeRequest.class));
 
-        perform(patch("/member/password"), request, status().isNotFound());
+        perform(patch("/member/password"), request, status().isNotFound())
+                .andExpect(jsonPath("$.errorCode").value("MemberNotFound"));
     }
 
     @DisplayName("회원 비밀번호 수정 시 비밀번호가 틀렸을 경우")
@@ -198,9 +203,10 @@ public class MemberControllerTest extends BaseControllerTest {
                 .build();
 
         doThrow(new PasswordNotMatchedException("password is not matched"))
-                .when(passwordChangeService).change(any(Member.class), any(PasswordChangeRequest.class));
+                .when(passwordChangeService).change(any(), any(PasswordChangeRequest.class));
 
-        perform(patch("/member/password"), request, status().isBadRequest());
+        perform(patch("/member/password"), request, status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("PasswordNotMatched"));
     }
 
     @DisplayName("회원 비밀번호 수정 시 기존 비밀번호와 변경 비밀번호가 같을때")
@@ -212,9 +218,10 @@ public class MemberControllerTest extends BaseControllerTest {
                 .build();
 
         doThrow(new UpdatePasswordSameException("origin and update password same"))
-                .when(passwordChangeService).change(any(Member.class), any(PasswordChangeRequest.class));
+                .when(passwordChangeService).change(any(), any(PasswordChangeRequest.class));
 
-        perform(patch("/member/password"), request, status().isBadRequest());
+        perform(patch("/member/password"), request, status().isBadRequest())
+                .andExpect(jsonPath("$.errorCode").value("UpdatePasswordSame"));
     }
 
     @DisplayName("회원 비밀번호 수정 성공")

@@ -1,6 +1,6 @@
 package com.nos.tax.household.command.application.service;
 
-import com.nos.tax.common.exception.NotFoundException;
+import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.helper.builder.HouseHoldCreateHelperBuilder;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
 import com.nos.tax.household.command.application.HouseHoldMoveOutService;
@@ -29,6 +29,14 @@ public class HouseHoldMoveOutServiceTest {
     public HouseHoldMoveOutServiceTest() {
         houseHoldRepository = mock(HouseHoldRepository.class);
         houseHoldMoveOutService = new HouseHoldMoveOutService(houseHoldRepository);
+    }
+
+    @DisplayName("이사할 세대의 ID가 NULL인 경우")
+    @Test
+    void houseHoldIdNull() {
+        Assertions.assertThatThrownBy(() -> houseHoldMoveOutService.leave(null))
+                .isInstanceOf(ValidationErrorException.class)
+                .hasMessage("houseHoldId is null");
     }
 
     @DisplayName("이사할 세대가 조회되지 않을 경우")

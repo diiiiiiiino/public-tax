@@ -1,11 +1,10 @@
 package com.nos.tax.waterbill.command.domain.exception;
 
-public class WaterBillStateException extends RuntimeException {
-    public WaterBillStateException(String message) {
-        super(message);
-    }
+import com.nos.tax.common.exception.ApplicationException;
+import com.nos.tax.common.http.ErrorCode;
 
-    public WaterBillStateException(String message, Throwable cause) {
-        super(message, cause);
+public class WaterBillStateException extends ApplicationException {
+    public WaterBillStateException(String message, ErrorCode errorCode) {
+        super(message, errorCode);
     }
 }

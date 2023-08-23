@@ -4,8 +4,9 @@ import com.nos.tax.building.command.domain.Building;
 import com.nos.tax.util.VerifyUtil;
 import com.nos.tax.waterbill.command.domain.WaterBill;
 import com.nos.tax.waterbill.command.domain.WaterBillDetail;
-import com.nos.tax.waterbill.command.domain.exception.WaterBillCalculateConditionException;
-import com.nos.tax.waterbill.command.domain.exception.WaterBillStateException;
+import com.nos.tax.waterbill.command.domain.exception.WaterBillNotCalculateStateException;
+import com.nos.tax.waterbill.command.domain.exception.WaterBillNotReadyStateException;
+import com.nos.tax.waterbill.command.domain.exception.WaterMeterNotAllCreatedException;
 import com.nos.tax.watermeter.command.domain.repository.WaterMeter;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +21,10 @@ public class WaterBillCalculateService {
      * @param building
      * @param waterBill
      * @param waterMeters
-     * @throws WaterBillCalculateConditionException - 수도 계량값 목록이 세대수 만큼 입력되지 않았을 경우
-     * @throws ArithmeticException - 세대별 수도 요금 계산 중 오버플로우가 발생한 경우
-     * @throws WaterBillStateException - 수도 요금 계산 상태가 완료되었을 경우
+     * @throws WaterMeterNotAllCreatedException - 수도 계량 데이터가 세대수 만큼 생성되지 않았을 경우
+     * @throws ArithmeticException - 세대별 수도 요금 계산 중 오버플로우가 발생한 경우 todo
+     * @throws WaterBillNotReadyStateException - 수도 요금 상태가 준비 상태가 아닌 경우
+     * @throws WaterBillNotCalculateStateException - 수도 요금 상태가 계산 상태가 아닌 경우
      */
     public void calculate(Building building, WaterBill waterBill, List<WaterMeter> waterMeters) {
         VerifyUtil.verifyNull(building, "building");
@@ -30,7 +32,7 @@ public class WaterBillCalculateService {
         VerifyUtil.verifyNull(waterMeters, "waterMeters");
 
         if(building.getHouseHolds().size() != waterMeters.size()){
-            throw new WaterBillCalculateConditionException("Water meter not all entered");
+            throw new WaterMeterNotAllCreatedException("Water meter not all created");
         }
 
         waterBill.updateCalculateState();

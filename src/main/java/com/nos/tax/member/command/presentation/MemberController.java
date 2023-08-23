@@ -52,7 +52,7 @@ public class MemberController {
      */
     @PatchMapping
     public Response<Void> updateMember(Member member, @RequestBody MemberInfoChangeRequest request){
-        memberInfoChangeService.change(member, request);
+        memberInfoChangeService.change(member.getId(), request);
         return Response.ok();
     }
 
@@ -67,7 +67,7 @@ public class MemberController {
      */
     @PatchMapping("/password")
     public Response<Void> updatePassword(Member member, @RequestBody PasswordChangeRequest request){
-        passwordChangeService.change(member, request);
+        passwordChangeService.change(member.getId(), request);
         return Response.ok();
     }
 }

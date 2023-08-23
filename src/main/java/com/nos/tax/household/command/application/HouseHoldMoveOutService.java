@@ -1,10 +1,10 @@
 package com.nos.tax.household.command.application;
 
-import com.nos.tax.common.exception.NotFoundException;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.household.command.domain.enumeration.HouseHoldState;
 import com.nos.tax.household.command.domain.repository.HouseHoldRepository;
 import com.nos.tax.member.command.application.exception.HouseHoldNotFoundException;
+import com.nos.tax.util.VerifyUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +17,8 @@ public class HouseHoldMoveOutService {
 
     @Transactional
     public void leave(Long houseHoldId) {
+        VerifyUtil.verifyNull(houseHoldId, "houseHoldId");
+
         HouseHold houseHold = houseHoldRepository.findByIdAndHouseHoldState(houseHoldId, HouseHoldState.LIVE)
                 .orElseThrow(() -> new HouseHoldNotFoundException("HouseHold not found"));
 

@@ -4,7 +4,6 @@ import com.nos.tax.common.exception.ValidationCode;
 import com.nos.tax.common.exception.ValidationError;
 import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
-import com.nos.tax.member.command.application.dto.MemberInfoChangeRequest;
 import com.nos.tax.member.command.application.dto.PasswordChangeRequest;
 import com.nos.tax.member.command.application.exception.MemberNotFoundException;
 import com.nos.tax.member.command.application.validator.PasswordChangeRequestValidator;
@@ -13,8 +12,6 @@ import com.nos.tax.member.command.domain.repository.MemberRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
 
 import java.util.List;
 import java.util.Optional;
@@ -44,9 +41,9 @@ public class PasswordChangeServiceTest {
                 .newPassword("bc14!@")
                 .build();
 
-        Member member = MemberCreateHelperBuilder.builder().build();
+        Member member = MemberCreateHelperBuilder.builder().id(1L).build();
 
-        Assertions.assertThatThrownBy(() -> passwordChangeService.change(member, request))
+        Assertions.assertThatThrownBy(() -> passwordChangeService.change(member.getId(), request))
                 .isInstanceOf(ValidationErrorException.class)
                 .hasMessage("Request has invalid values")
                 .hasFieldOrPropertyWithValue("errors", List.of(
@@ -63,9 +60,9 @@ public class PasswordChangeServiceTest {
                 .newPassword("abcd1234!@")
                 .build();
 
-        Member member = MemberCreateHelperBuilder.builder().build();
+        Member member = MemberCreateHelperBuilder.builder().id(1L).build();
 
-        Assertions.assertThatThrownBy(() -> passwordChangeService.change(member, request))
+        Assertions.assertThatThrownBy(() -> passwordChangeService.change(member.getId(), request))
                 .isInstanceOf(MemberNotFoundException.class)
                 .hasMessage("Member not found");
     }
@@ -82,7 +79,7 @@ public class PasswordChangeServiceTest {
 
         when(memberRepository.findById(anyLong())).thenReturn(Optional.of(member));
 
-        passwordChangeService.change(member, request);
+        passwordChangeService.change(member.getId(), request);
 
         assertThat(member.getPassword().getValue()).isEqualTo("qwer1234!!");
     }

@@ -3,8 +3,8 @@ package com.nos.tax.waterbill.command.domain;
 import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.helper.WaterBillCalculateHelper;
 import com.nos.tax.waterbill.command.domain.enumeration.WaterBillState;
-import com.nos.tax.waterbill.command.domain.exception.WaterBillCalculateConditionException;
-import com.nos.tax.waterbill.command.domain.exception.WaterBillStateException;
+import com.nos.tax.waterbill.command.domain.exception.WaterBillNotCalculateStateException;
+import com.nos.tax.waterbill.command.domain.exception.WaterMeterNotAllCreatedException;
 import com.nos.tax.waterbill.command.domain.service.WaterBillCalculateService;
 import com.nos.tax.watermeter.command.domain.repository.WaterMeter;
 import org.junit.jupiter.api.DisplayName;
@@ -61,8 +61,8 @@ public class WaterBillCalculateServiceTest {
         List<WaterMeter> subMeters = meters.subList(0, meters.size() - 1);
 
         assertThatThrownBy(() -> waterBillCalculateService.calculate(testObj.getBuilding(), testObj.getWaterBill(), subMeters))
-                .isInstanceOf(WaterBillCalculateConditionException.class)
-                .hasMessage("Water meter not all entered");
+                .isInstanceOf(WaterMeterNotAllCreatedException.class)
+                .hasMessage("Water meter not all created");
     }
 
     @DisplayName("수도요금 계산 시 모든 세대주의 수도 계량값이 입력되었을 때")
@@ -118,7 +118,7 @@ public class WaterBillCalculateServiceTest {
         waterBillCalculateService.calculate(testObj.getBuilding(), waterBill, testObj.getMeters());
 
         assertThatThrownBy(() -> waterBill.changeUnitAmount(2300.4))
-                .isInstanceOf(WaterBillStateException.class)
-                .hasMessage("The unit amount cannot be changed when the water rate is calculating");
+                .isInstanceOf(WaterBillNotCalculateStateException.class)
+                .hasMessage("You must be in a calculated state to change the water bill unit amount");
     }
 }

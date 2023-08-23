@@ -14,7 +14,11 @@ public enum ErrorCode {
     UPDATE_PASSWORD_SAME(HttpStatus.BAD_REQUEST, "UpdatePasswordSame"),
     INVALID_VALUE(HttpStatus.BAD_REQUEST, "InvalidValue"),
     BUILDING_NOT_FOUND(HttpStatus.NOT_FOUND, "BuildingNotFound"),
-    WATER_BILL_DUPLICATE(HttpStatus.CONFLICT, "WaterBillDuplicate");
+    WATER_BILL_DUPLICATE(HttpStatus.CONFLICT, "WaterBillDuplicate"),
+    WATER_BILL_NOT_FOUND(HttpStatus.NOT_FOUND, "WaterBillNotFound"),
+    WATER_METER_NOT_ALL_CREATED(HttpStatus.UNPROCESSABLE_ENTITY, "WaterMeterNotAllCreated"),
+    WATER_BILL_NOT_READY_STATE(HttpStatus.FORBIDDEN, "WaterBillNotReadyState"),
+    WATER_BILL_NOT_CALCULATE_STATE(HttpStatus.FORBIDDEN, "WaterBillNotCalculateState");
 
     private HttpStatus status;
     private String code;

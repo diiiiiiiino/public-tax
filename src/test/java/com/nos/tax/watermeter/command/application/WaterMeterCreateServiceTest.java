@@ -7,6 +7,8 @@ import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.household.command.domain.repository.HouseHoldRepository;
 import com.nos.tax.member.command.domain.Member;
+import com.nos.tax.watermeter.command.application.dto.WaterMeterCreateRequest;
+import com.nos.tax.watermeter.command.application.service.WaterMeterCreateService;
 import com.nos.tax.watermeter.command.domain.repository.WaterMeter;
 import com.nos.tax.watermeter.command.domain.repository.WaterMeterRepository;
 import org.junit.jupiter.api.DisplayName;

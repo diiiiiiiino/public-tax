@@ -27,13 +27,15 @@ public class MemberInfoChangeService {
     }
 
     @Transactional
-    public void change(Member member, MemberInfoChangeRequest request) {
+    public void change(Long memberId, MemberInfoChangeRequest request) {
         List<ValidationError> errors = validator.validate(request);
+        RequestValidator.validateId(memberId, "memberId", errors);
+
         if(!errors.isEmpty()){
             throw new ValidationErrorException("Request has invalid values", errors);
         }
 
-        member = memberRepository.findById(member.getId())
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("Member not found"));
 
         member.changeName(request.getName());

@@ -4,7 +4,8 @@ import com.nos.tax.building.command.domain.Building;
 import com.nos.tax.util.VerifyUtil;
 import com.nos.tax.waterbill.command.domain.converter.YearMonthConverter;
 import com.nos.tax.waterbill.command.domain.enumeration.WaterBillState;
-import com.nos.tax.waterbill.command.domain.exception.WaterBillStateException;
+import com.nos.tax.waterbill.command.domain.exception.WaterBillNotCalculateStateException;
+import com.nos.tax.waterbill.command.domain.exception.WaterBillNotReadyStateException;
 import com.nos.tax.watermeter.command.domain.repository.WaterMeter;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -60,37 +61,31 @@ public class WaterBill {
     }
 
     public void addWaterBillDetail(WaterBillDetail waterBillDetail){
-        verifyWaterBillDetailAddState();
+        verifyCalculatingState("WaterBillDetail addition is possible when calculating state");
         this.waterBillDetails.add(waterBillDetail);
     }
 
     public void updateCalculateState() {
         if(state != WaterBillState.READY){
-            throw new WaterBillStateException("You can only calculate the water bill when you are ready");
+            throw new WaterBillNotReadyStateException("You can only calculate the water bill when you are ready");
         }
 
         state = WaterBillState.CALCULATING;
     }
 
     public void updateCompleteState() {
-        verifyCalculatingState("The unit amount cannot be changed when the water rate is calculating");
+        verifyCalculatingState("You must be in a calculated state to change to a completed state");
         state = WaterBillState.COMPLETE;
     }
 
     public void changeUnitAmount(double unitAmount){
-        verifyCalculatingState("The unit amount cannot be changed when the water rate is calculating");
+        verifyCalculatingState("You must be in a calculated state to change the water bill unit amount");
         this.unitAmount = unitAmount;
     }
 
     private void verifyCalculatingState(String msg){
         if(state != WaterBillState.CALCULATING){
-            throw new WaterBillStateException(msg);
-        }
-    }
-
-    private void verifyWaterBillDetailAddState() {
-        if(state == WaterBillState.COMPLETE){
-            throw new WaterBillStateException("Addition is not possible when completed");
+            throw new WaterBillNotCalculateStateException(msg);
         }
     }
 

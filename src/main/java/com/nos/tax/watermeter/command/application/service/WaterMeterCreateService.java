@@ -1,9 +1,10 @@
-package com.nos.tax.watermeter.command.application;
+package com.nos.tax.watermeter.command.application.service;
 
 import com.nos.tax.common.exception.NotFoundException;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.household.command.domain.repository.HouseHoldRepository;
 import com.nos.tax.member.command.domain.Member;
+import com.nos.tax.watermeter.command.application.dto.WaterMeterCreateRequest;
 import com.nos.tax.watermeter.command.domain.repository.WaterMeter;
 import com.nos.tax.watermeter.command.domain.repository.WaterMeterRepository;
 import lombok.RequiredArgsConstructor;

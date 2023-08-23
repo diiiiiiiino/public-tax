@@ -4,16 +4,12 @@ import com.nos.tax.common.exception.ValidationCode;
 import com.nos.tax.common.exception.ValidationError;
 import com.nos.tax.common.validator.RequestValidator;
 import com.nos.tax.common.validator.Validator;
-import com.nos.tax.member.command.application.dto.MemberCreateRequest;
 import com.nos.tax.waterbill.command.application.dto.WaterBillCreateRequest;
 import com.nos.tax.waterbill.command.application.validator.annotation.WaterBillCreateRequestQualifier;
-import org.springframework.util.StringUtils;
 
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.nos.tax.common.enumeration.TextLengthRange.*;
 
 @Validator
 @WaterBillCreateRequestQualifier

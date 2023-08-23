@@ -12,8 +12,6 @@ import com.nos.tax.member.command.domain.repository.MemberRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,9 +41,9 @@ public class MemberInfoChangeServiceTest {
                 .mobile("010125678")
                 .build();
 
-        Member member = MemberCreateHelperBuilder.builder().build();
+        Member member = MemberCreateHelperBuilder.builder().id(1L).build();
 
-        Assertions.assertThatThrownBy(() -> memberInfoChangeService.change(member, request))
+        Assertions.assertThatThrownBy(() -> memberInfoChangeService.change(member.getId(), request))
                 .isInstanceOf(ValidationErrorException.class)
                 .hasMessage("Request has invalid values")
                 .hasFieldOrPropertyWithValue("errors", List.of(
@@ -62,9 +60,9 @@ public class MemberInfoChangeServiceTest {
                 .mobile("01012345678")
                 .build();
 
-        Member member = MemberCreateHelperBuilder.builder().build();
+        Member member = MemberCreateHelperBuilder.builder().id(1L).build();
 
-        Assertions.assertThatThrownBy(() -> memberInfoChangeService.change(member, request))
+        Assertions.assertThatThrownBy(() -> memberInfoChangeService.change(member.getId(), request))
                 .isInstanceOf(MemberNotFoundException.class)
                 .hasMessage("Member not found");
     }
@@ -81,7 +79,7 @@ public class MemberInfoChangeServiceTest {
 
         when(memberRepository.findById(anyLong())).thenReturn(Optional.of(member));
 
-        memberInfoChangeService.change(member, request);
+        memberInfoChangeService.change(member.getId(), request);
 
         assertThat(member.getName()).isEqualTo("홍길동");
         assertThat(member.getMobile().toString()).isEqualTo("01012345678");
