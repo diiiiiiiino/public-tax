@@ -38,7 +38,7 @@ public class BuildingRepositoryTest {
 
     @DisplayName("Building 저장")
     @Test
-    void building_save() {
+    void buildingSave() {
         Building building = createBuilding();
 
         assertThat(building.getName()).isEqualTo("빌라");
@@ -62,7 +62,7 @@ public class BuildingRepositoryTest {
 
     @DisplayName("Building 건물명 수정")
     @Test
-    void name_update() {
+    void nameUpdate() {
         Building building = createBuilding();
 
         building.changeName("자이");
@@ -76,7 +76,7 @@ public class BuildingRepositoryTest {
 
     @DisplayName("Building 주소 수정")
     @Test
-    void address_update(){
+    void addressUpdate(){
         Building building = createBuilding();
 
         building.changeAddress("변경주소1", "변경주소2", "99999");
@@ -93,7 +93,7 @@ public class BuildingRepositoryTest {
 
     @DisplayName("Building 세대 추가")
     @Test
-    void household_add(){
+    void householdAdd(){
         Building building = createBuilding();
 
         List<HouseHold> newHouseHolds = new ArrayList<>(List.of(HouseHold.of("102호", building)));

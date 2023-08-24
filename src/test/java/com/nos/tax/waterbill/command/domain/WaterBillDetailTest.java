@@ -18,7 +18,7 @@ public class WaterBillDetailTest {
 
     @DisplayName("수도 요금 상세 생성 시 세대 id 누락")
     @Test
-    void household_id_missing_when_generating_water_bill_details() {
+    void householdIdMissingWhenGeneratingWaterBillDetails() {
         assertThatThrownBy(() -> WaterBillDetail.of(0, 0, null, null))
                 .isInstanceOf(ValidationErrorException.class)
                 .hasMessage("waterBillDetailHouseHold is null");
@@ -26,7 +26,7 @@ public class WaterBillDetailTest {
 
     @DisplayName("수도 요금 상세 납부금액이 음수 일 때")
     @Test
-    void water_amount_value_negative_when_generating_water_bill_details() {
+    void waterAmountValueNegativeWhenGeneratingWaterBillDetails() {
         Building building = createBuilding();
         HouseHold houseHold = building.getHouseHolds().get(0);
 
@@ -37,7 +37,7 @@ public class WaterBillDetailTest {
 
     @DisplayName("수도 요금 상세 납부금액 입력 성공")
     @Test
-    void enter_water_amount_value() {
+    void enterWaterAmountValue() {
         Building building = createBuilding();
         HouseHold houseHold = building.getHouseHolds().get(0);
 

@@ -9,7 +9,6 @@ import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.household.command.domain.repository.HouseHoldRepository;
 import com.nos.tax.member.command.domain.Member;
-import com.nos.tax.waterbill.command.application.dto.WaterBillCreateRequest;
 import com.nos.tax.watermeter.command.application.dto.WaterMeterCreateRequest;
 import com.nos.tax.watermeter.command.application.service.WaterMeterCreateService;
 import com.nos.tax.watermeter.command.application.validator.WaterMeterCreateRequestValidator;
@@ -62,7 +61,7 @@ public class WaterMeterCreateServiceTest {
 
     @DisplayName("이번 달 수도 계량 값이 저번 달 수동 계량 값보다 작은 경우")
     @Test
-    void previous_meter_bigger_than_present_meter() {
+    void previousMeterBiggerThanPresentMeter() {
         WaterMeterCreateRequest waterMeterCreateRequest = new WaterMeterCreateRequest(100, 99, YearMonth.of(2023, 8));
         Member member = MemberCreateHelperBuilder.builder().id(1L).build();
 
@@ -75,7 +74,7 @@ public class WaterMeterCreateServiceTest {
 
     @DisplayName("회원이 관리하는 세대가 없을 경우")
     @Test
-    void household_is_not_found(){
+    void householdIsNotFound(){
         WaterMeterCreateRequest waterMeterCreateRequest = new WaterMeterCreateRequest(0, 100, YearMonth.of(2023, 8));
         Member member = MemberCreateHelperBuilder.builder().id(1L).build();
 
@@ -88,7 +87,7 @@ public class WaterMeterCreateServiceTest {
 
     @DisplayName("수도 계량 데이터 생성 성공")
     @Test
-    void create_success(){
+    void createSuccess(){
         WaterMeterCreateRequest request = new WaterMeterCreateRequest(0, 100, YearMonth.of(2023, 8));
         Member member = MemberCreateHelperBuilder.builder().id(1L).build();
         HouseHold houseHold = HouseHoldCreateHelperBuilder.builder().build();

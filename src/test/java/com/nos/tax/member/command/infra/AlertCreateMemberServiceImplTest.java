@@ -17,7 +17,7 @@ public class AlertCreateMemberServiceImplTest {
     @DisplayName("전화번호가 null 또는 빈 문자열일때")
     @ParameterizedTest
     @NullAndEmptySource
-    void mobile_null_and_empty(String mobile) {
+    void mobileNullAndEmpty(String mobile) {
         String inviteCode = "123456";
 
         Assertions.assertThatThrownBy(() -> alertCreateMemberServiceImpl.alert(mobile, inviteCode))
@@ -28,7 +28,7 @@ public class AlertCreateMemberServiceImplTest {
     @DisplayName("초대코드가 null 또는 빈 문자열일때")
     @ParameterizedTest
     @NullAndEmptySource
-    void inviteCode_null_and_empty(String inviteCode) {
+    void inviteCodeNullAndEmpty(String inviteCode) {
         String mobile = "01012345678";
 
         Assertions.assertThatThrownBy(() -> alertCreateMemberServiceImpl.alert(mobile, inviteCode))

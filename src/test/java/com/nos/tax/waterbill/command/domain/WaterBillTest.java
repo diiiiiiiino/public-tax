@@ -22,7 +22,7 @@ public class WaterBillTest {
 
     @DisplayName("수도 요금 생성 시 건물 누락")
     @Test
-    void missing_buildings_when_generating_water_bills() {
+    void missingBuildingsWhenGeneratingWaterBills() {
         assertThatThrownBy(() -> WaterBill.of(null, 77920, YearMonth.of(2023, 7)))
                 .isInstanceOf(ValidationErrorException.class)
                 .hasMessage("waterBillBuilding is null");
@@ -30,7 +30,7 @@ public class WaterBillTest {
 
     @DisplayName("수도 요금 생성 시 총 사용액이 음수 일 때")
     @Test
-    void total_amount_negative_when_generating_water_bill() {
+    void totalAmountNegativeWhenGeneratingWaterBill() {
         Building building = createBuilding();
 
         assertThatThrownBy(() -> WaterBill.of(building, -77920, YearMonth.of(2023, 7)))
@@ -40,7 +40,7 @@ public class WaterBillTest {
 
     @DisplayName("수도 요금 생성 시 요금 정산 년월일 누락")
     @Test
-    void missing_date_when_generating_water_bills() {
+    void missingDateWhenGeneratingWaterBills() {
         assertThatThrownBy(() -> WaterBill.of(null, 77920, null))
                 .isInstanceOf(ValidationErrorException.class)
                 .hasMessage("waterBillBuilding is null");
@@ -48,7 +48,7 @@ public class WaterBillTest {
 
     @DisplayName("수도 요금 생성 성공")
     @Test
-    void successful_generation_of_water_bills() {
+    void successfulGenerationOfWaterBills() {
         Building building = createBuilding();
         WaterBill waterBill = WaterBill.of(building, 77920, YearMonth.of(2023, 7));
 
@@ -57,7 +57,7 @@ public class WaterBillTest {
 
     @DisplayName("수도 요금 준비 상태에서 계산 상태로 변경")
     @Test
-    void update_calculation_status_in_water_bill_ready() {
+    void updateCalculationStatusInWaterBillReady() {
         Building building = createBuilding();
         WaterBill waterBill = WaterBill.of(building, 77920, YearMonth.of(2023, 7));
 
@@ -68,7 +68,7 @@ public class WaterBillTest {
 
     @DisplayName("수도 요금 계산 상태에서 계산 상태로 변경")
     @Test
-    void update_calculation_status_in_water_bill_calculation() {
+    void updateCalculationStatusInWaterBillCalculation() {
         Building building = createBuilding();
         WaterBill waterBill = WaterBill.of(building, 77920, YearMonth.of(2023, 7));
 
@@ -81,7 +81,7 @@ public class WaterBillTest {
 
     @DisplayName("수도 요금 완료 상태에서 계산 상태로 변경")
     @Test
-    void update_calculation_status_in_water_bill_complete() {
+    void updateCalculationStatusInWaterBillComplete() {
         Building building = createBuilding();
         WaterBill waterBill = WaterBill.of(building, 77920, YearMonth.of(2023, 7));
 
@@ -96,7 +96,7 @@ public class WaterBillTest {
 
     @DisplayName("수도 요금 준비 상태에서 완료 상태로 변경")
     @Test
-    void update_complete_status_in_water_bill_ready() {
+    void updateCompleteStatusInWaterBillReady() {
         Building building = createBuilding();
         WaterBill waterBill = WaterBill.of(building, 77920, YearMonth.of(2023, 7));
 
@@ -107,7 +107,7 @@ public class WaterBillTest {
 
     @DisplayName("수도 요금 계산 상태에서 완료 상태로 변경")
     @Test
-    void update_complete_status_in_water_bill_calculation() {
+    void updateCompleteStatusInWaterBillCalculation() {
         Building building = createBuilding();
         WaterBill waterBill = WaterBill.of(building, 77920, YearMonth.of(2023, 7));
 
@@ -120,7 +120,7 @@ public class WaterBillTest {
 
     @DisplayName("수도 요금 완료 상태에서 완료 상태로 변경")
     @Test
-    void update_complete_status_in_water_bill_complete() {
+    void updateCompleteStatusInWaterBillComplete() {
         Building building = createBuilding();
         WaterBill waterBill = WaterBill.of(building, 77920, YearMonth.of(2023, 7));
 

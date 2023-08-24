@@ -26,7 +26,7 @@ public class MemberTest {
     @DisplayName("회원 이름 변경 시 null 또는 빈 문자열 전달 시 실패")
     @ParameterizedTest
     @NullAndEmptySource
-    void member_name_update_with_null_and_empty(String name) {
+    void memberNameUpdateWithNullAndEmpty(String name) {
         Member member = MemberCreateHelperBuilder.builder().build();
 
         assertThatThrownBy(() -> member.changeName(name))
@@ -36,7 +36,7 @@ public class MemberTest {
 
     @DisplayName("회원 이름 변경 성공")
     @Test
-    void member_name_update_success() {
+    void memberNameUpdateSuccess() {
         Member member = MemberCreateHelperBuilder.builder().build();
 
         member.changeName("김철수");
@@ -47,7 +47,7 @@ public class MemberTest {
     @DisplayName("회원 전화번호 변경 시 null 또는 빈 문자열 전달 시 실패")
     @ParameterizedTest
     @NullAndEmptySource
-    void member_mobile_update_with_null_and_empty(String mobile) {
+    void memberMobileUpdateWithNullAndEmpty(String mobile) {
         Member member = MemberCreateHelperBuilder.builder().build();
 
         assertThatThrownBy(() -> member.changeMobile(Mobile.of(mobile)))
@@ -57,7 +57,7 @@ public class MemberTest {
 
     @DisplayName("회원 전화번호 변경 성공")
     @Test
-    void member_mobile_update_success() {
+    void memberMobileUpdateSuccess() {
         Member member = MemberCreateHelperBuilder.builder().build();
 
         member.changeMobile(Mobile.of("01033334444"));
@@ -68,7 +68,7 @@ public class MemberTest {
     @DisplayName("회원 비밀번호 변경 시 기존 비밀번호가 일치하지 않을 때")
     @ParameterizedTest
     @ValueSource(strings = { "qwer1234!@#", "qwer123!@#$", "wer1234!@#" })
-    void when_password_change_origin_password_not_match(String value){
+    void whenPasswordChangeOriginPasswordNotMatch(String value){
         String updateValue = "sprtjtm13$$@@";
         Member member = MemberCreateHelperBuilder.builder().build();
 
@@ -80,7 +80,7 @@ public class MemberTest {
     @DisplayName("회원 비밀번호 변경 시 변경할 비밀번호가 길이가 길이가 8~16자리가 아닐 때")
     @ParameterizedTest
     @ValueSource(strings = { "1234567", "12345678912345678" })
-    void when_password_change_digits_are_not_8_to_16_digits(String value) {
+    void whenPasswordChangeDigitsAreNot8To16Digits(String value) {
         String originValue = "qwer1234!@#$";
         Password password = Password.of(originValue);
 
@@ -96,7 +96,7 @@ public class MemberTest {
     @DisplayName("회원 비밀번호 변경 시 기존 비밀번호가 null이거나 빈 문자열일 때")
     @ParameterizedTest
     @NullAndEmptySource
-    void when_password_change_origin_value_is_null_or_empty_string(String value) {
+    void whenPasswordChangeOriginValueIsNullOrEmptyString(String value) {
         String updateValue = "qwer1234!@#$";
         Password password = Password.of(updateValue);
         Member member = MemberCreateHelperBuilder.builder()
@@ -111,7 +111,7 @@ public class MemberTest {
     @DisplayName("회원 비밀번호 변경 시 변경할 비밀번호가 null이거나 빈 문자열일 때")
     @ParameterizedTest
     @NullAndEmptySource
-    void when_password_change_update_value_is_null_or_empty_string(String value) {
+    void whenPasswordChangeUpdateValueIsNullOrEmptyString(String value) {
         String originValue = "qwer1234!@#$";
         Password password = Password.of(originValue);
         Member member = MemberCreateHelperBuilder.builder()
@@ -126,7 +126,7 @@ public class MemberTest {
     @DisplayName("회원 비밀번호 변경 시 변경할 비밀번호에 영문이 포함되어 있지 않을 때")
     @ParameterizedTest
     @ValueSource(strings = { "비밀번호1234!@#$", "12341234!@#$", "가나다라마바차카" })
-    void when_the_password_change_does_not_contain_english_characters(String value) {
+    void whenThePasswordChangeDoesNotContainEnglishCharacters(String value) {
         String originValue = "qwer1234!@#$";
         Password password = Password.of(originValue);
         Member member = MemberCreateHelperBuilder.builder()
@@ -141,7 +141,7 @@ public class MemberTest {
     @DisplayName("회원 비밀번호 변경 시 변경할 비밀번호에 숫자가 포함되어 있지 않을 때")
     @ParameterizedTest
     @ValueSource(strings = { "abcdefgh!!@@", "aaaabbbbbe", "!@!@@#@$aa" })
-    void when_password_change_doesnt_contain_numbers(String value) {
+    void whenPasswordChangeDoesntContainNumbers(String value) {
         String originValue = "qwer1234!@#$";
         Password password = Password.of(originValue);
         Member member = MemberCreateHelperBuilder.builder()
@@ -155,7 +155,7 @@ public class MemberTest {
 
     @DisplayName("회원 비밀번호 변경 시 기존 비밀번호와 변경할 비밀번호가 같을 때")
     @Test
-    void when_password_change_origin_and_update_password_same() {
+    void whenPasswordChangeOriginAndUpdatePasswordSame() {
         String originValue = "qwer1234!@#$";
         String updateValue = "qwer1234!@#$";
         Password password = Password.of(originValue);
@@ -170,7 +170,7 @@ public class MemberTest {
 
     @DisplayName("회원 비밀번호 변경 성공")
     @Test
-    void password_change_successful() {
+    void passwordChangeSuccessful() {
         String originValue = "qwer1234!@#$";
         String updateValue = "!@#$qwer1234";
         Password password = Password.of(originValue);

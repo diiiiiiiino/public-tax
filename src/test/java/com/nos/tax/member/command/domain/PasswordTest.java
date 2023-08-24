@@ -16,7 +16,7 @@ public class PasswordTest {
     @DisplayName("비밀번호 길이가 8~16자리가 아닐 때")
     @ParameterizedTest
     @ValueSource(strings = { "1234567", "12345678912345678" })
-    void password_digits_are_not_8_to_16_digits(String password) {
+    void passwordDigitsAreNot8To16Digits(String password) {
         assertThatThrownBy(() -> Password.of(password))
                 .isInstanceOf(PasswordOutOfConditionException.class)
                 .hasMessage("Length condition not matched");
@@ -25,7 +25,7 @@ public class PasswordTest {
     @DisplayName("비밀번호가 null이거나 빈 문자열일 때")
     @ParameterizedTest
     @NullAndEmptySource
-    void password_is_null_or_empty_string(String password) {
+    void passwordIsNullOrEmptyString(String password) {
         assertThatThrownBy(() -> Password.of(password))
                 .isInstanceOf(ValidationErrorException.class)
                 .hasMessage("password has no text");
@@ -34,7 +34,7 @@ public class PasswordTest {
     @DisplayName("비밀번호에 영문이 포함되어 있지 않을 때")
     @ParameterizedTest
     @ValueSource(strings = { "비밀번호1234!@#$", "12341234!@#$", "가나다라마바차카" })
-    void when_the_password_does_not_contain_english_characters(String password) {
+    void whenThePasswordDoesNotContainEnglishCharacters(String password) {
         assertThatThrownBy(() -> Password.of(password))
                 .isInstanceOf(PasswordOutOfConditionException.class)
                 .hasMessage("Has no alphabet");
@@ -43,7 +43,7 @@ public class PasswordTest {
     @DisplayName("비밀번호에 숫자가 포함되어 있지 않을 때")
     @ParameterizedTest
     @ValueSource(strings = { "abcdefgh!!@@", "aaaabbbbbe", "!@!@@#@$aa" })
-    void password_doesnt_contain_numbers(String value) {
+    void passwordDoesntContainNumbers(String value) {
         assertThatThrownBy(() -> Password.of(value))
                 .isInstanceOf(PasswordOutOfConditionException.class)
                 .hasMessage("Has no digit");
@@ -52,7 +52,7 @@ public class PasswordTest {
     @DisplayName("비밀번호 생성 성공")
     @ParameterizedTest
     @ValueSource(strings = { "qwer1234!@", "4r5t6y7u#$p1q", "!12345abcde" })
-    void successful_password_generation(String value) {
+    void successfulPasswordGeneration(String value) {
         Password password = Password.of(value);
 
         assertThat(password.getValue()).isEqualTo(value);

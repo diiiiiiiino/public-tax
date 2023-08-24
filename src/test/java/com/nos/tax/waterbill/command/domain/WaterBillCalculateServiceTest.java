@@ -25,7 +25,7 @@ public class WaterBillCalculateServiceTest {
 
     @DisplayName("수도요금 계산 시 건물이 null인 경우")
     @Test
-    void if_building_is_null_when_calculating() {
+    void ifBuildingIsNullWhenCalculating() {
         WaterBillCalculateHelper testObj = WaterBillCalculateHelper.WaterBillCalculateHelperBuilder.builder().build();
 
         assertThatThrownBy(() -> waterBillCalculateService.calculate(null, testObj.getWaterBill(), testObj.getMeters()))
@@ -35,7 +35,7 @@ public class WaterBillCalculateServiceTest {
 
     @DisplayName("수도요금 계산 시 수도요금이 null인 경우")
     @Test
-    void if_water_bill_is_null_when_calculating() {
+    void ifWaterBillIsNullWhenCalculating() {
         WaterBillCalculateHelper testObj = WaterBillCalculateHelper.WaterBillCalculateHelperBuilder.builder().build();
 
         assertThatThrownBy(() -> waterBillCalculateService.calculate(testObj.getBuilding(), null, testObj.getMeters()))
@@ -45,7 +45,7 @@ public class WaterBillCalculateServiceTest {
 
     @DisplayName("수도요금 계산 시 수도계량값이 null인 경우")
     @Test
-    void if_water_meter_is_null_when_calculating() {
+    void ifWaterMeterIsNullWhenCalculating() {
         WaterBillCalculateHelper testObj = WaterBillCalculateHelper.WaterBillCalculateHelperBuilder.builder().build();
 
         assertThatThrownBy(() -> waterBillCalculateService.calculate(testObj.getBuilding(), testObj.getWaterBill(), null))
@@ -55,7 +55,7 @@ public class WaterBillCalculateServiceTest {
 
     @DisplayName("수도요금 계산 시 모든 세대주의 수도 계량값이 입력되지 않았을 때")
     @Test
-    void when_water_bill_is_calculated_water_meter_of_all_householder_is_not_entered() {
+    void whenWaterBillIsCalculatedWaterMeterOfAllHouseholderIsNotEntered() {
         WaterBillCalculateHelper testObj = WaterBillCalculateHelper.WaterBillCalculateHelperBuilder.builder().build();
         List<WaterMeter> meters = testObj.getMeters();
         List<WaterMeter> subMeters = meters.subList(0, meters.size() - 1);
@@ -67,7 +67,7 @@ public class WaterBillCalculateServiceTest {
 
     @DisplayName("수도요금 계산 시 모든 세대주의 수도 계량값이 입력되었을 때")
     @Test
-    void when_water_bill_is_calculated_water_meter_of_all_householder_is_entered() {
+    void whenWaterBillIsCalculatedWaterMeterOfAllHouseholderIsEntered() {
         WaterBillCalculateHelper testObj = WaterBillCalculateHelper.WaterBillCalculateHelperBuilder.builder().build();
         WaterBill waterBill = testObj.getWaterBill();
 
@@ -86,7 +86,7 @@ public class WaterBillCalculateServiceTest {
 
     @DisplayName("수도요금 계산 시 사용 금액과 반올림 된 사용 금액과의 차이 계산")
     @Test
-    void calculation_of_the_difference_between_the_amount_used_and_the_rounded_amount_used_when_calculating_the_water_bill() {
+    void calculationOfTheDifferenceBetweenTheAmountUsedAndTheRoundedAmountUsedWhenCalculatingTheWaterBill() {
         WaterBillCalculateHelper testObj = WaterBillCalculateHelper.WaterBillCalculateHelperBuilder.builder().build();
         WaterBill waterBill = testObj.getWaterBill();
 
@@ -111,7 +111,7 @@ public class WaterBillCalculateServiceTest {
 
     @DisplayName("수도요금 완료 상태에서 단위 요금 갱신할 때")
     @Test
-    void when_renewing_the_unit_rate_with_the_water_rate_completed() {
+    void whenRenewingTheUnitRateWithTheWaterRateCompleted() {
         WaterBillCalculateHelper testObj = WaterBillCalculateHelper.WaterBillCalculateHelperBuilder.builder().build();
         WaterBill waterBill = testObj.getWaterBill();
 

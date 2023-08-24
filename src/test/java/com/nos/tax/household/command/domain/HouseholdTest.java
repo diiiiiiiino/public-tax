@@ -18,14 +18,14 @@ public class HouseholdTest {
     @DisplayName("세대 생성 시 세대명 누락")
     @ParameterizedTest
     @NullAndEmptySource
-    void household_create_with_null_and_empty_room(String room) {
+    void householdCreateWithNullAndEmptyRoom(String room) {
         assertThatThrownBy(() -> HouseHold.of(room, BuildingCreateHelperBuilder.builder().build()))
                 .isInstanceOf(ValidationErrorException.class);
     }
 
     @DisplayName("세대 생성 성공")
     @Test
-    void household_create_success() {
+    void householdCreateSuccess() {
         HouseHold houseHold = HouseHold.of("101호", BuildingCreateHelperBuilder.builder().build());
 
         assertThat(houseHold.getRoom()).isEqualTo("101호");
@@ -34,7 +34,7 @@ public class HouseholdTest {
 
     @DisplayName("세대 세대주 변경")
     @Test
-    void household_householder_update() {
+    void householdHouseholderUpdate() {
         HouseHold houseHold = HouseHold.of("101호", BuildingCreateHelperBuilder.builder().build());
 
         Member member = MemberCreateHelperBuilder.builder().build();

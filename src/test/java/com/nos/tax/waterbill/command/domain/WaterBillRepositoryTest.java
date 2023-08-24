@@ -52,7 +52,7 @@ public class WaterBillRepositoryTest {
 
     @DisplayName("수도 요금 정산 데이터 생성")
     @Test
-    void save_water_bill() {
+    void saveWaterBill() {
         Building building = createBuilding();
 
         WaterBill waterBill = WaterBill.of(building, 77920, YearMonth.of(2023, 7));
@@ -71,7 +71,7 @@ public class WaterBillRepositoryTest {
 
     @DisplayName("수도요금 계산 적용 시")
     @Test
-    void calculate_water_bills_usage() {
+    void calculateWaterBillsUsage() {
         Building building = createBuilding();
         YearMonth yearMonth = YearMonth.of(2023, 7);
 

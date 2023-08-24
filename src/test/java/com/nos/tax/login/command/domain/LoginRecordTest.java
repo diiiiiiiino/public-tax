@@ -15,7 +15,7 @@ public class LoginRecordTest {
 
     @DisplayName("로그인 기록 생성 시 회원이 null일 경우")
     @Test
-    void member_is_null_when_creating_login_history() {
+    void memberIsNullWhenCreatingLoginHistory() {
         assertThatThrownBy(() -> LoginRecord.builder(null, LocalDateTime.now()).build())
                 .isInstanceOf(ValidationErrorException.class)
                 .hasMessage("loginRecordMember is null");
@@ -23,7 +23,7 @@ public class LoginRecordTest {
 
     @DisplayName("로그인 기록 생성 시 로그인 시간이 null인 경우")
     @Test
-    void login_time_is_null_when_creating_login_history() {
+    void loginTimeIsNullWhenCreatingLoginHistory() {
         Member member = MemberCreateHelperBuilder.builder().build();
 
         assertThatThrownBy(() -> LoginRecord.builder(member, null).build())
@@ -33,7 +33,7 @@ public class LoginRecordTest {
 
     @DisplayName("필수 속성으로만 로그인 기록 생성 성공")
     @Test
-    void successfully_generated_login_history_with_required_properties_only() {
+    void successfullyGeneratedLoginHistoryWithRequiredPropertiesOnly() {
         Member member = MemberCreateHelperBuilder.builder().build();
 
         LoginRecord loginRecord = LoginRecord.builder(member, LocalDateTime.now()).build();
@@ -43,7 +43,7 @@ public class LoginRecordTest {
 
     @DisplayName("선택 속성 추가하여 로그인 기록 생성  성공")
     @Test
-    void successful_login_history_creation_by_adding_selection_properties() {
+    void successfulLoginHistoryCreationByAddingSelectionProperties() {
         Member member = MemberCreateHelperBuilder.builder().build();
 
         LoginRecord loginRecord = LoginRecord.builder(member, LocalDateTime.now())

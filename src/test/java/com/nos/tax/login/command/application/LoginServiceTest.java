@@ -33,7 +33,7 @@ public class LoginServiceTest {
 
     @DisplayName("로그인 시 회원 미조회")
     @Test
-    void member_information_not_checked_when_logging_in() {
+    void memberInformationNotCheckedWhenLoggingIn() {
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setLoginId("loginId");
         loginRequest.setPassword("qwer1234!@");
@@ -48,7 +48,7 @@ public class LoginServiceTest {
     @DisplayName("로그인 시 로그인 정보가 다를때")
     @ParameterizedTest
     @ValueSource(strings = { "qwer!@#$", "1234!@#$qwer" })
-    void when_login_information_is_different(String pw) {
+    void whenLoginInformationIsDifferent(String pw) {
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setLoginId("loginId");
         loginRequest.setPassword(pw);
@@ -64,7 +64,7 @@ public class LoginServiceTest {
 
     @DisplayName("로그인 성공")
     @Test
-    void login_success() {
+    void loginSuccess() {
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setLoginId("loginId");
         loginRequest.setPassword("qwer1234!@#$");

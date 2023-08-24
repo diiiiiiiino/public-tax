@@ -59,7 +59,7 @@ public class WaterBillCreateServiceTest {
 
     @DisplayName("관리자의 건물이 조회되지 않을 때")
     @Test
-    void when_create_waterBill_then_Building_is_not_exists() {
+    void whenCreateWaterBillThen_BuildingIsNotExists() {
         Member member = MemberCreateHelperBuilder.builder().id(1L).build();
         WaterBillCreateRequest request = WaterBillCreateRequest.of(77000, YearMonth.of(2023, 7));
 
@@ -72,7 +72,7 @@ public class WaterBillCreateServiceTest {
 
     @DisplayName("생성하고자하는 년월에 수도요금 정산데이터가 이미 존재할 떄")
     @Test
-    void when_create_waterBill_then_already_calculateYm_exists() {
+    void whenCreateWaterBillThenAlreadyCalculateYmExists() {
         Member member = MemberCreateHelperBuilder.builder().id(1L).build();
 
         Building building = BuildingCreateHelperBuilder.builder().build();
@@ -89,7 +89,7 @@ public class WaterBillCreateServiceTest {
 
     @DisplayName("관리자가 수도요금 정산 데이터 생성")
     @Test
-    void admin_create_waterBill() {
+    void adminCreateWaterBill() {
         Member admin = MemberCreateHelperBuilder.builder().id(1L).build();
         Building building = BuildingCreateHelperBuilder.builder().build();
         WaterBill waterBill = WaterBill.of(building, 77000, YearMonth.of(2023, 7));

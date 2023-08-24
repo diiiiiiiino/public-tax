@@ -43,7 +43,7 @@ public class HouseholdRepositoryTest {
 
     @DisplayName("세대 저장")
     @Test
-    void household_create() {
+    void householdCreate() {
         HouseHold houseHold = createHouseHold();
 
         assertThat(houseHold).isNotNull();
@@ -53,7 +53,7 @@ public class HouseholdRepositoryTest {
 
     @DisplayName("세대에 세대주 수정")
     @Test
-    void household_householder_update() {
+    void householdHouseholderUpdate() {
         HouseHold houseHold = createHouseHold();
 
         flushAndClear(entityManager);

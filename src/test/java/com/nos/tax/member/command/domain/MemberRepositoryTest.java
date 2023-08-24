@@ -25,7 +25,7 @@ public class MemberRepositoryTest {
 
     @DisplayName("회원 저장")
     @Test
-    void member_create_success() {
+    void memberCreateSuccess() {
         Member member = MemberCreateHelperBuilder.builder().build();
         member = memberRepository.save(member);
 
@@ -40,7 +40,7 @@ public class MemberRepositoryTest {
 
     @DisplayName("회원 이름 변경")
     @Test
-    void member_name_update() {
+    void memberNameUpdate() {
         Member member = MemberCreateHelperBuilder.builder()
                 .name("김하성")
                 .build();
@@ -61,7 +61,7 @@ public class MemberRepositoryTest {
 
     @DisplayName("회원 전화번호 변경")
     @Test
-    void member_mobile_update() {
+    void memberMobileUpdate() {
         Member member = MemberCreateHelperBuilder.builder().build();
         member = memberRepository.save(member);
 

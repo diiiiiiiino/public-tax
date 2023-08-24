@@ -30,7 +30,7 @@ public class LoginRecordRepositoryTest {
 
     @DisplayName("로그인 기록 저장")
     @Test
-    void loginHistory_create() {
+    void loginHistoryCreate() {
         Member member = MemberCreateHelperBuilder.builder().build();
         memberRepository.save(member);
 

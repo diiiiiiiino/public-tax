@@ -37,7 +37,7 @@ public class RequestCreateMemberServiceTest {
     @DisplayName("회원 생성 요청 목록이 null 또는 비어있을 때")
     @ParameterizedTest
     @NullAndEmptySource
-    void request_null_and_empty(List<RequestCreateMemberRequest> requests) {
+    void requestNullAndEmpty(List<RequestCreateMemberRequest> requests) {
         assertThatThrownBy(() -> requestCreateMemberService.request(requests))
                 .isInstanceOf(ValidationErrorException.class)
                 .hasMessage("requests no element");
@@ -46,7 +46,7 @@ public class RequestCreateMemberServiceTest {
     @DisplayName("회원 생성 요청에 null 또는 빈 문자열이 포함되어 있을 때")
     @ParameterizedTest
     @MethodSource("nullAndEmptyCreateMemberRequestList")
-    void include_null_and_empty_value(List<RequestCreateMemberRequest> requests) {
+    void includeNullAndEmptyValue(List<RequestCreateMemberRequest> requests) {
         assertThatThrownBy(() -> requestCreateMemberService.request(requests))
                 .isInstanceOf(ValidationErrorException.class)
                 .hasMessage("list has null or empty value");
@@ -63,7 +63,7 @@ public class RequestCreateMemberServiceTest {
 
     @DisplayName("회원 생성 요청에 등록되지 않은 세대 ID가 포함되어 있을 때")
     @Test
-    void household_id_is_not_found() {
+    void householdIdIsNotFound() {
         List<RequestCreateMemberRequest> requests = List.of(RequestCreateMemberRequest.of("01044445555", 1L), RequestCreateMemberRequest.of("01012345678", 2L));
 
         when(houseHoldRepository.findAllById(anyList())).thenReturn(List.of());
@@ -75,7 +75,7 @@ public class RequestCreateMemberServiceTest {
 
     @DisplayName("회원 생성 요청")
     @Test
-    void request_create_member_success() {
+    void requestCreateMemberSuccess() {
         List<RequestCreateMemberRequest> requests = List.of(RequestCreateMemberRequest.of("01044445555", 1L), RequestCreateMemberRequest.of("01012345678", 2L));
 
         when(houseHoldRepository.findAllById(any())).thenReturn(List.of(

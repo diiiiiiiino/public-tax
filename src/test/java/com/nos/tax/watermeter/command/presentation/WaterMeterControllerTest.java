@@ -4,7 +4,6 @@ import com.nos.tax.common.exception.ValidationCode;
 import com.nos.tax.common.exception.ValidationError;
 import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.helper.BaseControllerTest;
-import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.watermeter.command.application.dto.WaterMeterCreateRequest;
 import com.nos.tax.watermeter.command.application.service.WaterMeterCreateService;
 import org.junit.jupiter.api.DisplayName;
@@ -14,11 +13,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
 import java.time.YearMonth;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
