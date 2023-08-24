@@ -1,4 +1,4 @@
-package com.nos.tax.waterbill.command.application.controller;
+package com.nos.tax.waterbill.command.presentation.controller;
 
 import com.nos.tax.building.command.application.BuildingNotFoundException;
 import com.nos.tax.common.exception.ValidationCode;
@@ -13,7 +13,6 @@ import com.nos.tax.waterbill.command.domain.exception.WaterBillDuplicateExceptio
 import com.nos.tax.waterbill.command.domain.exception.WaterBillNotCalculateStateException;
 import com.nos.tax.waterbill.command.domain.exception.WaterBillNotReadyStateException;
 import com.nos.tax.waterbill.command.domain.exception.WaterMeterNotAllCreatedException;
-import com.nos.tax.waterbill.command.presentation.controller.WaterBillController;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
