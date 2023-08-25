@@ -102,14 +102,14 @@ public class BuildingAggregationTest {
     void buildingAddressUpdateSuccess(){
         Building building = BuildingCreateHelperBuilder.builder().build();
 
-        building.changeAddress("수정 주소1", "수정 주소2", "수정 우편번호");
+        building.changeAddress("수정 주소1", "수정 주소2", "99999");
 
         Address address = building.getAddress();
 
         assertThat(address).isNotNull();
         assertThat(address.getAddress1()).isEqualTo("수정 주소1");
         assertThat(address.getAddress2()).isEqualTo("수정 주소2");
-        assertThat(address.getZipNo()).isEqualTo("수정 우편번호");
+        assertThat(address.getZipNo()).isEqualTo("99999");
     }
 
     @DisplayName("건물 세대주 추가 시 비어있는 리스트 전달")

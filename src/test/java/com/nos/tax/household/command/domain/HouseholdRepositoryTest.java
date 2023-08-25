@@ -68,7 +68,7 @@ public class HouseholdRepositoryTest {
                 .build();;
         memberRepository.save(member);
 
-        HouseHolder houseHolder = HouseHolder.of(member, member.getName(), member.getMobile());
+        HouseHolder houseHolder = HouseHolder.of(member);
 
         houseHold.moveInHouse(houseHolder);
 

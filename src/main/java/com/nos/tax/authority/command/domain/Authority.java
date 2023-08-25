@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 
+import static com.nos.tax.common.enumeration.TextLengthRange.AUTHORITY_NAME;
+
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -25,7 +27,7 @@ public class Authority {
 
     /**
      * @param name 회원 권한명
-     * @throws ValidationErrorException {@code name}이 빈 문자열이거나 문자가 없을때
+     * @throws ValidationErrorException {@code name}이 {@code null}이거나 문자가 없을때, 길이가 1 ~ 10이 아닐때
      */
     private Authority(String name) {
         setName(name);
@@ -34,7 +36,7 @@ public class Authority {
     /**
      * @param id   회원 권한 ID
      * @param name 회원 권한명
-     * @throws ValidationErrorException {@code name}이 빈 문자열이거나 문자가 없을때
+     * @throws ValidationErrorException {@code name}이 {@code null}이거나 문자가 없을때, 길이가 1 ~ 10이 아닐때
      */
     private Authority(Long id, String name) {
         setId(id);
@@ -44,7 +46,7 @@ public class Authority {
     /**
      * @param name 회원 권한명
      * @return 회원 권한
-     * @throws ValidationErrorException {@code name}이 빈 문자열이거나 문자가 없을때
+     * @throws ValidationErrorException {@code name}이 {@code null}이거나 문자가 없을때, 길이가 1 ~ 10이 아닐때
      */
     public static Authority of(String name){
         return new Authority(name);
@@ -53,7 +55,7 @@ public class Authority {
     /**
      * @param authorityEnum 권한 열거형 상수
      * @return 회원 권한
-     * @throws ValidationErrorException {@code authorityEnum}이 빈 문자열이거나 문자가 없을때
+     * @throws ValidationErrorException {@code authorityEnum.getName()}이 {@code null}이거나 문자가 없을때
      */
     public static Authority of(AuthorityEnum authorityEnum){
         return new Authority(authorityEnum.getId(), authorityEnum.getName());
@@ -61,10 +63,10 @@ public class Authority {
 
     /**
      * @param name 회원 권한명
-     * @throws ValidationErrorException {@code name}이 빈 문자열이거나 문자가 없을때
+     * @throws ValidationErrorException {@code name}이 {@code null}이거나 문자가 없을때, 길이가 1 ~ 10이 아닐때
      */
     private void setName(String name) {
-        VerifyUtil.verifyText(name, "authorityName");
+        VerifyUtil.verifyTextLength(name, "authorityName", AUTHORITY_NAME.getMin(), AUTHORITY_NAME.getMax());
         this.name = name;
     }
 

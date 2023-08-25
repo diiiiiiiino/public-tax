@@ -78,7 +78,7 @@ public class HouseHolderChangeServiceTest {
     void changeHouseHolder() {
         Member member = MemberCreateHelperBuilder.builder().id(1L).build();
         HouseHold houseHold = HouseHoldCreateHelperBuilder.builder().build();
-        houseHold.moveInHouse(HouseHolder.of(member, member.getName(), member.getMobile()));
+        houseHold.moveInHouse(HouseHolder.of(member));
 
         Member changeMember = MemberCreateHelperBuilder.builder().id(2L)
                 .loginId("change")

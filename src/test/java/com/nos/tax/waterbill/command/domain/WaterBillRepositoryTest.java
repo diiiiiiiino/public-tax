@@ -4,7 +4,6 @@ import com.nos.tax.building.command.domain.Building;
 import com.nos.tax.building.command.domain.repository.BuildingRepository;
 import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
 import com.nos.tax.household.command.domain.HouseHold;
-import com.nos.tax.member.command.domain.repository.MemberRepository;
 import com.nos.tax.waterbill.command.domain.enumeration.WaterBillState;
 import com.nos.tax.waterbill.command.domain.repository.WaterBillRepository;
 import com.nos.tax.waterbill.command.domain.service.WaterBillCalculateService;
@@ -29,9 +28,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @ActiveProfiles("test")
 public class WaterBillRepositoryTest {
-    @Autowired
-    private MemberRepository memberRepository;
-
     @Autowired
     private WaterBillRepository waterBillRepository;
 
@@ -61,7 +57,7 @@ public class WaterBillRepositoryTest {
 
         flushAndClear(entityManager);
 
-        waterBill = waterBillRepository.findById(1L).get();
+        waterBill = waterBillRepository.findById(waterBill.getId()).get();
 
         assertThat(waterBill.getBuilding()).isEqualTo(building);
         assertThat(waterBill.getWaterBillDetails().size()).isEqualTo(0);

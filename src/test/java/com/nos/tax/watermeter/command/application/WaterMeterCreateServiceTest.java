@@ -103,6 +103,6 @@ public class WaterMeterCreateServiceTest {
         WaterMeter waterMeter = captor.getValue();
         assertThat(waterMeter.getPreviousMeter()).isEqualTo(0);
         assertThat(waterMeter.getPresentMeter()).isEqualTo(100);
-        assertThat(waterMeter.getYearMonth()).isEqualTo(YearMonth.of(2023, 8));
+        assertThat(waterMeter.getCalculateYm()).isEqualTo(YearMonth.of(2023, 8));
     }
 }

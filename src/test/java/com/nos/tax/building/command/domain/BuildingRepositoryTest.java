@@ -46,7 +46,7 @@ public class BuildingRepositoryTest {
         Address findAddress = building.getAddress();
         assertThat(findAddress.getAddress1()).isEqualTo("서울시 동작구 사당동");
         assertThat(findAddress.getAddress2()).isEqualTo("현대 아파트 101동");
-        assertThat(findAddress.getZipNo()).isEqualTo("111222");
+        assertThat(findAddress.getZipNo()).isEqualTo("11122");
 
         List<HouseHold> findHouseHolds = building.getHouseHolds();
 
@@ -132,7 +132,7 @@ public class BuildingRepositoryTest {
         for(int i = 0; i < houseHolds1.size(); i++){
             Member member = members.get(i);
             HouseHold houseHold = houseHolds1.get(i);
-            houseHold.moveInHouse(HouseHolder.of(member, member.getName(), member.getMobile()));
+            houseHold.moveInHouse(HouseHolder.of(member));
         }
 
         flushAndClear(entityManager);

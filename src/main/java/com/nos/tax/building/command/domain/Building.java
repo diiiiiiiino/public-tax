@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 
+import static com.nos.tax.common.enumeration.TextLengthRange.BUILDING_NAME;
+
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -33,10 +35,10 @@ public class Building {
     /**
      * @param name 건물명
      * @param address 건물 주소
-     * @param buildingFunctions 세대에 건물 객체를 주입하기 윈한 <code>Function</code> 리스트
+     * @param buildingFunctions 세대에 건물 객체를 주입하기 위한 {@code Function} 리스트
      * @throws ValidationErrorException 
      * <ul>
-     *     <li>{@code name}이 빈 문자열이거나 문자가 없을 경우
+     *     <li>{@code name}이 {@code null}이거나 문자가 없을 경우, 길이가 1~20 아닌 경우
      *     <li>{@code address}가 {@code null}인 경우
      *     <li>{@code buildingFunctions}가 {@code null}이거나 빈 리스트인 경우
      * </ul>
@@ -51,10 +53,10 @@ public class Building {
      * @param id 건물 ID
      * @param name 건물명
      * @param address 건물 주소
-     * @param buildingFunctions 세대에 건물 객체를 주입하기 윈한 <code>Function</code> 리스트
+     * @param buildingFunctions 세대에 건물 객체를 주입하기 위한 {@code Function} 리스트
      * @throws ValidationErrorException
      * <ul>
-     *     <li>{@code name}이 빈 문자열이거나 문자가 없을 경우
+     *     <li>{@code name}이 {@code null}이거나 문자가 없을 경우, 길이가 1~20 아닌 경우
      *     <li>{@code address}가 {@code null}인 경우
      *     <li>{@code buildingFunctions}가 {@code null}이거나 빈 리스트인 경우
      * </ul>
@@ -69,10 +71,10 @@ public class Building {
     /**
      * @param name 건물명
      * @param address 건물 주소
-     * @param buildingFunctions 세대에 건물 객체를 주입하기 윈한 <code>Function</code> 리스트
+     * @param buildingFunctions 세대에 건물 객체를 주입하기 위한 {@code Function} 리스트
      * @throws ValidationErrorException
      * <ul>
-     *     <li>{@code name}이 빈 문자열이거나 문자가 없을 경우
+     *     <li>{@code name}이 {@code null}이거나 문자가 없을 경우, 길이가 1~20 아닌 경우
      *     <li>{@code address}가 {@code null}인 경우
      *     <li>{@code buildingFunctions}가 {@code null}이거나 빈 리스트인 경우
      * </ul>
@@ -85,10 +87,10 @@ public class Building {
      * @param id 건물 ID
      * @param name 건물명
      * @param address 건물 주소
-     * @param buildingFunctions 세대에 건물 객체를 주입하기 윈한 <code>Function</code> 리스트
+     * @param buildingFunctions 세대에 건물 객체를 주입하기 위한 {@code Function} 리스트
      * @throws ValidationErrorException
      * <ul>
-     *     <li>{@code name}이 빈 문자열이거나 문자가 없을 경우
+     *     <li>{@code name}이 {@code null}이거나 문자가 없을 경우, 길이가 1~20 아닌 경우
      *     <li>{@code address}가 {@code null}인 경우
      *     <li>{@code buildingFunctions}가 {@code null}이거나 빈 리스트인 경우
      * </ul>
@@ -98,22 +100,24 @@ public class Building {
     }
 
     /**
+     * 건물명을 변경한다.
      * @param name 건물명
-     * @throws ValidationErrorException {@code name}이 빈 문자열이거나 문자가 없을 경우
+     * @throws ValidationErrorException {@code name}이 {@code null}이거나 문자가 없을 경우, 길이가 1~20 아닌 경우
      */
     public void changeName(String name) {
         setName(name);
     }
 
     /**
+     * 건물 주소를 변경한다.
      * @param address1 건물 주소1
      * @param address2 건물 주소2
      * @param zipNo    건물 우편번호
      * @throws ValidationErrorException
      * <ul>
-     *     <li>{@code address1}이 빈 문자열이거나 문자가 없을 경우
-     *     <li>{@code address2}이 빈 문자열이거나 문자가 없을 경우
-     *     <li>{@code zipNo}이 빈 문자열이거나 문자가 없을 경우
+     *     <li>{@code address1}이 {@code null}이거나 문자가 없을 경우, 길이가 1 ~ 50이 아닌 경우
+     *     <li>{@code address2}이 {@code null}이거나 문자가 없을 경우, 길이가 1 ~ 50이 아닌 경우
+     *     <li>{@code zipNo}이 {@code null}이거나 문자가 없을 경우, 길이가 5가 아닌 경우
      *     <li>{@code Address}가 {@code null}인 경우
      * </ul> 
      */
@@ -122,6 +126,7 @@ public class Building {
     }
 
     /**
+     * 세대 리스트를 추가한다.
      * @param newHouseHolds 추가할 세대 리스트
      * @throws ValidationErrorException {@code newHouseHolds}가 {@code null}이거나 빈 리스트일때
      */
@@ -139,10 +144,10 @@ public class Building {
 
     /**
      * @param name 건물명
-     * @throws ValidationErrorException {@code name}이 빈 문자열이거나 문자가 없을 경우
+     * @throws ValidationErrorException {@code name}이 {@code null}이거나 문자가 없을 경우, 길이가 1~20 아닌 경우
      */
     private void setName(String name) {
-        this.name = VerifyUtil.verifyText(name, "buildingName");
+        this.name = VerifyUtil.verifyTextLength(name, "buildingName", BUILDING_NAME.getMin(), BUILDING_NAME.getMax());
     }
 
     /**
@@ -163,10 +168,10 @@ public class Building {
     }
 
     /**
-     * @param buildingFunctions 세대에 건물 객체를 주입하기 윈한 <code>Function</code> 리스트
+     * @param buildingFunctions 세대에 건물 객체를 주입하기 위한 {@code Function} 리스트
      * @throws ValidationErrorException
      * <ul>
-     *     <li>{@code buildingFunctions}가 {@code null} 이거나 빈 리스트인 경우
+     *     <li>{@code buildingFunctions}가 {@code null}이거나 빈 리스트인 경우
      *     <li>{@code houseHolds}가 {@code null} 이거나 빈 리스트인 경우
      * </ul>
      */
@@ -182,8 +187,9 @@ public class Building {
     }
 
     /**
+     * 세대 리스트가 {@code null}이거나 비어있는지 확인한다.
      * @param houseHolds 세대 리스트
-     * @throws ValidationErrorException {@code houseHolds}가 {@code null} 이거나 빈 리스트인 경우
+     * @throws ValidationErrorException {@code houseHolds}가 {@code null}이거나 빈 리스트인 경우
      */
     private void verifyAtLeastOneOrMoreHouseHold(List<HouseHold> houseHolds){
         if(houseHolds == null || houseHolds.isEmpty()){
@@ -192,7 +198,8 @@ public class Building {
     }
 
     /**
-     * @param buildingFunctions 세대에 건물 객체를 주입하기 윈한 <code>Function</code> 리스트
+     * 세대에 건물 객체를 주입하기 윈한 <code>Function</code> 리스트가 {@code null}이거나 비어있는지 확인한다.
+     * @param buildingFunctions 세대에 건물 객체를 주입하기 위한 {@code Function} 리스트
      * @throws ValidationErrorException {@code buildingFunctions}가 {@code null} 이거나 빈 리스트인 경우
      */
     private void verifyAtLeastOneOrMoreBuildingFunctions(List<Function<Building, HouseHold>> buildingFunctions){

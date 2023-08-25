@@ -38,7 +38,7 @@ public class HouseholdTest {
         HouseHold houseHold = HouseHold.of("101호", BuildingCreateHelperBuilder.builder().build());
 
         Member member = MemberCreateHelperBuilder.builder().build();
-        HouseHolder houseHolder = HouseHolder.of(member, member.getName(), member.getMobile());
+        HouseHolder houseHolder = HouseHolder.of(member);
 
         houseHold.moveInHouse(houseHolder);
         assertThat(houseHold.getHouseHolder()).isNotNull();

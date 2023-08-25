@@ -38,7 +38,7 @@ public class HouseHolderChangeService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new NotFoundException("Member not found"));
 
-        houseHold.moveInHouse(HouseHolder.of(member, member.getName(), member.getMobile()));
+        houseHold.moveInHouse(HouseHolder.of(member));
     }
 
     private List<ValidationError> validateRequest(Long houseHoldId, Long memberId){

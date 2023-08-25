@@ -102,7 +102,7 @@ public class AdminCreateServiceTest {
     @Test
     void createAdminSuccess() {
         MemberCreateRequest memberCreateRequest = MemberCreateRequest.of("loginId", "qwer1234!@", "홍길동", "01012345678", 1L,"123456");
-        BuildingInfo buildingInfo = BuildingInfo.of("광동빌라", "서울특별시 강남구 대치동", "광동빌라 A동", "123456");
+        BuildingInfo buildingInfo = BuildingInfo.of("광동빌라", "서울특별시 강남구 대치동", "광동빌라 A동", "12345");
         List<HouseHoldInfo> houseHoldInfos = List.of(HouseHoldInfo.of("101호", false), HouseHoldInfo.of("102호", true), HouseHoldInfo.of("103호", false), HouseHoldInfo.of("104호", false));
 
         AdminCreateRequest adminCreateRequest = AdminCreateRequest.of(memberCreateRequest, buildingInfo, houseHoldInfos);
@@ -121,7 +121,7 @@ public class AdminCreateServiceTest {
         assertThat(savedBuilding.getName()).isEqualTo("광동빌라");
         assertThat(savedBuilding.getAddress().getAddress1()).isEqualTo("서울특별시 강남구 대치동");
         assertThat(savedBuilding.getAddress().getAddress2()).isEqualTo("광동빌라 A동");
-        assertThat(savedBuilding.getAddress().getZipNo()).isEqualTo("123456");
+        assertThat(savedBuilding.getAddress().getZipNo()).isEqualTo("12345");
         assertThat(savedBuilding.getHouseHolds()
                 .stream()
                 .filter(houseHold -> houseHold.getHouseHolder() != null)

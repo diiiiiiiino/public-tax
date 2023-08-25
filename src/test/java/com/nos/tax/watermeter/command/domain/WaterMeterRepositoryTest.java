@@ -53,7 +53,7 @@ public class WaterMeterRepositoryTest {
         assertThat(waterMeter.getPreviousMeter()).isEqualTo(650);
         assertThat(waterMeter.getPresentMeter()).isEqualTo(760);
         assertThat(waterMeter.getUsage()).isEqualTo(110);
-        assertThat(waterMeter.getYearMonth()).isEqualTo(YearMonth.of(2023, 7));
+        assertThat(waterMeter.getCalculateYm()).isEqualTo(YearMonth.of(2023, 7));
     }
 
     @DisplayName("세대주 ID 목록으로 수도 계량기 조회")

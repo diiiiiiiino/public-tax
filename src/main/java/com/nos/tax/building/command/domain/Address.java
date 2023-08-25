@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 
+import static com.nos.tax.common.enumeration.TextLengthRange.*;
+
 @Getter
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -29,9 +31,9 @@ public class Address {
      * @param zipNo    우편번호
      * @throws ValidationErrorException
      * <ul>
-     *     <li>{@code address1}이 빈 문자열이거나 문자가 없을 경우
-     *     <li>{@code address2}이 빈 문자열이거나 문자가 없을 경우
-     *     <li>{@code zipNo}이 빈 문자열이거나 문자가 없을 경우
+     *     <li>{@code address1}이 {@code null}이거나 문자가 없을 경우, 길이가 1 ~ 50이 아닌 경우
+     *     <li>{@code address2}이 {@code null}이거나 문자가 없을 경우, 길이가 1 ~ 50이 아닌 경우
+     *     <li>{@code zipNo}이 {@code null}이거나 문자가 없을 경우, 길이가 5가 아닌 경우
      * </ul>
      */
     public Address(String address1, String address2, String zipNo) {
@@ -46,9 +48,9 @@ public class Address {
      * @param zipNo    우편번호
      * @throws ValidationErrorException
      * <ul>
-     *     <li>{@code address1}이 빈 문자열이거나 문자가 없을 경우
-     *     <li>{@code address2}이 빈 문자열이거나 문자가 없을 경우
-     *     <li>{@code zipNo}이 빈 문자열이거나 문자가 없을 경우
+     *     <li>{@code address1}이 {@code null}이거나 문자가 없을 경우, 길이가 1 ~ 50이 아닌 경우
+     *     <li>{@code address2}이 {@code null}이거나 문자가 없을 경우, 길이가 1 ~ 50이 아닌 경우
+     *     <li>{@code zipNo}이 {@code null}이거나 문자가 없을 경우, 길이가 5가 아닌 경우
      * </ul>
      */
     public static Address of(String address1, String address2, String zipNo){
@@ -57,26 +59,26 @@ public class Address {
 
     /**
      * @param address1 주소1
-     * @throws ValidationErrorException {@code address1}이 빈 문자열이거나 문자가 없을 경우
+     * @throws ValidationErrorException {@code address1}이 {@code null}이거나 문자가 없을 경우, 길이가 1 ~ 50이 아닌 경우
      */
     private void setAddress1(String address1) {
-        this.address1 = VerifyUtil.verifyText(address1, "address1");
+        this.address1 = VerifyUtil.verifyTextLength(address1, "address1", ADDRESS1.getMin(), ADDRESS1.getMax());
     }
 
     /**
      * @param address2 주소2
-     * @throws ValidationErrorException {@code address2}이 빈 문자열이거나 문자가 없을 경우
+     * @throws ValidationErrorException {@code address2}이 {@code null}이거나 문자가 없을 경우, 길이가 1 ~ 50이 아닌 경우
      */
     private void setAddress2(String address2) {
-        this.address2 = VerifyUtil.verifyText(address2, "address2");
+        this.address2 = VerifyUtil.verifyTextLength(address2, "address2", ADDRESS2.getMin(), ADDRESS2.getMax());
     }
 
     /**
      * @param zipNo 우편 번호
-     * @throws ValidationErrorException {@code zipNo}이 빈 문자열이거나 문자가 없을 경우
+     * @throws ValidationErrorException {@code zipNo}이 {@code null}이거나 문자가 없을 경우, 길이가 5가 아닌 경우
      */
     private void setZipNo(String zipNo) {
-        this.zipNo = VerifyUtil.verifyText(zipNo, "zipNo");
+        this.zipNo = VerifyUtil.verifyTextLength(zipNo, "zipNo", ZIP_NO.getMin(), ZIP_NO.getMax());
     }
 
     @Override
