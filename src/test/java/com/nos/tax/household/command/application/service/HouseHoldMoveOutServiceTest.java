@@ -1,5 +1,6 @@
 package com.nos.tax.household.command.application.service;
 
+import com.nos.tax.common.exception.CustomNullPointerException;
 import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.helper.builder.HouseHoldCreateHelperBuilder;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
@@ -35,7 +36,7 @@ public class HouseHoldMoveOutServiceTest {
     @Test
     void houseHoldIdNull() {
         Assertions.assertThatThrownBy(() -> houseHoldMoveOutService.leave(null))
-                .isInstanceOf(ValidationErrorException.class)
+                .isInstanceOf(CustomNullPointerException.class)
                 .hasMessage("houseHoldId is null");
     }
 

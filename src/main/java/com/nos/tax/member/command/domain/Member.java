@@ -18,6 +18,16 @@ import java.util.function.Function;
 
 import static com.nos.tax.common.enumeration.TextLengthRange.MEMBER_NAME;
 
+/**
+ * <p>회원 엔티티</p>
+ * <p>모든 메서드와 생성자에서 아래와 같은 경우 {@code CustomIllegalArgumentException}를 발생한다.</p>
+ * {@code loginId}가 {@code null}이거나 문자가 없을 경우, 길이가 1 ~ 20 아닌 경우 <br>
+ * {@code name}가 {@code null}이거나 문자가 없을 경우, 길이가 1 ~ 15 아닌 경우 <br>
+ * {@code functions}가 {@code null}이거나 빈 리스트인 경우 <br>
+ * <p>모든 메서드와 생성자에서 아래와 같은 경우 {@code CustomNullPointerException}를 발생한다.</p>
+ * {@code password}가 {@code null}인 경우 <br>
+ * {@code mobile}이 {@code null}인 경우
+ */
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -52,14 +62,6 @@ public class Member {
      * @param name 회원명
      * @param mobile 전화번호
      * @param functions 회원권한에 회원 객체를 주입하기 위한 {@code Function} 리스트
-     * @throws ValidationErrorException
-     * <ul>
-     *     <li>{@code loginId}가 {@code null}이거나 문자가 없을 경우, 길이가 1 ~ 20 아닌 경우
-     *     <li>{@code password}가 {@code null}인 경우
-     *     <li>{@code name}가 {@code null}이거나 문자가 없을 경우, 길이가 1 ~ 15 아닌 경우
-     *     <li>{@code mobile}이 {@code null}인 경우
-     *     <li>{@code functions}가 {@code null}이거나 빈 리스트인 경우
-     * </ul>
      */
     private Member(String loginId, Password password, String name, Mobile mobile, List<Function<Member, MemberAuthority>> functions) {
         setLoginId(loginId);
@@ -76,14 +78,6 @@ public class Member {
      * @param name 회원명
      * @param mobile 전화번호
      * @param functions 회원권한에 회원 객체를 주입하기 위한 {@code Function} 리스트
-     * @throws ValidationErrorException
-     * <ul>
-     *     <li>{@code loginId}가 {@code null}이거나 문자가 없을 경우, 길이가 1 ~ 20 아닌 경우
-     *     <li>{@code password}가 {@code null}인 경우
-     *     <li>{@code name}가 {@code null}이거나 문자가 없을 경우, 길이가 1 ~ 15 아닌 경우
-     *     <li>{@code mobile}이 {@code null}인 경우
-     *     <li>{@code functions}가 {@code null}이거나 빈 리스트인 경우
-     * </ul>
      */
     private Member(Long id, String loginId, Password password, String name, Mobile mobile, List<Function<Member, MemberAuthority>> functions) {
         this(loginId, password, name, mobile, functions);
@@ -96,14 +90,6 @@ public class Member {
      * @param name 회원명
      * @param mobile 전화번호
      * @param functions 회원권한에 회원 객체를 주입하기 위한 {@code Function} 리스트
-     * @throws ValidationErrorException
-     * <ul>
-     *     <li>{@code loginId}가 {@code null}이거나 문자가 없을 경우, 길이가 1 ~ 20 아닌 경우
-     *     <li>{@code password}가 {@code null}인 경우
-     *     <li>{@code name}가 {@code null}이거나 문자가 없을 경우, 길이가 1 ~ 15 아닌 경우
-     *     <li>{@code mobile}이 {@code null}인 경우
-     *     <li>{@code functions}가 {@code null}이거나 빈 리스트인 경우
-     * </ul>
      */
     public static Member of(String loginId, Password password, String name, Mobile mobile, List<Function<Member, MemberAuthority>> functions) {
         return new Member(loginId, password, name, mobile, functions);
@@ -116,14 +102,6 @@ public class Member {
      * @param name 회원명
      * @param mobile 전화번호
      * @param functions 회원권한에 회원 객체를 주입하기 위한 {@code Function} 리스트
-     * @throws ValidationErrorException
-     * <ul>
-     *     <li>{@code loginId}가 {@code null}이거나 문자가 없을 경우, 길이가 1 ~ 20 아닌 경우
-     *     <li>{@code password}가 {@code null}인 경우
-     *     <li>{@code name}가 {@code null}이거나 문자가 없을 경우, 길이가 1 ~ 15 아닌 경우
-     *     <li>{@code mobile}이 {@code null}인 경우
-     *     <li>{@code functions}가 {@code null}이거나 빈 리스트인 경우
-     * </ul>
      */
     public static Member of(Long id, String loginId, Password password, String name, Mobile mobile, List<Function<Member, MemberAuthority>> functions) {
         return new Member(id, loginId, password, name, mobile, functions);
@@ -131,7 +109,6 @@ public class Member {
 
     /**
      * @param name 회원명
-     * @throws ValidationErrorException {@code name}가 {@code null}이거나 문자가 없을 경우, 길이가 1 ~ 15 아닌 경우
      */
     public void changeName(String name) {
         setName(name);
@@ -140,7 +117,6 @@ public class Member {
     /**
      * 전화번호 변경
      * @param mobile 전화번호
-     * @throws ValidationErrorException {@code mobile}이 {@code null}인 경우
      */
     public void changeMobile(Mobile mobile) {
         setMobile(mobile);
@@ -186,7 +162,6 @@ public class Member {
     /**
      * 회원 권한 변경
      * @param functions 회원권한에 회원 객체를 주입하기 위한 {@code Function} 리스트
-     * @throws ValidationErrorException {@code functions}가 {@code null}이거나 빈 리스트인 경우
      */
     public void changeAuthority(List<Function<Member, MemberAuthority>> functions){
         VerifyUtil.verifyCollection(functions, "memberAuthorities");
@@ -209,7 +184,6 @@ public class Member {
 
     /**
      * @param loginId
-     * @throws ValidationErrorException {@code loginId}가 {@code null}이거나 문자가 없을 경우, 길이가 1 ~ 20 아닌 경우
      */
     private void setLoginId(String loginId) {
         VerifyUtil.verifyTextLength(loginId, "memberLoginId", MEMBER_NAME.getMin(), MEMBER_NAME.getMax());
@@ -218,7 +192,6 @@ public class Member {
 
     /**
      * @param password
-     * @throws ValidationErrorException {@code password}가 {@code null}인 경우
      */
     private void setPassword(Password password){
         this.password = VerifyUtil.verifyNull(password, "memberPassword");
@@ -226,7 +199,6 @@ public class Member {
 
     /**
      * @param name
-     * @throws ValidationErrorException {@code name}가 {@code null}이거나 문자가 없을 경우, 길이가 1 ~ 15 아닌 경우
      */
     private void setName(String name) {
         this.name = VerifyUtil.verifyTextLength(name, "memberName", MEMBER_NAME.getMin(), MEMBER_NAME.getMax());
@@ -234,7 +206,6 @@ public class Member {
 
     /**
      * @param mobile
-     * @throws ValidationErrorException {@code password}가 {@code null}인 경우
      */
     private void setMobile(Mobile mobile) {
         this.mobile = VerifyUtil.verifyNull(mobile, "memberMobile");

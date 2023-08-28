@@ -1,5 +1,6 @@
 package com.nos.tax.member.command.infra;
 
+import com.nos.tax.common.exception.CustomIllegalArgumentException;
 import com.nos.tax.common.exception.ValidationErrorException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -21,7 +22,7 @@ public class AlertCreateMemberServiceImplTest {
         String inviteCode = "123456";
 
         Assertions.assertThatThrownBy(() -> alertCreateMemberServiceImpl.alert(mobile, inviteCode))
-                .isInstanceOf(ValidationErrorException.class)
+                .isInstanceOf(CustomIllegalArgumentException.class)
                 .hasMessage("memberMobile has no text");
     }
 
@@ -32,7 +33,7 @@ public class AlertCreateMemberServiceImplTest {
         String mobile = "01012345678";
 
         Assertions.assertThatThrownBy(() -> alertCreateMemberServiceImpl.alert(mobile, inviteCode))
-                .isInstanceOf(ValidationErrorException.class)
+                .isInstanceOf(CustomIllegalArgumentException.class)
                 .hasMessage("memberInviteCode has no text");
     }
 }

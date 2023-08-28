@@ -2,6 +2,8 @@ package com.nos.tax.member.command.application.service;
 
 import com.nos.tax.building.command.domain.Building;
 import com.nos.tax.building.command.domain.repository.BuildingRepository;
+import com.nos.tax.common.exception.CustomIllegalArgumentException;
+import com.nos.tax.common.exception.CustomNullPointerException;
 import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.member.command.application.dto.AdminCreateRequest;
 import com.nos.tax.member.command.application.dto.BuildingInfo;
@@ -46,7 +48,7 @@ public class AdminCreateServiceTest {
         AdminCreateRequest adminCreateRequest = AdminCreateRequest.of(null, buildingInfo, houseHoldInfos);
 
         assertThatThrownBy(() -> adminCreateService.create(adminCreateRequest))
-                .isInstanceOf(ValidationErrorException.class)
+                .isInstanceOf(CustomNullPointerException.class)
                 .hasMessage("request is null");
     }
 
@@ -59,7 +61,7 @@ public class AdminCreateServiceTest {
         AdminCreateRequest adminCreateRequest = AdminCreateRequest.of(memberCreateRequest, null, houseHoldInfos);
 
         assertThatThrownBy(() -> adminCreateService.create(adminCreateRequest))
-                .isInstanceOf(ValidationErrorException.class)
+                .isInstanceOf(CustomNullPointerException.class)
                 .hasMessage("buildingInfo is null");
     }
 
@@ -73,7 +75,7 @@ public class AdminCreateServiceTest {
         AdminCreateRequest adminCreateRequest = AdminCreateRequest.of(memberCreateRequest, buildingInfo, houseHoldInfos);
 
         assertThatThrownBy(() -> adminCreateService.create(adminCreateRequest))
-                .isInstanceOf(ValidationErrorException.class)
+                .isInstanceOf(CustomIllegalArgumentException.class)
                 .hasMessage("houseHoldInfos no element");
     }
 

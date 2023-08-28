@@ -1,16 +1,29 @@
 package com.nos.tax.watermeter.command.domain.repository;
 
-import com.nos.tax.common.exception.ValidationErrorException;
+import com.nos.tax.common.http.ErrorCode;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.util.VerifyUtil;
 import com.nos.tax.waterbill.command.domain.converter.YearMonthConverter;
+import com.nos.tax.watermeter.command.domain.exception.PresentMeterSmallerException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.YearMonth;
+import java.util.Map;
 
+/**
+ * <p>수도계량 엔티티</p>
+ * <p>모든 메서드와 생성자 메서드에서 아래와 같은 경우 {@code CustomIllegalArgumentException}를 발생한다.</p>
+ * {@code previousMeter}가 음수인 경우 <br>
+ * {@code presentMeter}가 음수인 경우
+ * <p>모든 메서드와 생성자 메서드에서 아래와 같은 경우 {@code CustomNullPointerException}를 발생한다.</p>
+ * {@code calculateYm}이 {@code null}인 경우 <br>
+ * {@code houseHold}가 {@code null}인 경우
+ * <p>모든 생성자와 메서드에서 아래와 같은 경우 {@code PresentMeterSmallerException}를 발생한다.</p>
+ * {@code presentMeter}가 {@code previousMeter}보다 작은 경우
+ */
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -33,13 +46,6 @@ public class WaterMeter {
      * @param presentMeter 이번 달 수도계량 값
      * @param calculateYm 정산년월
      * @param houseHold 세대 객체
-     * @throws ValidationErrorException
-     * <ul>
-     *     <li>{@code previousMeter}가 음수인 경우
-     *     <li>{@code presentMeter}가 음수인 경우, {@code previousMeter}보다 작은 경우
-     *     <li>{@code calculateYm}이 {@code null}인 경우
-     *     <li>{@code houseHold}가 {@code null}인 경우
-     * </ul>
      */
     private WaterMeter(int previousMeter, int presentMeter, YearMonth calculateYm, HouseHold houseHold) {
         setPreviousMeter(previousMeter);
@@ -54,13 +60,6 @@ public class WaterMeter {
      * @param presentMeter 이번 달 수도계량 값
      * @param calculateYm 정산년월
      * @param houseHold 세대 객체
-     * @throws ValidationErrorException
-     * <ul>
-     *     <li>{@code previousMeter}가 음수인 경우
-     *     <li>{@code presentMeter}가 음수인 경우, {@code previousMeter}보다 작은 경우
-     *     <li>{@code calculateYm}이 {@code null}인 경우
-     *     <li>{@code houseHold}가 {@code null}인 경우
-     * </ul>
      */
     private WaterMeter(Long id, int previousMeter, int presentMeter, YearMonth calculateYm, HouseHold houseHold){
         this(previousMeter, presentMeter, calculateYm, houseHold);
@@ -72,13 +71,6 @@ public class WaterMeter {
      * @param presentMeter 이번 달 수도계량 값
      * @param calculateYm 정산년월
      * @param houseHold 세대 객체
-     * @throws ValidationErrorException
-     * <ul>
-     *     <li>{@code previousMeter}가 음수인 경우
-     *     <li>{@code presentMeter}가 음수인 경우, {@code previousMeter}보다 작은 경우
-     *     <li>{@code calculateYm}이 {@code null}인 경우
-     *     <li>{@code houseHold}가 {@code null}인 경우
-     * </ul>
      * @return 수도계량 값
      */
     public static WaterMeter of(int previousMeter, int presentMeter, YearMonth calculateYm, HouseHold houseHold) {
@@ -91,13 +83,6 @@ public class WaterMeter {
      * @param presentMeter 이번 달 수도계량 값
      * @param calculateYm 정산년월
      * @param houseHold 세대 객체
-     * @throws ValidationErrorException
-     * <ul>
-     *     <li>{@code previousMeter}가 음수인 경우
-     *     <li>{@code presentMeter}가 음수인 경우, {@code previousMeter}보다 작은 경우
-     *     <li>{@code calculateYm}이 {@code null}인 경우
-     *     <li>{@code houseHold}가 {@code null}인 경우
-     * </ul>
      * @return 수도계량 값
      */
     public static WaterMeter of(Long id, int previousMeter, int presentMeter, YearMonth calculateYm, HouseHold houseHold) {
@@ -113,7 +98,6 @@ public class WaterMeter {
 
     /**
      * @param previousMeter 이전달 수도계량 값
-     * @throws ValidationErrorException {@code previousMeter}가 음수인 경우
      */
     private void setPreviousMeter(int previousMeter) {
         this.previousMeter = VerifyUtil.verifyNegative(previousMeter, "waterMeterPreviousMeter");
@@ -123,7 +107,6 @@ public class WaterMeter {
      * 이번달 수도계량 값을 설정한다.
      * 이전달 수도계량 값을 먼저 설정해줘야 이번달 수도 사용량을 계산할 수 있다.
      * @param presentMeter 이번달 수도계량 값
-     * @throws ValidationErrorException {@code presentMeter}가 음수인 경우, {@code previousMeter}보다 작은 경우
      */
     private void setPresentMeter(int presentMeter) {
         VerifyUtil.verifyNegative(presentMeter, "waterMeterPreviousMeter");
@@ -134,7 +117,6 @@ public class WaterMeter {
 
     /**
      * @param calculateYm
-     * @throws ValidationErrorException {@code calculateYm}이 {@code null}인 경우
      */
     private void setCalculateYm(YearMonth calculateYm) {
         this.calculateYm = VerifyUtil.verifyNull(calculateYm, "waterMeterYearMonth");
@@ -142,7 +124,6 @@ public class WaterMeter {
 
     /**
      * @param houseHold 세대 객체
-     * @throws ValidationErrorException {@code houseHold}가 {@code null}인 경우
      */
     private void setHouseHold(HouseHold houseHold) {
         this.houseHold = VerifyUtil.verifyNull(houseHold, "waterMeterHouseHold");
@@ -150,11 +131,10 @@ public class WaterMeter {
 
     /**
      * @param presentMeter
-     * @throws ValidationErrorException {@code presentMeter}가 {@code previousMeter}보다 작은 경우
      */
     private void checkPresentMeterBiggerThanPreviousMeter(int presentMeter) {
         if(this.previousMeter > presentMeter){
-            throw new ValidationErrorException("Present meter smaller than previous meter");
+            throw new PresentMeterSmallerException("Present meter smaller than previous meter", ErrorCode.PRESENT_METER_SMALLER, Map.of("name", "presentMeter"));
         }
     }
 }

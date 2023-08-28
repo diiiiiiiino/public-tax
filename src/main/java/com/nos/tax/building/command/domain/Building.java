@@ -1,5 +1,6 @@
 package com.nos.tax.building.command.domain;
 
+import com.nos.tax.common.exception.CustomIllegalArgumentException;
 import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.util.VerifyUtil;
@@ -15,6 +16,13 @@ import java.util.function.Function;
 
 import static com.nos.tax.common.enumeration.TextLengthRange.BUILDING_NAME;
 
+/**
+ * <p>건물 엔티티</p>
+ * <p>모든 메서드와 생성자에서 아래와 같은 경우 {@code CustomIllegalArgumentException}를 발생한다.</p>
+ * {@code name}이 {@code null}이거나 문자가 없을 경우, 길이가 1~20 아닌 경우<br>
+ * {@code address}가 {@code null}인 경우 <br>
+ * {@code buildingFunctions}가 {@code null}이거나 빈 리스트인 경우
+ */
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

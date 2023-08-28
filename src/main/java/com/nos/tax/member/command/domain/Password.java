@@ -1,6 +1,5 @@
 package com.nos.tax.member.command.domain;
 
-import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.member.command.domain.exception.PasswordOutOfConditionException;
 import com.nos.tax.util.VerifyUtil;
 import jakarta.persistence.Embeddable;
@@ -12,6 +11,16 @@ import java.util.Objects;
 
 import static com.nos.tax.common.enumeration.TextLengthRange.PASSWORD;
 
+/**
+ * <p>비밀번호 밸류</p>
+ * <p>모든 메서드와 생성자 메서드에서 아래와 같은 경우 {@code CustomIllegalArgumentException}를 발생한다.</p>
+ * {@code value}가 {@code null}이거나 빈 문자열일때
+ * <p>모든 메서드와 생성자에서 아래와 같은 경우 {@code PasswordOutOfConditionException}를 발생한다.</p>
+ * {@code value} 길이가 8 ~ 16이 아닐때 <br>
+ * {@code value} 영어가 포함되어있지 않을때 <br>
+ * {@code value} 숫자가 포함되어있지 않을때 <br>
+ * {@code value} 특수문자가 포함되어 있지 않을때 <br>
+ */
 @Getter
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -20,14 +29,6 @@ public class Password {
 
     /**
      * @param value 비밀번호
-     * @throws ValidationErrorException {@code value}
-     * <ul>
-     *     <li>null이거나 빈 문자열일때
-     *     <li>길이가 8 ~ 16이 아닐때
-     *     <li>영어가 포함되어있지 않을때
-     *     <li>숫자가 포함되어있지 않을때
-     *     <li>특수문자가 포함되어 있지 않을때
-     * </ul>
      */
     private Password(String value) {
         setValue(value);
@@ -35,14 +36,6 @@ public class Password {
 
     /**
      * @param value 비밀번호
-     * @throws ValidationErrorException {@code value}
-     * <ul>
-     *     <li>null이거나 빈 문자열일때
-     *     <li>길이가 8 ~ 16이 아닐때
-     *     <li>영어가 포함되어있지 않을때
-     *     <li>숫자가 포함되어있지 않을때
-     *     <li>특수문자가 포함되어 있지 않을때
-     * </ul>
      * @return 비밀번호
      */
     public static Password of(String value) {
@@ -51,14 +44,6 @@ public class Password {
 
     /**
      * @param value 비밀번호
-     * @throws ValidationErrorException {@code value}
-     * <ul>
-     *     <li>null이거나 빈 문자열일때
-     *     <li>길이가 8 ~ 16이 아닐때
-     *     <li>영어가 포함되어있지 않을때
-     *     <li>숫자가 포함되어있지 않을때
-     *     <li>특수문자가 포함되어 있지 않을때
-     * </ul>
      */
     private void setValue(String value) {
         VerifyUtil.verifyText(value, "password");
@@ -71,7 +56,6 @@ public class Password {
 
     /**
      * @param value 비밀번호
-     * @throws ValidationErrorException {@code value} 길이가 8 ~ 16이 아닐때
      */
     private void confirmPasswordLength(String value) {
         int length = value.length();
@@ -82,7 +66,6 @@ public class Password {
 
     /**
      * @param value 비밀번호
-     * @throws ValidationErrorException {@code value} 영어가 포함되어있지 않을때
      */
     private void confirmPasswordIncludingEnglish(String value){
         boolean hasAlphabet = false;
@@ -100,7 +83,6 @@ public class Password {
 
     /**
      * @param value 비밀번호
-     * @throws ValidationErrorException {@code value} 숫자가 포함되어있지 않을때
      */
     private void confirmPasswordIncludingDigit(String value){
         boolean hasDigit = false;
@@ -118,7 +100,6 @@ public class Password {
 
     /**
      * @param value 비밀번호
-     * @throws ValidationErrorException {@code value} 특수문자가 포함되어있지 않을때
      */
     private void confirmPasswordIncludingSpecialCharacter(String value) {
         if(!value.matches(".*[~`!@#$%^&*()\\-_+=|\\\\\\[\\]{};:'\",<.>/?]+.*")){
@@ -127,11 +108,12 @@ public class Password {
     }
 
     /**
-     * @param password 비밀번호
+     * @param value 비밀번호
      * @return 비밀번호 일치 여부
      */
-    public boolean match(String password) {
-        return this.value.equals(password);
+    public boolean match(String value) {
+        VerifyUtil.verifyText(value, "password");
+        return this.value.equals(value);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.nos.tax.login.command.domain;
 
-import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.util.VerifyUtil;
 import jakarta.persistence.*;
@@ -11,6 +10,14 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+/**
+ * <p>로그인 이력 엔티티</p>
+ * <p>모든 메서드와 생성자에서 아래와 같은 경우 {@code CustomIllegalArgumentException}를 발생한다.</p>
+ * {@code userAgent}가 {@code null}이거나 문자가 없을 경우, 길이가 1 ~ 200이 아닌 경우 <br>
+ * <p>모든 메서드와 생성자에서 아래와 같은 경우 {@code CustomNullPointerException}를 발생한다.</p>
+ * {@code member}가 {@code null}인 경우 <br>
+ * {@code loginTime}이 {@code null}인 경우
+ */
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -30,12 +37,6 @@ public class LoginRecord {
      * @param member 회원 객체
      * @param loginTime 로그인 일시
      * @param userAgent 유저 에이전트
-     * @throws ValidationErrorException
-     * <ul>
-     *     <li>{@code member}가 {@code null}인 경우
-     *     <li>{@code loginTime}이 {@code null}인 경우
-     *     <li>{@code userAgent}이 {@code null}이거나 문자가 없을 경우, 길이가 1 ~ 200이 아닌 경우
-     * </ul>
      */
     private LoginRecord(Member member, LocalDateTime loginTime, String userAgent) {
         setMember(member);
@@ -73,7 +74,6 @@ public class LoginRecord {
 
     /**
      * @param member 회원 객체
-     * @throws ValidationErrorException {@code member}가 {@code null}인 경우
      */
     private void setMember(Member member) {
         this.member = VerifyUtil.verifyNull(member, "loginRecordMember");
@@ -81,7 +81,6 @@ public class LoginRecord {
 
     /**
      * @param userAgent 유저 에이전트
-     * @throws ValidationErrorException {@code userAgent}이 {@code null}이거나 문자가 없을 경우, 길이가 1 ~ 200이 아닌 경우
      */
     private void setUserAgent(String userAgent) {
         this.userAgent = userAgent;
@@ -89,7 +88,6 @@ public class LoginRecord {
 
     /**
      * @param loginTime 로그인 일시
-     * @throws ValidationErrorException {@code loginTime}이 {@code null}인 경우
      */
     private void setLoginTime(LocalDateTime loginTime) {
         this.loginTime = VerifyUtil.verifyNull(loginTime, "loginRecordLoginTime");

@@ -1,5 +1,6 @@
 package com.nos.tax.member.command.domain;
 
+import com.nos.tax.common.exception.CustomIllegalArgumentException;
 import com.nos.tax.common.exception.ValidationErrorException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,7 @@ public class MobileTest {
     @NullAndEmptySource
     void mobileCreateWithNullAndEmptyNum(String value) {
         assertThatThrownBy(() -> Mobile.of(value))
-                .isInstanceOf(ValidationErrorException.class);
+                .isInstanceOf(CustomIllegalArgumentException.class);
     }
 
     @DisplayName("전화번호 생성 시 첫번째 번호가 정해진 길이와 다를 경우")
@@ -25,7 +26,7 @@ public class MobileTest {
     @ValueSource(strings = {"0101111111", "010"})
     void mobileCreateDifferentFirstNumAndLength(String value) {
         assertThatThrownBy(() -> Mobile.of(value))
-                .isInstanceOf(ValidationErrorException.class)
+                .isInstanceOf(CustomIllegalArgumentException.class)
                 .hasMessage("mobile is not less than 11 and not more than 11 digits");
     }
 

@@ -2,6 +2,7 @@ package com.nos.tax.member.command.domain;
 
 import com.nos.tax.authority.command.domain.Authority;
 import com.nos.tax.authority.command.domain.enumeration.AuthorityEnum;
+import com.nos.tax.common.exception.CustomIllegalArgumentException;
 import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
 import com.nos.tax.member.command.domain.exception.PasswordNotMatchedException;
@@ -30,7 +31,7 @@ public class MemberTest {
         Member member = MemberCreateHelperBuilder.builder().build();
 
         assertThatThrownBy(() -> member.changeName(name))
-                .isInstanceOf(ValidationErrorException.class)
+                .isInstanceOf(CustomIllegalArgumentException.class)
                 .hasMessage("memberName has no text");
     }
 
@@ -51,7 +52,7 @@ public class MemberTest {
         Member member = MemberCreateHelperBuilder.builder().build();
 
         assertThatThrownBy(() -> member.changeMobile(Mobile.of(mobile)))
-                .isInstanceOf(ValidationErrorException.class)
+                .isInstanceOf(CustomIllegalArgumentException.class)
                 .hasMessage("mobile has no text");
     }
 
@@ -104,7 +105,7 @@ public class MemberTest {
                 .build();
 
         assertThatThrownBy(() -> member.changePassword(value, updateValue))
-                .isInstanceOf(ValidationErrorException.class)
+                .isInstanceOf(CustomIllegalArgumentException.class)
                 .hasMessage("memberOriginPassword has no text");
     }
 
@@ -119,7 +120,7 @@ public class MemberTest {
                 .build();
 
         assertThatThrownBy(() -> member.changePassword(originValue, value))
-                .isInstanceOf(ValidationErrorException.class)
+                .isInstanceOf(CustomIllegalArgumentException.class)
                 .hasMessage("memberUpdatePassword has no text");
     }
 
@@ -193,7 +194,7 @@ public class MemberTest {
         assertThatThrownBy(() -> MemberCreateHelperBuilder.builder()
                 .functions(functions)
                 .build())
-                .isInstanceOf(ValidationErrorException.class)
+                .isInstanceOf(CustomIllegalArgumentException.class)
                 .hasMessage("memberAuthorities no element");
     }
 

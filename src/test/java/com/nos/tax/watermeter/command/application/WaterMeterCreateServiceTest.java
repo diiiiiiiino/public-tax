@@ -8,10 +8,12 @@ import com.nos.tax.helper.builder.HouseHoldCreateHelperBuilder;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.household.command.domain.repository.HouseHoldRepository;
+import com.nos.tax.member.command.application.exception.HouseHoldNotFoundException;
 import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.watermeter.command.application.dto.WaterMeterCreateRequest;
 import com.nos.tax.watermeter.command.application.service.WaterMeterCreateService;
 import com.nos.tax.watermeter.command.application.validator.WaterMeterCreateRequestValidator;
+import com.nos.tax.watermeter.command.domain.exception.PresentMeterSmallerException;
 import com.nos.tax.watermeter.command.domain.repository.WaterMeter;
 import com.nos.tax.watermeter.command.domain.repository.WaterMeterRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -68,7 +70,7 @@ public class WaterMeterCreateServiceTest {
         when(houseHoldRepository.findByMemberId(any())).thenReturn(Optional.of(HouseHoldCreateHelperBuilder.builder().build()));
 
         assertThatThrownBy(() -> waterMeterCreateService.create(member.getId(), waterMeterCreateRequest))
-                .isInstanceOf(ValidationErrorException.class)
+                .isInstanceOf(PresentMeterSmallerException.class)
                 .hasMessage("Present meter smaller than previous meter");
     }
 
@@ -81,7 +83,7 @@ public class WaterMeterCreateServiceTest {
         when(houseHoldRepository.findByMemberId(any())).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> waterMeterCreateService.create(member.getId(), waterMeterCreateRequest))
-                .isInstanceOf(NotFoundException.class)
+                .isInstanceOf(HouseHoldNotFoundException.class)
                 .hasMessage("Household not found");
     }
 

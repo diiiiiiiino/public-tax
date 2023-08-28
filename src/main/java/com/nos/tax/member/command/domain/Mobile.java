@@ -1,6 +1,5 @@
 package com.nos.tax.member.command.domain;
 
-import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.util.VerifyUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -10,6 +9,11 @@ import java.util.Objects;
 
 import static com.nos.tax.common.enumeration.TextLengthRange.MOBILE;
 
+/**
+ * <p>전화번호 밸류</p>
+ * <p>모든 메서드와 생성자에서 아래와 같은 경우 {@code CustomIllegalArgumentException}를 발생한다.</p>
+ * {@code value}가 {@code null}이거나 빈 문자열일때, 길이가 11이 아닐때
+ */
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Mobile {
@@ -17,7 +21,6 @@ public class Mobile {
 
     /**
      * @param value 전화번호
-     * @throws ValidationErrorException {@code value}가 {@code null}이거나 빈 문자열일때, 길이가 11이 아닐때
      */
     private Mobile(String value) {
         setValue(value);
@@ -25,7 +28,6 @@ public class Mobile {
 
     /**
      * @param value 전화번호
-     * @throws ValidationErrorException {@code value}가 {@code null}이거나 빈 문자열일때, 길이가 11이 아닐때
      * @return 전화번호
      */
     public static Mobile of(String value) {
@@ -34,7 +36,6 @@ public class Mobile {
 
     /**
      * @param value 전화번호
-     * @throws ValidationErrorException {@code value}가 {@code null}이거나 빈 문자열일때, 길이가 11이 아닐때
      */
     private void setValue(String value){
         VerifyUtil.verifyTextLength(value, "mobile", MOBILE.getMin(), MOBILE.getMax());

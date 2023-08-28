@@ -1,10 +1,17 @@
 package com.nos.tax.common.http;
 
 import com.nos.tax.common.exception.ApplicationException;
+import com.nos.tax.common.exception.CustomIllegalArgumentException;
+import com.nos.tax.common.exception.CustomNullPointerException;
 import com.nos.tax.common.exception.ValidationErrorException;
+import org.apache.ibatis.jdbc.Null;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import static com.nos.tax.common.http.ErrorCode.INVALID_REQUEST;
+import static com.nos.tax.common.http.ErrorCode.NULL;
 
 @RestControllerAdvice
 public class RestControllerExceptionHandler {
@@ -26,5 +33,45 @@ public class RestControllerExceptionHandler {
 
         return ResponseEntity.status(errorCode.getStatus())
                 .body(response);
+    }
+
+    @ExceptionHandler({IllegalArgumentException.class})
+    public ResponseEntity<?> totalHandle(IllegalArgumentException exception) {
+        Response.ResponseBuilder builder = Response.builder()
+                .message(exception.getMessage());
+
+        if(exception instanceof CustomIllegalArgumentException){
+            CustomIllegalArgumentException customEx = (CustomIllegalArgumentException)exception;
+            ErrorCode errorCode = customEx.getErrorCode();
+
+            builder.errorCode(errorCode.getCode())
+                    .data(customEx.getDetail());
+
+            return ResponseEntity.status(errorCode.getStatus())
+                    .body(builder.build());
+        }
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(builder.build());
+    }
+
+    @ExceptionHandler({NullPointerException.class})
+    public ResponseEntity<?> totalHandle(NullPointerException exception) {
+        Response.ResponseBuilder builder = Response.builder()
+                .message(exception.getMessage());
+
+        if(exception instanceof CustomNullPointerException){
+            CustomNullPointerException customEx = (CustomNullPointerException)exception;
+            ErrorCode errorCode = customEx.getErrorCode();
+
+            builder.errorCode(errorCode.getCode())
+                    .data(customEx.getDetail());
+
+            return ResponseEntity.status(errorCode.getStatus())
+                    .body(builder.build());
+        }
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(builder.build());
     }
 }

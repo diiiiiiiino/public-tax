@@ -12,6 +12,13 @@ import java.util.Objects;
 
 import static com.nos.tax.common.enumeration.TextLengthRange.*;
 
+/**
+ * <p>주소 엔티티</p>
+ * <p>모든 메서드와 생성자에서 아래와 같은 경우 {@code CustomIllegalArgumentException}를 발생한다.</p>
+ * {@code address1}이 {@code null}이거나 문자가 없을 경우, 길이가 1 ~ 50이 아닌 경우<br>
+ * {@code address2}이 {@code null}이거나 문자가 없을 경우, 길이가 1 ~ 50이 아닌 경우<br>
+ * {@code zipNo}이 {@code null}이거나 문자가 없을 경우, 길이가 5가 아닌 경우
+ */
 @Getter
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -29,12 +36,6 @@ public class Address {
      * @param address1 주소1
      * @param address2 주소2
      * @param zipNo    우편번호
-     * @throws ValidationErrorException
-     * <ul>
-     *     <li>{@code address1}이 {@code null}이거나 문자가 없을 경우, 길이가 1 ~ 50이 아닌 경우
-     *     <li>{@code address2}이 {@code null}이거나 문자가 없을 경우, 길이가 1 ~ 50이 아닌 경우
-     *     <li>{@code zipNo}이 {@code null}이거나 문자가 없을 경우, 길이가 5가 아닌 경우
-     * </ul>
      */
     public Address(String address1, String address2, String zipNo) {
         setAddress1(address1);
@@ -46,12 +47,6 @@ public class Address {
      * @param address1 주소1
      * @param address2 주소2
      * @param zipNo    우편번호
-     * @throws ValidationErrorException
-     * <ul>
-     *     <li>{@code address1}이 {@code null}이거나 문자가 없을 경우, 길이가 1 ~ 50이 아닌 경우
-     *     <li>{@code address2}이 {@code null}이거나 문자가 없을 경우, 길이가 1 ~ 50이 아닌 경우
-     *     <li>{@code zipNo}이 {@code null}이거나 문자가 없을 경우, 길이가 5가 아닌 경우
-     * </ul>
      */
     public static Address of(String address1, String address2, String zipNo){
         return new Address(address1, address2, zipNo);
@@ -59,7 +54,6 @@ public class Address {
 
     /**
      * @param address1 주소1
-     * @throws ValidationErrorException {@code address1}이 {@code null}이거나 문자가 없을 경우, 길이가 1 ~ 50이 아닌 경우
      */
     private void setAddress1(String address1) {
         this.address1 = VerifyUtil.verifyTextLength(address1, "address1", ADDRESS1.getMin(), ADDRESS1.getMax());
@@ -67,7 +61,6 @@ public class Address {
 
     /**
      * @param address2 주소2
-     * @throws ValidationErrorException {@code address2}이 {@code null}이거나 문자가 없을 경우, 길이가 1 ~ 50이 아닌 경우
      */
     private void setAddress2(String address2) {
         this.address2 = VerifyUtil.verifyTextLength(address2, "address2", ADDRESS2.getMin(), ADDRESS2.getMax());
@@ -75,7 +68,6 @@ public class Address {
 
     /**
      * @param zipNo 우편 번호
-     * @throws ValidationErrorException {@code zipNo}이 {@code null}이거나 문자가 없을 경우, 길이가 5가 아닌 경우
      */
     private void setZipNo(String zipNo) {
         this.zipNo = VerifyUtil.verifyTextLength(zipNo, "zipNo", ZIP_NO.getMin(), ZIP_NO.getMax());

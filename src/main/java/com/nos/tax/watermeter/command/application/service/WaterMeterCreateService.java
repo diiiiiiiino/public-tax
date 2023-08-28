@@ -1,11 +1,11 @@
 package com.nos.tax.watermeter.command.application.service;
 
-import com.nos.tax.common.exception.NotFoundException;
 import com.nos.tax.common.exception.ValidationError;
 import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.common.validator.RequestValidator;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.household.command.domain.repository.HouseHoldRepository;
+import com.nos.tax.member.command.application.exception.HouseHoldNotFoundException;
 import com.nos.tax.watermeter.command.application.dto.WaterMeterCreateRequest;
 import com.nos.tax.watermeter.command.application.validator.WaterMeterCreateRequestQualifier;
 import com.nos.tax.watermeter.command.domain.repository.WaterMeter;
@@ -28,6 +28,10 @@ public class WaterMeterCreateService {
         this.validator = validator;
     }
 
+    /**
+     * @param memberId
+     * @param request
+     */
     @Transactional
     public void create(Long memberId, WaterMeterCreateRequest request) {
         List<ValidationError> errors = validator.validate(request);
@@ -38,7 +42,7 @@ public class WaterMeterCreateService {
         }
 
         HouseHold houseHold = houseHoldRepository.findByMemberId(memberId)
-                .orElseThrow(() -> new NotFoundException("Household not found"));
+                .orElseThrow(() -> new HouseHoldNotFoundException("Household not found"));
 
         waterMeterRepository.save(WaterMeter.of(request.getPreviousMeter(), request.getPresentMeter(), request.getCalculateYm(), houseHold));
     }

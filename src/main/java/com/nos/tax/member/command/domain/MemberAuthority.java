@@ -10,6 +10,12 @@ import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 
+/**
+ * <p>회원 권한 엔티티</p>
+ * <p>모든 메서드와 생성자에서 아래와 같은 경우 {@code CustomNullPointerException}를 발생한다.</p>
+ * {@code member}가 {@code null}일 때 <br>
+ * {@code authority}가 {@code null}일 때
+ */
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -27,11 +33,6 @@ public class MemberAuthority {
     /**
      * @param member 회원 객체
      * @param authority 권한 객체
-     * @throws ValidationErrorException
-     * <ul>
-     *     <li>{@code member}가 {@code null}일 때
-     *     <li>{@code authority}가 {@code null}일 때
-     * </ul>
      */
     private MemberAuthority(Member member, Authority authority){
         setMember(member);
@@ -41,11 +42,6 @@ public class MemberAuthority {
     /**
      * @param member 회원 객체
      * @param authority 권한 객체
-     * @throws ValidationErrorException
-     * <ul>
-     *     <li>{@code member}가 {@code null}일 때
-     *     <li>{@code authority}가 {@code null}일 때
-     * </ul>
      * @return 회원 권한
      */
     public static MemberAuthority of(Member member, Authority authority){
@@ -54,7 +50,6 @@ public class MemberAuthority {
 
     /**
      * @param member 회원 객체
-     * @throws ValidationErrorException {@code member}가 {@code null}일 때 
      */
     private void setMember(Member member) {
         VerifyUtil.verifyNull(member, "member");
@@ -63,7 +58,6 @@ public class MemberAuthority {
 
     /**
      * @param authority 권한 객체
-     * @throws ValidationErrorException {@code authority}가 {@code null}일 때
      */
     private void setAuthority(Authority authority) {
         VerifyUtil.verifyNull(authority, "authority");

@@ -10,11 +10,11 @@ public class ValidationErrorException extends ApplicationException{
     private List<ValidationError> errors;
 
     public ValidationErrorException(String message) {
-        super(message, ErrorCode.INVALID_VALUE);
+        super(message, ErrorCode.INVALID_REQUEST);
     }
 
     public ValidationErrorException(String message, List<ValidationError> errors) {
-        super(message, ErrorCode.INVALID_VALUE);
+        super(message, ErrorCode.INVALID_REQUEST);
         this.errors = errors;
     }
 }

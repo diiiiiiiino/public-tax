@@ -17,6 +17,14 @@ import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <p>수도요금 엔티티</p>
+ * <p>모든 메서드와 생성자 메서드에서 아래와 같은 경우 {@code CustomIllegalArgumentException}를 발생한다.</p>
+ * {@code totalAmount}가 음수인 경우
+ * <p>모든 메서드와 생성자 메서드에서 아래와 같은 경우 {@code CustomNullPointerException}를 발생한다.</p>
+ * {@code building}이 {@code null}인 경우 <br>
+ * {@code calculateYm}이 {@code null}인 경우 <br>
+ */
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -46,12 +54,6 @@ public class WaterBill {
      * @param building 건물 객체
      * @param totalAmount 총 사용요금
      * @param calculateYm 정산년월
-     * @throws ValidationErrorException
-     * <ul>
-     *     <li>{@code building}이 {@code null}인 경우
-     *     <li>{@code totalAmount}가 음수인 경우
-     *     <li>{@code calculateYm}이 {@code null}인 경우
-     * </ul>
      */
     private WaterBill(Building building, int totalAmount, YearMonth calculateYm) {
         setBuilding(building);
@@ -64,12 +66,6 @@ public class WaterBill {
      * @param building 건물 객체
      * @param totalAmount 총 사용요금
      * @param calculateYm 정산년월
-     * @throws ValidationErrorException
-     * <ul>
-     *     <li>{@code building}이 {@code null}인 경우
-     *     <li>{@code totalAmount}가 음수인 경우
-     *     <li>{@code calculateYm}이 {@code null}인 경우
-     * </ul>
      * @return 수도요금
      */
     public static WaterBill of(Building building, int totalAmount, YearMonth calculateYm){
@@ -139,7 +135,6 @@ public class WaterBill {
 
     /**
      * @param building 건물 객체
-     * @throws ValidationErrorException {@code building}이 {@code null}인 경우
      */
     private void setBuilding(Building building) {
         this.building = VerifyUtil.verifyNull(building, "waterBillBuilding");
@@ -147,7 +142,6 @@ public class WaterBill {
 
     /**
      * @param totalAmount 총 사용요금
-     * @throws ValidationErrorException {@code totalAmount}가 음수인 경우
      */
     private void setTotalAmount(int totalAmount) {
         VerifyUtil.verifyNegative(totalAmount, "waterBillTotalAmount");
@@ -156,7 +150,6 @@ public class WaterBill {
 
     /**
      * @param calculateYm 정산년월
-     * @throws ValidationErrorException {@code calculateYm}이 {@code null}인 경우
      */
     private void setCalculateYm(YearMonth calculateYm) {
         this.calculateYm = VerifyUtil.verifyNull(calculateYm, "waterBillCalculateYm");

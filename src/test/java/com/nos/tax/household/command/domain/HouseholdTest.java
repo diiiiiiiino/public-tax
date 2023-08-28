@@ -1,5 +1,6 @@
 package com.nos.tax.household.command.domain;
 
+import com.nos.tax.common.exception.CustomIllegalArgumentException;
 import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
@@ -20,7 +21,7 @@ public class HouseholdTest {
     @NullAndEmptySource
     void householdCreateWithNullAndEmptyRoom(String room) {
         assertThatThrownBy(() -> HouseHold.of(room, BuildingCreateHelperBuilder.builder().build()))
-                .isInstanceOf(ValidationErrorException.class);
+                .isInstanceOf(CustomIllegalArgumentException.class);
     }
 
     @DisplayName("세대 생성 성공")

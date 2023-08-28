@@ -12,6 +12,13 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * <p>수도요금 상세 밸류</p>
+ * <p>모든 메서드와 생성자 메서드에서 아래와 같은 경우 {@code CustomIllegalArgumentException}를 발생한다.</p>
+ * {@code amount}가 음수인 경우
+ * <p>모든 메서드와 생성자 메서드에서 아래와 같은 경우 {@code CustomNullPointerException}를 발생한다.</p>
+ * {@code houseHold}가 {@code null}인 경우
+ */
 @Getter
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -31,11 +38,6 @@ public class WaterBillDetail {
      * @param difference 요금 차액
      * @param houseHold 세대 객체
      * @param waterMeter 수도 계량 객체
-     * @throws ValidationErrorException
-     * <ul>
-     *     <li>{@code amount}가 음수인 경우
-     *     <li>{@code houseHold}가 {@code null}인 경우
-     * </ul>
      */
     private WaterBillDetail(int amount, int difference, HouseHold houseHold, WaterMeter waterMeter) {
         setAmount(amount);
@@ -49,11 +51,6 @@ public class WaterBillDetail {
      * @param difference 요금 차액
      * @param houseHold 세대 객체
      * @param waterMeter 수도 계량 객체
-     * @throws ValidationErrorException
-     * <ul>
-     *     <li>{@code amount}가 음수인 경우
-     *     <li>{@code houseHold}가 {@code null}인 경우
-     * </ul>
      * @return 수도요금 상세
      */
     public static WaterBillDetail of(int amount, int difference, HouseHold houseHold, WaterMeter waterMeter) {
@@ -62,7 +59,6 @@ public class WaterBillDetail {
 
     /**
      * @param amount 수도 사용 요금
-     * @throws ValidationErrorException {@code amount}가 음수인 경우
      */
     private void setAmount(int amount) {
         this.amount = VerifyUtil.verifyNegative(amount, "waterBillDetailAmount");
@@ -77,7 +73,6 @@ public class WaterBillDetail {
 
     /**
      * @param houseHold 세대 객체
-     * @throws ValidationErrorException {@code houseHold}가 {@code null}인 경우
      */
     private void setHouseHold(HouseHold houseHold) {
         this.houseHold = VerifyUtil.verifyNull(houseHold, "waterBillDetailHouseHold");

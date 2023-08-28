@@ -17,7 +17,7 @@ public class LoginRecordTest {
     @Test
     void memberIsNullWhenCreatingLoginHistory() {
         assertThatThrownBy(() -> LoginRecord.builder(null, LocalDateTime.now()).build())
-                .isInstanceOf(ValidationErrorException.class)
+                .isInstanceOf(NullPointerException.class)
                 .hasMessage("loginRecordMember is null");
     }
 
@@ -27,7 +27,7 @@ public class LoginRecordTest {
         Member member = MemberCreateHelperBuilder.builder().build();
 
         assertThatThrownBy(() -> LoginRecord.builder(member, null).build())
-                .isInstanceOf(ValidationErrorException.class)
+                .isInstanceOf(NullPointerException.class)
                 .hasMessage("loginRecordLoginTime is null");
     }
 

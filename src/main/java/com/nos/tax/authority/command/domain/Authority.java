@@ -1,6 +1,7 @@
 package com.nos.tax.authority.command.domain;
 
 import com.nos.tax.authority.command.domain.enumeration.AuthorityEnum;
+import com.nos.tax.common.exception.CustomIllegalArgumentException;
 import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.util.VerifyUtil;
 import jakarta.persistence.*;
@@ -12,6 +13,11 @@ import java.util.Objects;
 
 import static com.nos.tax.common.enumeration.TextLengthRange.AUTHORITY_NAME;
 
+/**
+ * <p>회원 권한 엔티티</p>
+ * <p>모든 메서드와 생성자에서 아래와 같은 경우 {@code CustomIllegalArgumentException}를 발생한다.</p>
+ * {@code name}이 {@code null}이거나 문자가 없거나 길이가 1 ~ 10이 아닐때
+ */
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -27,7 +33,6 @@ public class Authority {
 
     /**
      * @param name 회원 권한명
-     * @throws ValidationErrorException {@code name}이 {@code null}이거나 문자가 없을때, 길이가 1 ~ 10이 아닐때
      */
     private Authority(String name) {
         setName(name);
@@ -36,7 +41,6 @@ public class Authority {
     /**
      * @param id   회원 권한 ID
      * @param name 회원 권한명
-     * @throws ValidationErrorException {@code name}이 {@code null}이거나 문자가 없을때, 길이가 1 ~ 10이 아닐때
      */
     private Authority(Long id, String name) {
         setId(id);
@@ -46,7 +50,6 @@ public class Authority {
     /**
      * @param name 회원 권한명
      * @return 회원 권한
-     * @throws ValidationErrorException {@code name}이 {@code null}이거나 문자가 없을때, 길이가 1 ~ 10이 아닐때
      */
     public static Authority of(String name){
         return new Authority(name);
@@ -55,7 +58,6 @@ public class Authority {
     /**
      * @param authorityEnum 권한 열거형 상수
      * @return 회원 권한
-     * @throws ValidationErrorException {@code authorityEnum.getName()}이 {@code null}이거나 문자가 없을때
      */
     public static Authority of(AuthorityEnum authorityEnum){
         return new Authority(authorityEnum.getId(), authorityEnum.getName());
@@ -63,7 +65,6 @@ public class Authority {
 
     /**
      * @param name 회원 권한명
-     * @throws ValidationErrorException {@code name}이 {@code null}이거나 문자가 없을때, 길이가 1 ~ 10이 아닐때
      */
     private void setName(String name) {
         VerifyUtil.verifyTextLength(name, "authorityName", AUTHORITY_NAME.getMin(), AUTHORITY_NAME.getMax());

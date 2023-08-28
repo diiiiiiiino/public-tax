@@ -1,5 +1,7 @@
 package com.nos.tax.building.command.domain;
 
+import com.nos.tax.common.exception.CustomIllegalArgumentException;
+import com.nos.tax.common.exception.CustomNullPointerException;
 import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
 import com.nos.tax.household.command.domain.HouseHold;
@@ -24,7 +26,7 @@ public class BuildingAggregationTest {
     @MethodSource("provideArgsForAddress")
     void addressCreateWithNullAndEmptyParameter(String address1, String address2, String zipNo){
         assertThatThrownBy(() -> Address.of(address1, address2, zipNo))
-                .isInstanceOf(ValidationErrorException.class);
+                .isInstanceOf(CustomIllegalArgumentException.class);
     }
 
     @DisplayName("건물 생성 시 건물명 누락")
@@ -34,7 +36,7 @@ public class BuildingAggregationTest {
         Assertions.assertThatThrownBy(() -> BuildingCreateHelperBuilder.builder()
                         .buildingName(name)
                         .build())
-                .isInstanceOf(ValidationErrorException.class);
+                .isInstanceOf(CustomIllegalArgumentException.class);
     }
 
     @DisplayName("건물 엔티티 생성 시 주소 누락")
@@ -43,7 +45,7 @@ public class BuildingAggregationTest {
         Assertions.assertThatThrownBy(() -> BuildingCreateHelperBuilder.builder()
                         .address(null)
                         .build())
-                .isInstanceOf(ValidationErrorException.class)
+                .isInstanceOf(CustomNullPointerException.class)
                 .hasMessage("buildingAddress is null");
     }
 
@@ -73,7 +75,7 @@ public class BuildingAggregationTest {
         Building building = BuildingCreateHelperBuilder.builder().build();
 
         assertThatThrownBy(() -> building.changeName(name))
-                .isInstanceOf(ValidationErrorException.class);
+                .isInstanceOf(CustomIllegalArgumentException.class);
     }
 
 
@@ -94,7 +96,7 @@ public class BuildingAggregationTest {
         Building building = BuildingCreateHelperBuilder.builder().build();
 
         assertThatThrownBy(() -> building.changeAddress(address1, address2, zipNo))
-                .isInstanceOf(ValidationErrorException.class);
+                .isInstanceOf(CustomIllegalArgumentException.class);
     }
 
     @DisplayName("건물 엔티티 주소 수정 성공")

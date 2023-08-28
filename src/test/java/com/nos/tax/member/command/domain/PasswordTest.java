@@ -1,5 +1,6 @@
 package com.nos.tax.member.command.domain;
 
+import com.nos.tax.common.exception.CustomIllegalArgumentException;
 import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.member.command.domain.exception.PasswordOutOfConditionException;
 import org.junit.jupiter.api.DisplayName;
@@ -27,7 +28,7 @@ public class PasswordTest {
     @NullAndEmptySource
     void passwordIsNullOrEmptyString(String password) {
         assertThatThrownBy(() -> Password.of(password))
-                .isInstanceOf(ValidationErrorException.class)
+                .isInstanceOf(CustomIllegalArgumentException.class)
                 .hasMessage("password has no text");
     }
 

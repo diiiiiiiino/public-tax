@@ -42,7 +42,7 @@ public class HouseHoldControllerTest extends BaseControllerTest {
         mockMvc.perform(post("/household/move-out/1"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.errorCode").value("InvalidValue"));
+                .andExpect(jsonPath("$.errorCode").value("InvalidRequest"));
     }
 
     @DisplayName("세대 이사시 세대 미조회")

@@ -1,6 +1,8 @@
 package com.nos.tax.waterbill.command.domain;
 
 import com.nos.tax.building.command.domain.Building;
+import com.nos.tax.common.exception.CustomIllegalArgumentException;
+import com.nos.tax.common.exception.CustomNullPointerException;
 import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
 import com.nos.tax.household.command.domain.HouseHold;
@@ -24,7 +26,7 @@ public class WaterBillTest {
     @Test
     void missingBuildingsWhenGeneratingWaterBills() {
         assertThatThrownBy(() -> WaterBill.of(null, 77920, YearMonth.of(2023, 7)))
-                .isInstanceOf(ValidationErrorException.class)
+                .isInstanceOf(CustomNullPointerException.class)
                 .hasMessage("waterBillBuilding is null");
     }
 
@@ -34,7 +36,7 @@ public class WaterBillTest {
         Building building = createBuilding();
 
         assertThatThrownBy(() -> WaterBill.of(building, -77920, YearMonth.of(2023, 7)))
-                .isInstanceOf(ValidationErrorException.class)
+                .isInstanceOf(CustomIllegalArgumentException.class)
                 .hasMessage("waterBillTotalAmount no negative");
     }
 
@@ -42,7 +44,7 @@ public class WaterBillTest {
     @Test
     void missingDateWhenGeneratingWaterBills() {
         assertThatThrownBy(() -> WaterBill.of(null, 77920, null))
-                .isInstanceOf(ValidationErrorException.class)
+                .isInstanceOf(CustomNullPointerException.class)
                 .hasMessage("waterBillBuilding is null");
     }
 

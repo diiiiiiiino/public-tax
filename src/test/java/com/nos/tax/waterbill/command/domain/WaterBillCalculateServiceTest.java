@@ -1,5 +1,6 @@
 package com.nos.tax.waterbill.command.domain;
 
+import com.nos.tax.common.exception.CustomNullPointerException;
 import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.helper.WaterBillCalculateHelper;
 import com.nos.tax.waterbill.command.domain.enumeration.WaterBillState;
@@ -29,7 +30,7 @@ public class WaterBillCalculateServiceTest {
         WaterBillCalculateHelper testObj = WaterBillCalculateHelper.WaterBillCalculateHelperBuilder.builder().build();
 
         assertThatThrownBy(() -> waterBillCalculateService.calculate(null, testObj.getWaterBill(), testObj.getMeters()))
-                .isInstanceOf(ValidationErrorException.class)
+                .isInstanceOf(CustomNullPointerException.class)
                 .hasMessage("building is null");
     }
 
@@ -39,7 +40,7 @@ public class WaterBillCalculateServiceTest {
         WaterBillCalculateHelper testObj = WaterBillCalculateHelper.WaterBillCalculateHelperBuilder.builder().build();
 
         assertThatThrownBy(() -> waterBillCalculateService.calculate(testObj.getBuilding(), null, testObj.getMeters()))
-                .isInstanceOf(ValidationErrorException.class)
+                .isInstanceOf(CustomNullPointerException.class)
                 .hasMessage("waterBill is null");
     }
 
@@ -49,7 +50,7 @@ public class WaterBillCalculateServiceTest {
         WaterBillCalculateHelper testObj = WaterBillCalculateHelper.WaterBillCalculateHelperBuilder.builder().build();
 
         assertThatThrownBy(() -> waterBillCalculateService.calculate(testObj.getBuilding(), testObj.getWaterBill(), null))
-                .isInstanceOf(ValidationErrorException.class)
+                .isInstanceOf(CustomNullPointerException.class)
                 .hasMessage("waterMeters is null");
     }
 

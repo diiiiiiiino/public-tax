@@ -1,5 +1,6 @@
 package com.nos.tax.member.command.application.service;
 
+import com.nos.tax.common.exception.CustomIllegalArgumentException;
 import com.nos.tax.common.exception.NotFoundException;
 import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.helper.builder.HouseHoldCreateHelperBuilder;
@@ -39,7 +40,7 @@ public class RequestCreateMemberServiceTest {
     @NullAndEmptySource
     void requestNullAndEmpty(List<RequestCreateMemberRequest> requests) {
         assertThatThrownBy(() -> requestCreateMemberService.request(requests))
-                .isInstanceOf(ValidationErrorException.class)
+                .isInstanceOf(CustomIllegalArgumentException.class)
                 .hasMessage("requests no element");
     }
 
