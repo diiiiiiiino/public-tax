@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Objects;
 
@@ -19,7 +20,7 @@ import java.util.Objects;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MemberAuthority {
+public class MemberAuthority implements GrantedAuthority {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -62,6 +63,11 @@ public class MemberAuthority {
     private void setAuthority(Authority authority) {
         VerifyUtil.verifyNull(authority, "authority");
         this.authority = authority;
+    }
+
+    @Override
+    public String getAuthority() {
+        return authority.getName();
     }
 
     @Override

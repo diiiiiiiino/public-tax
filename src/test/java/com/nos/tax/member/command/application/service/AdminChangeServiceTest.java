@@ -75,21 +75,21 @@ public class AdminChangeServiceTest {
 
         adminChangeService.change(admin, 2L);
 
-        Set<Authority> adminAuthorities = admin.getAuthorities()
+        Set<String> adminAuthorities = admin.getAuthorities()
                 .stream()
                 .map(MemberAuthority::getAuthority)
                 .collect(Collectors.toSet());
 
-        Set<Authority> memberAuthorities = member.getAuthorities()
+        Set<String> memberAuthorities = member.getAuthorities()
                 .stream()
                 .map(MemberAuthority::getAuthority)
                 .collect(Collectors.toSet());
 
         assertThat(adminAuthorities).hasSize(1);
-        assertThat(adminAuthorities).containsOnly(Authority.of(AuthorityEnum.ROLE_MEMBER));
+        assertThat(adminAuthorities).containsOnly(AuthorityEnum.ROLE_MEMBER.getName());
 
         assertThat(memberAuthorities).hasSize(2);
-        assertThat(memberAuthorities).containsOnly(Authority.of(AuthorityEnum.ROLE_ADMIN), Authority.of(AuthorityEnum.ROLE_MEMBER));
+        assertThat(memberAuthorities).containsOnly(AuthorityEnum.ROLE_ADMIN.getName(), AuthorityEnum.ROLE_MEMBER.getName());
     }
 
     private Member createAdmin(){

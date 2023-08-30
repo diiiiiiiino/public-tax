@@ -146,13 +146,13 @@ public class MemberCreateServiceTest {
         assertThat(savedMember.getMobile().toString()).isEqualTo("01012345678");
         assertThat(savedMember.getName()).isEqualTo("홍길동");
 
-        Set<Authority> authoritySet = savedMember.getAuthorities()
+        Set<String> authoritySet = savedMember.getAuthorities()
                 .stream()
                 .map(MemberAuthority::getAuthority)
                 .collect(Collectors.toSet());
 
         assertThat(authoritySet).hasSize(1);
-        assertThat(authoritySet).containsOnly(Authority.of(AuthorityEnum.ROLE_MEMBER));
+        assertThat(authoritySet).containsOnly(AuthorityEnum.ROLE_MEMBER.getName());
 
         HouseHolder houseHolder = houseHold.getHouseHolder();
         assertThat(houseHolder.getMember().getLoginId()).isEqualTo("loginId");

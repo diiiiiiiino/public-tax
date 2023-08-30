@@ -210,11 +210,11 @@ public class MemberTest {
 
         member.changeAuthority(functions);
 
-        Set<Authority> authorities = member.getAuthorities()
+        Set<String> authorities = member.getAuthorities()
                 .stream()
                 .map(MemberAuthority::getAuthority)
                 .collect(Collectors.toSet());
 
-        assertThat(authorities).containsAll(Set.of(Authority.of(AuthorityEnum.ROLE_MEMBER), Authority.of(AuthorityEnum.ROLE_ADMIN)));
+        assertThat(authorities).containsAll(Set.of(AuthorityEnum.ROLE_MEMBER.getName(), AuthorityEnum.ROLE_ADMIN.getName()));
     }
 }
