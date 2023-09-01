@@ -1,15 +1,14 @@
 package com.nos.tax.infra.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,28 +21,34 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-
-    private final AuthenticationManagerBuilder managerBuilder;
     private final UserDetailsService userDetailsService;
+
+
+    @Bean
+    public AuthenticationManager authenticationManager(
+            HttpSecurity httpSecurity, UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder = httpSecurity.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+        return authenticationManagerBuilder.build();
+    }
 
     @Bean
     PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
 
+
     @Bean
     protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(registry -> registry.anyRequest().permitAll());
+        http.userDetailsService(userDetailsService)
+                .authorizeHttpRequests(registry -> registry
+                        .requestMatchers("/login").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .passwordManagement(configurer -> passwordEncoder());
 
         return http.build();
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager() throws Exception {
-        managerBuilder.userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder());
-
-        return managerBuilder.build();
     }
 
 

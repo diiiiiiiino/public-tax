@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nos.tax.common.exception.CustomIllegalArgumentException;
 import com.nos.tax.common.http.ErrorCode;
 import com.nos.tax.login.command.application.service.LoginRequest;
-import com.nos.tax.member.command.domain.Member;
+import com.nos.tax.member.command.application.security.SecurityMember;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,8 +15,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 
@@ -24,16 +22,13 @@ import java.io.IOException;
 
 @Component
 public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
-    private final UserDetailsService userDetailsService;
     private final ObjectMapper objectMapper;
     private final JWTUtil jwtUtil;
 
     public JWTLoginFilter(AuthenticationManager authenticationManager,
-                          UserDetailsService userDetailsService,
                           ObjectMapper objectMapper,
                           JWTUtil jwtUtil) {
         super(authenticationManager);
-        this.userDetailsService = userDetailsService;
         this.objectMapper = objectMapper;
         this.jwtUtil = jwtUtil;
         setFilterProcessesUrl("/login");
@@ -51,10 +46,8 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
             throw new CustomIllegalArgumentException("Login request fail", ErrorCode.INVALID_REQUEST);
         }
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getLoginId());
-
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                userDetails, userDetails.getPassword(), userDetails.getAuthorities()
+                loginRequest.getLoginId(), loginRequest.getPassword(), null
         );
 
         return getAuthenticationManager().authenticate(token);
@@ -67,7 +60,7 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
             FilterChain chain,
             Authentication authResult) throws IOException, ServletException
     {
-        Member member = (Member) authResult.getPrincipal();
+        SecurityMember member = (SecurityMember) authResult.getPrincipal();
 
         response.setHeader(HttpHeaders.AUTHORIZATION, jwtUtil.makeAuthToken(member));
         response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);

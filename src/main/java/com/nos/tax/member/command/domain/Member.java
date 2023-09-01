@@ -53,7 +53,7 @@ public class Member {
     @Convert(converter = MobileConverter.class)
     private Mobile mobile;
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "member")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, mappedBy = "member")
     private Set<MemberAuthority> authorities = new HashSet<>();
 
     /**
