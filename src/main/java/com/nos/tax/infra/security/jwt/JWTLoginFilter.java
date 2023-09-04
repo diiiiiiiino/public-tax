@@ -20,7 +20,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-@Component
 public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
     private final ObjectMapper objectMapper;
     private final JWTUtil jwtUtil;
@@ -58,8 +57,7 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain chain,
-            Authentication authResult) throws IOException, ServletException
-    {
+            Authentication authResult) throws IOException, ServletException {
         SecurityMember member = (SecurityMember) authResult.getPrincipal();
 
         response.setHeader(HttpHeaders.AUTHORIZATION, jwtUtil.makeAuthToken(member));
