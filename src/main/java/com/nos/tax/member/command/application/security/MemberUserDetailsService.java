@@ -1,6 +1,5 @@
 package com.nos.tax.member.command.application.security;
 
-import com.nos.tax.member.command.application.security.SecurityMember;
 import com.nos.tax.member.command.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

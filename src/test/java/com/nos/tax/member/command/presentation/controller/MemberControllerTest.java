@@ -17,7 +17,7 @@ import com.nos.tax.member.command.application.service.PasswordChangeService;
 import com.nos.tax.member.command.domain.exception.PasswordNotMatchedException;
 import com.nos.tax.member.command.domain.exception.PasswordOutOfConditionException;
 import com.nos.tax.member.command.domain.exception.UpdatePasswordSameException;
-import com.nos.tax.member.command.presentation.MemberController;
+import com.nos.tax.member.presentation.MemberController;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

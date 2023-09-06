@@ -1,6 +1,5 @@
 package com.nos.tax.member.command.application.service;
 
-import com.nos.tax.authority.command.domain.Authority;
 import com.nos.tax.authority.command.domain.enumeration.AuthorityEnum;
 import com.nos.tax.common.component.DateUtils;
 import com.nos.tax.common.exception.ValidationCode;

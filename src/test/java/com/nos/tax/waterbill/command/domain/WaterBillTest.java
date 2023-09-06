@@ -3,7 +3,6 @@ package com.nos.tax.waterbill.command.domain;
 import com.nos.tax.building.command.domain.Building;
 import com.nos.tax.common.exception.CustomIllegalArgumentException;
 import com.nos.tax.common.exception.CustomNullPointerException;
-import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.waterbill.command.domain.enumeration.WaterBillState;

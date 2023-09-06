@@ -34,9 +34,10 @@ public class LoginServiceTest {
     @DisplayName("로그인 시 회원 미조회")
     @Test
     void memberInformationNotCheckedWhenLoggingIn() {
-        LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setLoginId("loginId");
-        loginRequest.setPassword("qwer1234!@");
+        LoginRequest loginRequest = LoginRequest.builder()
+                .loginId("loginId")
+                .password("qwer1234!@")
+                .build();
 
         when(memberRepository.findByLoginId(anyString())).thenReturn(Optional.empty());
 
@@ -49,9 +50,10 @@ public class LoginServiceTest {
     @ParameterizedTest
     @ValueSource(strings = { "qwer!@#$", "1234!@#$qwer" })
     void whenLoginInformationIsDifferent(String pw) {
-        LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setLoginId("loginId");
-        loginRequest.setPassword(pw);
+        LoginRequest loginRequest = LoginRequest.builder()
+                .loginId("loginId")
+                .password(pw)
+                .build();
 
         Member member = MemberCreateHelperBuilder.builder().build();
 
@@ -65,9 +67,10 @@ public class LoginServiceTest {
     @DisplayName("로그인 성공")
     @Test
     void loginSuccess() {
-        LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setLoginId("loginId");
-        loginRequest.setPassword("qwer1234!@#$");
+        LoginRequest loginRequest = LoginRequest.builder()
+                .loginId("loginId")
+                .password("qwer1234!@")
+                .build();
 
         Member member = MemberCreateHelperBuilder.builder().build();
         when(memberRepository.findByLoginId(anyString())).thenReturn(Optional.of(member));

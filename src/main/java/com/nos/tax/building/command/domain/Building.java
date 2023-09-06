@@ -1,6 +1,5 @@
 package com.nos.tax.building.command.domain;
 
-import com.nos.tax.common.exception.CustomIllegalArgumentException;
 import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.util.VerifyUtil;

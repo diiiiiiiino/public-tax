@@ -1,6 +1,5 @@
 package com.nos.tax.login.command.domain;
 
-import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
 import com.nos.tax.member.command.domain.Member;
 import org.junit.jupiter.api.DisplayName;

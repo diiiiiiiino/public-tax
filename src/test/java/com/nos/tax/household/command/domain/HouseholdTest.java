@@ -1,7 +1,6 @@
 package com.nos.tax.household.command.domain;
 
 import com.nos.tax.common.exception.CustomIllegalArgumentException;
-import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
 import com.nos.tax.household.command.domain.enumeration.HouseHoldState;

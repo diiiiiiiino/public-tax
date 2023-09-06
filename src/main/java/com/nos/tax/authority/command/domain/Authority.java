@@ -1,8 +1,6 @@
 package com.nos.tax.authority.command.domain;
 
 import com.nos.tax.authority.command.domain.enumeration.AuthorityEnum;
-import com.nos.tax.common.exception.CustomIllegalArgumentException;
-import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.util.VerifyUtil;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

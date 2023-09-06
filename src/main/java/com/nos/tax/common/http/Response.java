@@ -25,6 +25,7 @@ public class Response<T> {
      */
     public static <T> Response<T> ok(){
         return (Response<T>) Response.builder()
+                .message("ok")
                 .build();
     }
 
@@ -35,6 +36,7 @@ public class Response<T> {
      */
     public static <T> Response<T> ok(T data){
         return (Response<T>) Response.builder()
+                .message("ok")
                 .data(data)
                 .build();
     }

@@ -1,6 +1,7 @@
 package com.nos.tax.infra.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nos.tax.infra.security.jwt.JWTCheckFilter;
 import com.nos.tax.infra.security.jwt.JWTLoginFilter;
 import com.nos.tax.infra.security.jwt.JWTUtil;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -32,15 +32,11 @@ public class SecurityConfig {
     private final ObjectProvider<AuthenticationManager> objectProvider;
     private final ObjectMapper objectMapper;
     private final JWTUtil jwtUtil;
+    private final UserDetailsService userDetailsService;
 
     @Bean
-    public AuthenticationManager authenticationManager(
-            HttpSecurity httpSecurity,
-            UserDetailsService userDetailsService,
-            PasswordEncoder passwordEncoder) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder = httpSecurity.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder);
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
         return authenticationManagerBuilder.build();
     }
 
@@ -53,15 +49,15 @@ public class SecurityConfig {
     protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
         AuthenticationManager authenticationManager = objectProvider.getObject();
 
-        JWTLoginFilter jwtLoginFilter = new JWTLoginFilter(authenticationManager, objectMapper, jwtUtil);
+        JWTLoginFilter loginFilter = new JWTLoginFilter(authenticationManager, objectMapper, jwtUtil);
+        JWTCheckFilter checkFilter = new JWTCheckFilter(authenticationManager, userDetailsService, jwtUtil);
 
-        http.authorizeHttpRequests(registry -> registry
-                        .requestMatchers("/login").permitAll()
-                        .anyRequest().authenticated())
+        http.authorizeHttpRequests(registry -> registry.anyRequest().authenticated())
                 .cors(configure -> configure.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterAt(jwtLoginFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(checkFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

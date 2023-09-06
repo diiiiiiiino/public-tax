@@ -4,14 +4,10 @@ import com.nos.tax.common.exception.ApplicationException;
 import com.nos.tax.common.exception.CustomIllegalArgumentException;
 import com.nos.tax.common.exception.CustomNullPointerException;
 import com.nos.tax.common.exception.ValidationErrorException;
-import org.apache.ibatis.jdbc.Null;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import static com.nos.tax.common.http.ErrorCode.INVALID_REQUEST;
-import static com.nos.tax.common.http.ErrorCode.NULL;
 
 @RestControllerAdvice
 public class RestControllerExceptionHandler {

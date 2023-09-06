@@ -1,6 +1,5 @@
 package com.nos.tax.watermeter.command.application;
 
-import com.nos.tax.common.exception.NotFoundException;
 import com.nos.tax.common.exception.ValidationCode;
 import com.nos.tax.common.exception.ValidationError;
 import com.nos.tax.common.exception.ValidationErrorException;

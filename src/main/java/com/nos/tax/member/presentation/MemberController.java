@@ -1,14 +1,16 @@
-package com.nos.tax.member.command.presentation;
+package com.nos.tax.member.presentation;
 
 import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.common.http.Response;
 import com.nos.tax.member.command.application.dto.MemberCreateRequest;
 import com.nos.tax.member.command.application.dto.MemberInfoChangeRequest;
+import com.nos.tax.member.command.application.dto.MemberResponse;
 import com.nos.tax.member.command.application.dto.PasswordChangeRequest;
 import com.nos.tax.member.command.application.exception.ExpiredInviteCodeException;
 import com.nos.tax.member.command.application.exception.HouseHoldNotFoundException;
 import com.nos.tax.member.command.application.exception.InviteCodeNotFoundException;
 import com.nos.tax.member.command.application.exception.MemberNotFoundException;
+import com.nos.tax.member.command.application.security.SecurityMember;
 import com.nos.tax.member.command.application.service.MemberCreateService;
 import com.nos.tax.member.command.application.service.MemberInfoChangeService;
 import com.nos.tax.member.command.application.service.PasswordChangeService;
@@ -17,6 +19,7 @@ import com.nos.tax.member.command.domain.exception.PasswordNotMatchedException;
 import com.nos.tax.member.command.domain.exception.PasswordOutOfConditionException;
 import com.nos.tax.member.command.domain.exception.UpdatePasswordSameException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -69,5 +72,14 @@ public class MemberController {
     public Response<Void> updatePassword(Member member, @RequestBody PasswordChangeRequest request){
         passwordChangeService.change(member.getId(), request);
         return Response.ok();
+    }
+
+    /**
+     * @param securityMember 인증완료 회원
+     * @return {@code Http Response} 회원
+     */
+    @GetMapping
+    public Response<MemberResponse> getMember(@AuthenticationPrincipal SecurityMember securityMember){
+        return Response.ok(MemberResponse.from(securityMember));
     }
 }

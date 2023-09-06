@@ -1,7 +1,6 @@
 package com.nos.tax.member.command.domain;
 
 import com.nos.tax.common.exception.CustomIllegalArgumentException;
-import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.member.command.domain.exception.PasswordOutOfConditionException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;

@@ -1,7 +1,6 @@
 package com.nos.tax.waterbill.command.domain;
 
 import com.nos.tax.building.command.domain.Building;
-import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.util.VerifyUtil;
 import com.nos.tax.waterbill.command.domain.converter.YearMonthConverter;
 import com.nos.tax.waterbill.command.domain.enumeration.WaterBillState;

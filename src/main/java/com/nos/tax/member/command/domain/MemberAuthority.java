@@ -1,7 +1,6 @@
 package com.nos.tax.member.command.domain;
 
 import com.nos.tax.authority.command.domain.Authority;
-import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.util.VerifyUtil;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

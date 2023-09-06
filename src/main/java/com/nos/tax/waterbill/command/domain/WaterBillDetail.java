@@ -1,6 +1,5 @@
 package com.nos.tax.waterbill.command.domain;
 
-import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.util.VerifyUtil;
 import com.nos.tax.watermeter.command.domain.repository.WaterMeter;

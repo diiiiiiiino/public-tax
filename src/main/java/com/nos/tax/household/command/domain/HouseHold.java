@@ -2,7 +2,6 @@ package com.nos.tax.household.command.domain;
 
 import com.nos.tax.building.command.domain.Building;
 import com.nos.tax.common.exception.CustomNullPointerException;
-import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.household.command.domain.enumeration.HouseHoldState;
 import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.util.VerifyUtil;

@@ -29,7 +29,7 @@ public enum ErrorCode {
     /**기존 비밀번호와 변경 비밀번호 동일*/
     UPDATE_PASSWORD_SAME(HttpStatus.BAD_REQUEST, "UpdatePasswordSame"),
 
-    /**유효하지 요청*/
+    /**유효하지 않은 요청*/
     INVALID_REQUEST(HttpStatus.BAD_REQUEST, "InvalidRequest"),
 
     /**건물 미존재*/
