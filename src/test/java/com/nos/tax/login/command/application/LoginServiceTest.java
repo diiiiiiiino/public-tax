@@ -6,6 +6,7 @@ import com.nos.tax.login.command.application.service.LoginRequest;
 import com.nos.tax.login.command.application.service.LoginServiceImpl;
 import com.nos.tax.login.command.domain.LoginRecord;
 import com.nos.tax.login.command.domain.LoginRecordRepository;
+import com.nos.tax.member.command.application.exception.MemberNotFoundException;
 import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.member.command.domain.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -33,49 +34,23 @@ public class LoginServiceTest {
 
     @DisplayName("로그인 시 회원 미조회")
     @Test
-    void memberInformationNotCheckedWhenLoggingIn() {
-        LoginRequest loginRequest = LoginRequest.builder()
-                .loginId("loginId")
-                .password("qwer1234!@")
-                .build();
+    void memberNotfoundWhenLoggingIn() {
+        Member member = MemberCreateHelperBuilder.builder().build();
 
         when(memberRepository.findByLoginId(anyString())).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> loginService.login(loginRequest))
-                .isInstanceOf(LoginFailedException.class)
-                .hasMessage("Login information mismatch");
-    }
-
-    @DisplayName("로그인 시 로그인 정보가 다를때")
-    @ParameterizedTest
-    @ValueSource(strings = { "qwer!@#$", "1234!@#$qwer" })
-    void whenLoginInformationIsDifferent(String pw) {
-        LoginRequest loginRequest = LoginRequest.builder()
-                .loginId("loginId")
-                .password(pw)
-                .build();
-
-        Member member = MemberCreateHelperBuilder.builder().build();
-
-        when(memberRepository.findByLoginId(anyString())).thenReturn(Optional.of(member));
-
-        assertThatThrownBy(() -> loginService.login(loginRequest))
-                .isInstanceOf(LoginFailedException.class)
-                .hasMessage("Login information mismatch");
+        assertThatThrownBy(() -> loginService.login(member, "userAgent"))
+                .isInstanceOf(MemberNotFoundException.class)
+                .hasMessage("Member not found");
     }
 
     @DisplayName("로그인 성공")
     @Test
     void loginSuccess() {
-        LoginRequest loginRequest = LoginRequest.builder()
-                .loginId("loginId")
-                .password("qwer1234!@")
-                .build();
-
         Member member = MemberCreateHelperBuilder.builder().build();
         when(memberRepository.findByLoginId(anyString())).thenReturn(Optional.of(member));
 
-        loginService.login(loginRequest);
+        loginService.login(member, "userAgent");
 
         verify(loginRecordRepository, times(1)).save(any(LoginRecord.class));
     }

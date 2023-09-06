@@ -3,6 +3,7 @@ package com.nos.tax.login.command.application.service;
 import com.nos.tax.login.command.application.exception.LoginFailedException;
 import com.nos.tax.login.command.domain.LoginRecord;
 import com.nos.tax.login.command.domain.LoginRecordRepository;
+import com.nos.tax.member.command.application.exception.MemberNotFoundException;
 import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.member.command.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,17 +19,15 @@ public class LoginServiceImpl implements LoginService {
     private final MemberRepository memberRepository;
     private final LoginRecordRepository loginRecordRepository;
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
-    public void login(LoginRequest loginRequest) {
-        Member member = memberRepository.findByLoginId(loginRequest.getLoginId())
-                .orElseThrow(() -> new LoginFailedException("Login information mismatch"));
+    public void login(Member member, String userAgent) {
+        member = memberRepository.findByLoginId(member.getLoginId())
+                .orElseThrow(() -> new MemberNotFoundException("Member not found"));
 
-        if(!member.passwordMatch(loginRequest.getPassword())){
-            throw new LoginFailedException("Login information mismatch");
-        }
-
-        LoginRecord loginRecord = LoginRecord.builder(member, LocalDateTime.now()).build();
+        LoginRecord loginRecord = LoginRecord.builder(member, LocalDateTime.now())
+                .userAgent(userAgent)
+                .build();
 
         loginRecordRepository.save(loginRecord);
     }

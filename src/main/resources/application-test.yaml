@@ -2,5 +2,5 @@ logging:
   level:
     org:
       hibernate:
-        SQL: off
+        SQL: debug
         type: trace

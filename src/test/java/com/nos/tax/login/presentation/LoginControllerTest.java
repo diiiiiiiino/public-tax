@@ -1,4 +1,4 @@
-package com.nos.tax.login.command.presentation;
+package com.nos.tax.login.presentation;
 
 import com.nos.tax.helper.BaseControllerTest;
 import com.nos.tax.login.command.application.service.LoginRequest;
