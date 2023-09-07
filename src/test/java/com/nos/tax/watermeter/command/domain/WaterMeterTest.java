@@ -8,8 +8,6 @@ import com.nos.tax.watermeter.command.domain.exception.PresentMeterSmallerExcept
 import com.nos.tax.watermeter.command.domain.repository.WaterMeter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.YearMonth;
 

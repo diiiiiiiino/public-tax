@@ -2,10 +2,12 @@ package com.nos.tax.watermeter.command.application.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.YearMonth;
 
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public class WaterMeterCreateRequest{
     private int previousMeter;
