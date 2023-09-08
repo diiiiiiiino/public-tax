@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
 public abstract class BaseControllerTest {
@@ -50,12 +49,14 @@ public abstract class BaseControllerTest {
         token = response.getHeader(HttpHeaders.AUTHORIZATION);
     }
 
-    protected ResultActions getResultActions(Object object, MockHttpServletRequestBuilder builder) throws Exception {
+    protected ResultActions mvcPerform(MockHttpServletRequestBuilder builder, Object object) throws Exception {
+        if(object != null){
+            builder.content(writeValueAsString(object));
+        }
+
         return mockMvc.perform(builder
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
-                        .content(writeValueAsString(object))
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 }

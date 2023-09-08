@@ -6,14 +6,14 @@ import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.helper.BaseControllerTest;
 import com.nos.tax.household.command.application.HouseHoldMoveOutService;
 import com.nos.tax.household.command.application.HouseHolderChangeService;
-import com.nos.tax.household.command.presentaion.HouseHoldController;
 import com.nos.tax.member.command.application.exception.HouseHoldNotFoundException;
 import com.nos.tax.member.command.application.exception.MemberNotFoundException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +21,11 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(HouseHoldController.class)
+@SpringBootTest
+@ActiveProfiles("test")
 public class HouseHoldControllerTest extends BaseControllerTest {
 
     @MockBean
@@ -33,17 +34,20 @@ public class HouseHoldControllerTest extends BaseControllerTest {
     @MockBean
     private HouseHolderChangeService houseHolderChangeService;
 
+    @BeforeEach
+    void beforeEach() throws Exception {
+        login("abcde", "qwer1234!@");
+    }
+
     @DisplayName("세대 이사시 세대 ID NULL인 경우")
     @Test
     void whenHouseHoldMoveOutThenHouseHoldIdIsNull() throws Exception {
         doThrow(new ValidationErrorException("householdId is null"))
                 .when(houseHoldMoveOutService).leave(anyLong());
 
-        mockMvc.perform(post("/household/move-out/1"))
+        mvcPerform(post("/household/move-out/1"), null)
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.errorCode").value("InvalidRequest"))
-                .andDo(print());
+                .andExpect(jsonPath("$.errorCode").value("InvalidRequest"));
     }
 
     @DisplayName("세대 이사시 세대 미조회")
@@ -52,18 +56,16 @@ public class HouseHoldControllerTest extends BaseControllerTest {
         doThrow(new HouseHoldNotFoundException("Household not found"))
                 .when(houseHoldMoveOutService).leave(anyLong());
 
-        mockMvc.perform(post("/household/move-out/1"))
+        mvcPerform(post("/household/move-out/1"), null)
                 .andExpect(status().isNotFound())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.errorCode").value("HouseHoldNotFound"));
     }
 
     @DisplayName("세대 이사 성공")
     @Test
     void whenHouseHoldMoveOutThenSuccess() throws Exception {
-        mockMvc.perform(post("/household/move-out/1"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+        mvcPerform(post("/household/move-out/1"), null)
+                .andExpect(status().isOk());
     }
 
     @DisplayName("세대주 변경 시 유효성 체크")
@@ -76,11 +78,9 @@ public class HouseHoldControllerTest extends BaseControllerTest {
         doThrow(new ValidationErrorException("Request has invalid values", errors))
                 .when(houseHolderChangeService).change(anyLong(), anyLong());
 
-        mockMvc.perform(post("/household/householder/1/1"))
+        mvcPerform(post("/household/householder/1/1"), null)
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.errors").isNotEmpty())
-                .andDo(print());
+                .andExpect(jsonPath("$.errors").isNotEmpty());
     }
 
     @DisplayName("세대주 변경 시 세대 미조회")
@@ -89,9 +89,8 @@ public class HouseHoldControllerTest extends BaseControllerTest {
         doThrow(new HouseHoldNotFoundException("Household not found"))
                 .when(houseHolderChangeService).change(anyLong(), anyLong());
 
-        mockMvc.perform(post("/household/householder/1/1"))
+        mvcPerform(post("/household/householder/1/1"), null)
                 .andExpect(status().isNotFound())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.errorCode").value("HouseHoldNotFound"));
     }
 
@@ -101,17 +100,15 @@ public class HouseHoldControllerTest extends BaseControllerTest {
         doThrow(new MemberNotFoundException("Member not found"))
                 .when(houseHolderChangeService).change(anyLong(), anyLong());
 
-        mockMvc.perform(post("/household/householder/1/1"))
+        mvcPerform(post("/household/householder/1/1"), null)
                 .andExpect(status().isNotFound())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.errorCode").value("MemberNotFound"));
     }
 
     @DisplayName("세대주 변경 성공")
     @Test
     void whenHouseHolderChangeThenSuccess() throws Exception {
-        mockMvc.perform(post("/household/householder/1/1"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+        mvcPerform(post("/household/householder/1/1"), null)
+                .andExpect(status().isOk());
     }
 }

@@ -8,11 +8,13 @@ import com.nos.tax.member.command.domain.Mobile;
 import com.nos.tax.member.command.domain.Password;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.function.Function;
 
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public class MemberCreateRequest {
     private String loginId;

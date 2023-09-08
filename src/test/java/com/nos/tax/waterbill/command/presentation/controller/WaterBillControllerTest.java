@@ -13,11 +13,12 @@ import com.nos.tax.waterbill.command.domain.exception.WaterBillDuplicateExceptio
 import com.nos.tax.waterbill.command.domain.exception.WaterBillNotCalculateStateException;
 import com.nos.tax.waterbill.command.domain.exception.WaterBillNotReadyStateException;
 import com.nos.tax.waterbill.command.domain.exception.WaterMeterNotAllCreatedException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.YearMonth;
 import java.util.ArrayList;
@@ -26,9 +27,11 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(WaterBillController.class)
+@SpringBootTest
+@ActiveProfiles("test")
 public class WaterBillControllerTest extends BaseControllerTest {
 
     @MockBean
@@ -36,6 +39,11 @@ public class WaterBillControllerTest extends BaseControllerTest {
 
     @MockBean
     private WaterBillCalculateAppService waterBillCalculateAppService;
+
+    @BeforeEach
+    void beforeEach() throws Exception {
+        login("abcde", "qwer1234!@");
+    }
 
 
     @DisplayName("수도요금 정산 데이터 생성 파라미터 유효성 에러")
@@ -50,11 +58,8 @@ public class WaterBillControllerTest extends BaseControllerTest {
         doThrow(new ValidationErrorException("Request has invalid values", errors))
                 .when(waterBillCreateService).create(any(), any(WaterBillCreateRequest.class));
 
-        mockMvc.perform(post("/water-bill")
-                        .content(writeValueAsString(request))
-                        .contentType(MediaType.APPLICATION_JSON))
+        mvcPerform(post("/water-bill"), request)
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.errors").isNotEmpty());
     }
 
@@ -66,11 +71,8 @@ public class WaterBillControllerTest extends BaseControllerTest {
         doThrow(new BuildingNotFoundException("Building not found"))
                 .when(waterBillCreateService).create(any(), any(WaterBillCreateRequest.class));
 
-        mockMvc.perform(post("/water-bill")
-                        .content(writeValueAsString(request))
-                        .contentType(MediaType.APPLICATION_JSON))
+        mvcPerform(post("/water-bill"), request)
                 .andExpect(status().isNotFound())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.errorCode").value("BuildingNotFound"));
     }
 
@@ -82,11 +84,8 @@ public class WaterBillControllerTest extends BaseControllerTest {
         doThrow(new WaterBillDuplicateException("2023-08 WaterBill is exists"))
                 .when(waterBillCreateService).create(any(), any(WaterBillCreateRequest.class));
 
-        mockMvc.perform(post("/water-bill")
-                        .content(writeValueAsString(request))
-                        .contentType(MediaType.APPLICATION_JSON))
+        mvcPerform(post("/water-bill"), request)
                 .andExpect(status().isConflict())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.errorCode").value("WaterBillDuplicate"));
     }
 
@@ -95,11 +94,8 @@ public class WaterBillControllerTest extends BaseControllerTest {
     void whenWaterBillCreateThenSuccess() throws Exception {
         WaterBillCreateRequest request = WaterBillCreateRequest.of(40000, YearMonth.of(2023, 8));
 
-        mockMvc.perform(post("/water-bill")
-                        .content(writeValueAsString(request))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+        mvcPerform(post("/water-bill"), request)
+                .andExpect(status().isOk());
     }
 
     @DisplayName("수도요금 계산 시 파라미터 유효성 에러")
@@ -112,9 +108,8 @@ public class WaterBillControllerTest extends BaseControllerTest {
         doThrow(new ValidationErrorException("Request has invalid values", errors))
                 .when(waterBillCalculateAppService).calculate(any(), any(YearMonth.class));
 
-        mockMvc.perform(post("/water-bill/calculate/2023-08"))
+        mvcPerform(post("/water-bill/calculate/2023-08"), null)
                 .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.errors").isNotEmpty());
     }
 
@@ -124,10 +119,8 @@ public class WaterBillControllerTest extends BaseControllerTest {
         doThrow(new BuildingNotFoundException("Building not found"))
                 .when(waterBillCalculateAppService).calculate(any(), any(YearMonth.class));
 
-        mockMvc.perform(post("/water-bill/calculate/2023-08")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mvcPerform(post("/water-bill/calculate/2023-08"), null)
                 .andExpect(status().isNotFound())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.errorCode").value("BuildingNotFound"));
     }
 
@@ -137,10 +130,8 @@ public class WaterBillControllerTest extends BaseControllerTest {
         doThrow(new WaterBillNotFoundException("WaterBill not found"))
                 .when(waterBillCalculateAppService).calculate(any(), any(YearMonth.class));
 
-        mockMvc.perform(post("/water-bill/calculate/2023-08")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mvcPerform(post("/water-bill/calculate/2023-08"), null)
                 .andExpect(status().isNotFound())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.errorCode").value("WaterBillNotFound"));
     }
 
@@ -150,10 +141,8 @@ public class WaterBillControllerTest extends BaseControllerTest {
         doThrow(new WaterMeterNotAllCreatedException("Water meter not all created"))
                 .when(waterBillCalculateAppService).calculate(any(), any(YearMonth.class));
 
-        mockMvc.perform(post("/water-bill/calculate/2023-08")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mvcPerform(post("/water-bill/calculate/2023-08"), null)
                 .andExpect(status().isUnprocessableEntity())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.errorCode").value("WaterMeterNotAllCreated"));
     }
 
@@ -163,10 +152,8 @@ public class WaterBillControllerTest extends BaseControllerTest {
         doThrow(new WaterBillNotReadyStateException("You can only calculate the water bill when you are ready"))
                 .when(waterBillCalculateAppService).calculate(any(), any(YearMonth.class));
 
-        mockMvc.perform(post("/water-bill/calculate/2023-08")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mvcPerform(post("/water-bill/calculate/2023-08"), null)
                 .andExpect(status().isForbidden())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.errorCode").value("WaterBillNotReadyState"));
     }
 
@@ -176,19 +163,15 @@ public class WaterBillControllerTest extends BaseControllerTest {
         doThrow(new WaterBillNotCalculateStateException("WaterBillDetail addition is possible when calculating state"))
                 .when(waterBillCalculateAppService).calculate(any(), any(YearMonth.class));
 
-        mockMvc.perform(post("/water-bill/calculate/2023-08")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mvcPerform(post("/water-bill/calculate/2023-08"), null)
                 .andExpect(status().isForbidden())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.errorCode").value("WaterBillNotCalculateState"));
     }
 
     @DisplayName("수도요금 계산 성공")
     @Test
     void whenWaterBillCalculateThenSuccess() throws Exception {
-        mockMvc.perform(post("/water-bill/calculate/2023-08")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+        mvcPerform(post("/water-bill/calculate/2023-08"), null)
+                .andExpect(status().isOk());
     }
 }
