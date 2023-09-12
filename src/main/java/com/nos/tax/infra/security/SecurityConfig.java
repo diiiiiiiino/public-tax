@@ -1,19 +1,24 @@
 package com.nos.tax.infra.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nos.tax.infra.security.jwt.JWTAuthenticationEntryPoint;
 import com.nos.tax.infra.security.jwt.JWTCheckFilter;
 import com.nos.tax.infra.security.jwt.JWTLoginFilter;
 import com.nos.tax.infra.security.jwt.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,7 +30,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
@@ -46,22 +51,32 @@ public class SecurityConfig {
     }
 
     @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web
+                .ignoring()
+                .requestMatchers(PathRequest.toH2Console())
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+    }
+
+    @Bean
     protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
         AuthenticationManager authenticationManager = objectProvider.getObject();
 
         JWTLoginFilter loginFilter = new JWTLoginFilter(authenticationManager, objectMapper, jwtUtil);
         JWTCheckFilter checkFilter = new JWTCheckFilter(authenticationManager, userDetailsService, jwtUtil);
+        JWTAuthenticationEntryPoint authenticationFailureHandler = new JWTAuthenticationEntryPoint();
 
-        http.authorizeHttpRequests(registry -> registry.anyRequest().authenticated())
+        http.authorizeHttpRequests(registry -> registry
+                        .anyRequest().authenticated())
                 .cors(configure -> configure.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(checkFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterAfter(checkFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(configure -> configure.authenticationEntryPoint(authenticationFailureHandler));
 
         return http.build();
     }
-
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
