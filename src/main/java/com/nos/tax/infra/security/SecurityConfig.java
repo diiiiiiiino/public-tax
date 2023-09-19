@@ -39,6 +39,12 @@ public class SecurityConfig {
     private final JWTUtil jwtUtil;
     private final UserDetailsService userDetailsService;
 
+    private static final String[] AUTH_WHITELIST = {
+            "/swagger-ui/**",
+            "/swagger.html",
+            "/api-docs/**"
+    };
+
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
@@ -67,6 +73,7 @@ public class SecurityConfig {
         JWTAuthenticationEntryPoint authenticationFailureHandler = new JWTAuthenticationEntryPoint();
 
         http.authorizeHttpRequests(registry -> registry
+                        .requestMatchers(AUTH_WHITELIST).permitAll()
                         .anyRequest().authenticated())
                 .cors(configure -> configure.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
