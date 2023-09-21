@@ -2,6 +2,7 @@ package com.nos.tax.waterbill.command.domain;
 
 import com.nos.tax.common.exception.CustomNullPointerException;
 import com.nos.tax.helper.WaterBillCalculateHelper;
+import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.waterbill.command.domain.enumeration.WaterBillState;
 import com.nos.tax.waterbill.command.domain.exception.WaterBillNotCalculateStateException;
 import com.nos.tax.waterbill.command.domain.exception.WaterMeterNotAllCreatedException;
@@ -12,8 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 public class WaterBillCalculateServiceTest {
 
@@ -63,6 +63,35 @@ public class WaterBillCalculateServiceTest {
         assertThatThrownBy(() -> waterBillCalculateService.calculate(testObj.getBuilding(), testObj.getWaterBill(), subMeters))
                 .isInstanceOf(WaterMeterNotAllCreatedException.class)
                 .hasMessage("Water meter not all created");
+    }
+
+    @DisplayName("수도요금 계산 시 총 정산 금액에 정수 최대값을 설정했을때")
+    @Test
+    void whenWaterBillCalculateThenIntegerMaxValue() {
+        WaterBillCalculateHelper testObj = WaterBillCalculateHelper.WaterBillCalculateHelperBuilder.builder()
+                .build();
+
+        List<HouseHold> houseHolds = testObj.getBuilding().getHouseHolds();
+        WaterBill waterBill = WaterBill.of(testObj.getBuilding(), Integer.MAX_VALUE, testObj.getYearMonth());
+        List<WaterMeter> meters = List.of(
+                WaterMeter.of(0, 1, testObj.getYearMonth(), houseHolds.get(0)),
+                WaterMeter.of(0, 0, testObj.getYearMonth(), houseHolds.get(1)),
+                WaterMeter.of(0, 0, testObj.getYearMonth(), houseHolds.get(2)),
+                WaterMeter.of(0, 0, testObj.getYearMonth(), houseHolds.get(3)),
+                WaterMeter.of(0, 0, testObj.getYearMonth(), houseHolds.get(4)),
+                WaterMeter.of(0, 0, testObj.getYearMonth(), houseHolds.get(5)));
+
+        waterBillCalculateService.calculate(testObj.getBuilding(), waterBill, meters);
+
+        int totalAmount = waterBill.getWaterBillDetails()
+                .stream()
+                .map(WaterBillDetail::getAmount)
+                .mapToInt(Integer::intValue)
+                .sum();
+
+        assertThat(waterBill.getTotalUsage()).isEqualTo(1);
+        assertThat(totalAmount).isEqualTo(2147483600);
+        assertThat(waterBill.getState()).isEqualTo(WaterBillState.COMPLETE);
     }
 
     @DisplayName("수도요금 계산 시 모든 세대주의 수도 계량값이 입력되었을 때")

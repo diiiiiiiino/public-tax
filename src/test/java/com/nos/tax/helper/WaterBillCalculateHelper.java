@@ -53,8 +53,8 @@ public class WaterBillCalculateHelper {
             return this;
         }
 
-        public WaterBillCalculateHelperBuilder waterBill(WaterBill waterBill){
-            this.waterBill = waterBill;
+        public WaterBillCalculateHelperBuilder waterBill(int totalAmount){
+            this.waterBill = WaterBill.of(building, totalAmount, yearMonth);
             return this;
         }
 

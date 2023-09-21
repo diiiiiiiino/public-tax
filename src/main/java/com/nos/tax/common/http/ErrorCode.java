@@ -66,7 +66,10 @@ public enum ErrorCode {
     NULL(HttpStatus.BAD_REQUEST, "Null"),
 
     /**{@code presentMeter}가 {@code previousMeter}보다 작은 경우*/
-    PRESENT_METER_SMALLER(HttpStatus.BAD_REQUEST, "PresentMeterSmaller");
+    PRESENT_METER_SMALLER(HttpStatus.BAD_REQUEST, "PresentMeterSmaller"),
+
+    /** Server 에러*/
+    SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "ServerError");
 
     /**HttpStatus*/
     private HttpStatus status;
@@ -77,5 +80,4 @@ public enum ErrorCode {
     ErrorCode(HttpStatus status, String code) {
         this.status = status;
         this.code = code;
-    }
-}
+    }}

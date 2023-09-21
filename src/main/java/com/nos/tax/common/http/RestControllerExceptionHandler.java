@@ -1,9 +1,6 @@
 package com.nos.tax.common.http;
 
-import com.nos.tax.common.exception.ApplicationException;
-import com.nos.tax.common.exception.CustomIllegalArgumentException;
-import com.nos.tax.common.exception.CustomNullPointerException;
-import com.nos.tax.common.exception.ValidationErrorException;
+import com.nos.tax.common.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -11,6 +8,17 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class RestControllerExceptionHandler {
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> totalHandle(Exception exception) {
+        Response<?> response = Response.builder()
+                .message(exception.getMessage())
+                .errorCode(ErrorCode.SERVER_ERROR.getCode())
+                .build();
+
+        return ResponseEntity.status(ErrorCode.SERVER_ERROR.getStatus())
+                .body(response);
+    }
 
     @ExceptionHandler(ApplicationException.class)
     public ResponseEntity<?> totalHandle(ApplicationException exception) {

@@ -22,7 +22,6 @@ public class WaterBillCalculateService {
      * @param waterBill
      * @param waterMeters
      * @throws WaterMeterNotAllCreatedException - 수도 계량 데이터가 세대수 만큼 생성되지 않았을 경우
-     * @throws ArithmeticException - 세대별 수도 요금 계산 중 오버플로우가 발생한 경우 todo
      * @throws WaterBillNotReadyStateException - 수도 요금 상태가 준비 상태가 아닌 경우
      * @throws WaterBillNotCalculateStateException - 수도 요금 상태가 계산 상태가 아닌 경우
      */
@@ -43,7 +42,7 @@ public class WaterBillCalculateService {
                 .mapToInt(Integer::intValue)
                 .sum();
 
-        BigDecimal orgUnitAmount = BigDecimal.valueOf(totalAmount * 0.1).divide(BigDecimal.valueOf(totalUsage * 0.1), RoundingMode.HALF_UP);
+        BigDecimal orgUnitAmount = BigDecimal.valueOf((double)totalAmount).divide(BigDecimal.valueOf((double)totalUsage), RoundingMode.HALF_UP);
         int unitAmount = Math.toIntExact(Math.round(orgUnitAmount.doubleValue()));
 
         for(WaterMeter meter : waterMeters){
