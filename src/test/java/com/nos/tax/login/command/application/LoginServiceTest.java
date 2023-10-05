@@ -33,7 +33,7 @@ public class LoginServiceTest {
     void memberNotfoundWhenLoggingIn() {
         Member member = MemberCreateHelperBuilder.builder().build();
 
-        when(memberRepository.findByLoginId(anyString())).thenReturn(Optional.empty());
+        when(memberRepository.findByLoginIdAndIsEnabled(anyString(), anyBoolean())).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> loginService.login(member, "userAgent"))
                 .isInstanceOf(MemberNotFoundException.class)
@@ -44,7 +44,7 @@ public class LoginServiceTest {
     @Test
     void loginSuccess() {
         Member member = MemberCreateHelperBuilder.builder().build();
-        when(memberRepository.findByLoginId(anyString())).thenReturn(Optional.of(member));
+        when(memberRepository.findByLoginIdAndIsEnabled(anyString(), anyBoolean())).thenReturn(Optional.of(member));
 
         loginService.login(member, "userAgent");
 

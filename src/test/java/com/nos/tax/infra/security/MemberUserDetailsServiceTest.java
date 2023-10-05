@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -48,7 +49,7 @@ public class MemberUserDetailsServiceTest {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         Member member = MemberCreateHelperBuilder.builder().build();
 
-        when(memberRepository.findByLoginId(anyString())).thenReturn(Optional.of(member));
+        when(memberRepository.findByLoginIdAndIsEnabled(anyString(), anyBoolean())).thenReturn(Optional.of(member));
 
         UserDetails userDetails = memberUserDetailsService.loadUserByUsername("loginId");
 

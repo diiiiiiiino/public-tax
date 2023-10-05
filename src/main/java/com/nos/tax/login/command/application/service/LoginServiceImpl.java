@@ -21,7 +21,7 @@ public class LoginServiceImpl implements LoginService {
     @Transactional
     @Override
     public void login(Member member, String userAgent) {
-        member = memberRepository.findByLoginId(member.getLoginId())
+        member = memberRepository.findByLoginIdAndIsEnabled(member.getLoginId(), true)
                 .orElseThrow(() -> new MemberNotFoundException("Member not found"));
 
         LoginRecord loginRecord = LoginRecord.builder(member, LocalDateTime.now())

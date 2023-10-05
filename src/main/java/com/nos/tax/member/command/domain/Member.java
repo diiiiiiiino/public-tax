@@ -1,5 +1,6 @@
 package com.nos.tax.member.command.domain;
 
+import com.nos.tax.common.entity.BaseEntity;
 import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.member.command.domain.converter.MobileConverter;
 import com.nos.tax.member.command.domain.exception.PasswordNotMatchedException;
@@ -32,7 +33,7 @@ import static com.nos.tax.common.enumeration.TextLengthRange.MEMBER_NAME;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member {
+public class Member extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -56,6 +57,8 @@ public class Member {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, mappedBy = "member")
     private Set<MemberAuthority> authorities = new HashSet<>();
+
+    private boolean isEnabled = true;
 
     /**
      * @param loginId 로그인 ID
@@ -174,6 +177,14 @@ public class Member {
         }
 
         this.authorities = authorities;
+    }
+
+    /**
+     * 활성화 여부 변경
+     * @param isEnabled 활성화 여부
+     */
+    public void updateIsEnabled(boolean isEnabled){
+        this.isEnabled = isEnabled;
     }
 
     /**
