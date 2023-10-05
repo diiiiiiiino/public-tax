@@ -13,6 +13,7 @@ import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.member.command.domain.repository.MemberRepository;
 import com.nos.tax.util.VerifyUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 public class AdminCreateService {
     private final BuildingRepository buildingRepository;
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public void create(AdminCreateRequest request) {
@@ -35,7 +37,7 @@ public class AdminCreateService {
         BuildingInfo buildingInfo = request.getBuildingInfo();
         List<HouseHoldInfo> houseHoldInfos = request.getHouseHoldInfos();
 
-        Member admin = MemberCreateRequest.newAdmin(request.getMemberCreateRequest());
+        Member admin = MemberCreateRequest.newAdmin(request.getMemberCreateRequest(), passwordEncoder);
         Address address = Address.of(buildingInfo.getAddress1(), buildingInfo.getAddress2(), buildingInfo.getZipNo());
 
         List<Function<Building, HouseHold>> households = houseHoldInfos.stream()

@@ -6,13 +6,14 @@ import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.member.command.domain.MemberAuthority;
 import com.nos.tax.member.command.domain.Mobile;
 import com.nos.tax.member.command.domain.Password;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
 import java.util.function.Function;
 
 public class MemberCreateHelperBuilder {
     private Long id;
-    private Password password = Password.of("qwer1234!@#$");
+    private Password password = Password.of("qwer1234!@#$", new BCryptPasswordEncoder());
     private Mobile mobile = Mobile.of("01011112222");
     private String loginId = "loginId";
     private String name = "홍길동";

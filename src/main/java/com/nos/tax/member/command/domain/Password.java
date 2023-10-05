@@ -6,6 +6,7 @@ import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Objects;
 
@@ -30,28 +31,29 @@ public class Password {
     /**
      * @param value 비밀번호
      */
-    private Password(String value) {
-        setValue(value);
+    private Password(String value, PasswordEncoder passwordEncoder) {
+        setValue(value, passwordEncoder);
     }
 
     /**
      * @param value 비밀번호
      * @return 비밀번호
      */
-    public static Password of(String value) {
-        return new Password(value);
+    public static Password of(String value, PasswordEncoder passwordEncoder) {
+        return new Password(value, passwordEncoder);
     }
 
     /**
      * @param value 비밀번호
      */
-    private void setValue(String value) {
+    private void setValue(String value, PasswordEncoder passwordEncoder) {
+        VerifyUtil.verifyNull(passwordEncoder, "passwordEncoder");
         VerifyUtil.verifyText(value, "password");
         confirmPasswordLength(value);
         confirmPasswordIncludingEnglish(value);
         confirmPasswordIncludingDigit(value);
         confirmPasswordIncludingSpecialCharacter(value);
-        this.value = value;
+        this.value = passwordEncoder.encode(value);
     }
 
     /**
@@ -111,9 +113,9 @@ public class Password {
      * @param value 비밀번호
      * @return 비밀번호 일치 여부
      */
-    public boolean match(String value) {
+    public boolean match(String value, PasswordEncoder passwordEncoder) {
         VerifyUtil.verifyText(value, "password");
-        return this.value.equals(value);
+        return passwordEncoder.matches(value, this.value);
     }
 
     @Override

@@ -12,6 +12,7 @@ import com.nos.tax.member.command.domain.repository.MemberRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +31,7 @@ public class PasswordChangeServiceTest {
     public PasswordChangeServiceTest() {
         memberRepository = mock(MemberRepository.class);
         passwordChangeRequestValidator = new PasswordChangeRequestValidator();
-        passwordChangeService = new PasswordChangeService(memberRepository, passwordChangeRequestValidator);
+        passwordChangeService = new PasswordChangeService(memberRepository, new BCryptPasswordEncoder(), passwordChangeRequestValidator);
     }
 
     @DisplayName("변경 요청 파라미터 유효성 오류")
@@ -81,6 +82,6 @@ public class PasswordChangeServiceTest {
 
         passwordChangeService.change(member.getId(), request);
 
-        assertThat(member.getPassword().getValue()).isEqualTo("qwer1234!!");
+        assertThat(member.passwordMatch("qwer1234!!", new BCryptPasswordEncoder())).isTrue();
     }
 }

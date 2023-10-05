@@ -13,5 +13,6 @@ public class AlertCreateMemberServiceImpl implements AlertCreateMemberService {
         VerifyUtil.verifyText(inviteCode, "memberInviteCode");
 
         /*todo : 카톡 알림 API 연동 필요*/
+
     }
 }

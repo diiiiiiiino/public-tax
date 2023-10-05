@@ -16,6 +16,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
@@ -62,7 +63,7 @@ public class HouseholdRepositoryTest {
 
         Member member = MemberCreateHelperBuilder.builder()
                 .loginId("skull0202")
-                .password(Password.of("qwer1234!"))
+                .password(Password.of("qwer1234!", new BCryptPasswordEncoder()))
                 .name("스컬")
                 .mobile(Mobile.of("01012121313"))
                 .build();;

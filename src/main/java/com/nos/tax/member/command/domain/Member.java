@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.HashSet;
 import java.util.List;
@@ -136,27 +137,27 @@ public class Member {
      *     <li>{@code updatePassword}가 특수문자가 포함되어 있지 않을때
      * </ul>
      */
-    public void changePassword(String originPassword, String updatePassword) {
+    public void changePassword(String originPassword, String updatePassword, PasswordEncoder passwordEncoder) {
         VerifyUtil.verifyText(originPassword, "memberOriginPassword");
         VerifyUtil.verifyText(updatePassword, "memberUpdatePassword");
 
-        if(!this.password.match(originPassword)){
+        if(!passwordEncoder.matches(originPassword, this.password.getValue())){
             throw new PasswordNotMatchedException("password is not matched");
         }
 
-        if(this.password.match(updatePassword)){
+        if(passwordEncoder.matches(updatePassword, this.password.getValue())){
             throw new UpdatePasswordSameException("origin and update password same");
         }
 
-        setPassword(Password.of(updatePassword));
+        setPassword(Password.of(updatePassword, passwordEncoder));
     }
 
     /**
      * @param password 비밀번호
      * @return 비밀번호 일치 여부
      */
-    public boolean passwordMatch(String password) {
-        return this.password.match(password);
+    public boolean passwordMatch(String password, PasswordEncoder passwordEncoder) {
+        return this.password.match(password, passwordEncoder);
     }
 
     /**

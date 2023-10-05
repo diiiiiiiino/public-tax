@@ -9,6 +9,7 @@ import com.nos.tax.member.command.domain.Password;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.function.Function;
@@ -28,15 +29,15 @@ public class MemberCreateRequest {
         return new MemberCreateRequest(loginId, password, name, mobile, householdId, inviteCode);
     }
 
-    public static Member newMember(MemberCreateRequest request){
+    public static Member newMember(MemberCreateRequest request, PasswordEncoder passwordEncoder){
         List<Function<Member, MemberAuthority>> functions = List.of(member -> MemberAuthority.of(member, Authority.of(AuthorityEnum.ROLE_MEMBER)));
-        return Member.of(request.getLoginId(), Password.of(request.getPassword()), request.getName(), Mobile.of(request.getMobile()), functions);
+        return Member.of(request.getLoginId(), Password.of(request.getPassword(), passwordEncoder), request.getName(), Mobile.of(request.getMobile()), functions);
     }
 
-    public static Member newAdmin(MemberCreateRequest request){
+    public static Member newAdmin(MemberCreateRequest request, PasswordEncoder passwordEncoder){
         List<Function<Member, MemberAuthority>> functions = List.of(
                 member -> MemberAuthority.of(member, Authority.of(AuthorityEnum.ROLE_ADMIN)),
                 member -> MemberAuthority.of(member, Authority.of(AuthorityEnum.ROLE_MEMBER)));
-        return Member.of(request.getLoginId(), Password.of(request.getPassword()), request.getName(), Mobile.of(request.getMobile()), functions);
+        return Member.of(request.getLoginId(), Password.of(request.getPassword(), passwordEncoder), request.getName(), Mobile.of(request.getMobile()), functions);
     }
 }

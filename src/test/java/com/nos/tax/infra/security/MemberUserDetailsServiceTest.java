@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 import java.util.Set;
@@ -43,6 +45,7 @@ public class MemberUserDetailsServiceTest {
     @DisplayName("로그인ID로 회원 조회시 성공")
     @Test
     void loadUserByUsernameSuccess() {
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         Member member = MemberCreateHelperBuilder.builder().build();
 
         when(memberRepository.findByLoginId(anyString())).thenReturn(Optional.of(member));
@@ -55,7 +58,7 @@ public class MemberUserDetailsServiceTest {
 
         assertThat(userDetails).isInstanceOf(SecurityMember.class);
         assertThat(userDetails.getUsername()).isEqualTo("loginId");
-        assertThat(userDetails.getPassword()).isEqualTo("qwer1234!@#$");
+        assertThat(passwordEncoder.matches("qwer1234!@#$", userDetails.getPassword())).isTrue();
         assertThat(collect).containsOnly(AuthorityEnum.ROLE_MEMBER.getName());
     }
 }

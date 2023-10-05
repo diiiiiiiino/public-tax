@@ -16,6 +16,7 @@ import com.nos.tax.member.command.application.exception.InviteCodeNotFoundExcept
 import com.nos.tax.member.command.application.validator.annotation.MemberCreateRequestQualifier;
 import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.member.command.domain.repository.MemberRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,17 +25,20 @@ import java.util.List;
 @Service
 public class MemberCreateService {
     private final DateUtils dateUtils;
+    private final PasswordEncoder passwordEncoder;
     private final MemberInviteCodeRepository memberInviteCodeRepository;
     private final HouseHoldRepository houseHoldRepository;
     private final MemberRepository memberRepository;
     private final RequestValidator validator;
 
     public MemberCreateService(DateUtils dateUtils,
+                               PasswordEncoder passwordEncoder,
                                MemberInviteCodeRepository memberInviteCodeRepository,
                                HouseHoldRepository houseHoldRepository,
                                MemberRepository memberRepository,
                                @MemberCreateRequestQualifier RequestValidator validator) {
         this.dateUtils = dateUtils;
+        this.passwordEncoder = passwordEncoder;
         this.memberInviteCodeRepository = memberInviteCodeRepository;
         this.houseHoldRepository = houseHoldRepository;
         this.memberRepository = memberRepository;
@@ -57,7 +61,7 @@ public class MemberCreateService {
         HouseHold houseHold = houseHoldRepository.findById(request.getHouseholdId())
                 .orElseThrow(() -> new HouseHoldNotFoundException("not found household"));
 
-        Member member = MemberCreateRequest.newMember(request);
+        Member member = MemberCreateRequest.newMember(request, passwordEncoder);
         memberRepository.save(member);
 
         houseHold.moveInHouse(HouseHolder.of(member));

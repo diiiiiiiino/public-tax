@@ -19,6 +19,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.BDDMockito;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -36,7 +37,7 @@ public class AdminCreateServiceTest {
     public AdminCreateServiceTest() {
         buildingRepository = mock(BuildingRepository.class);
         memberRepository = mock(MemberRepository.class);
-        adminCreateService = new AdminCreateService(buildingRepository, memberRepository);
+        adminCreateService = new AdminCreateService(buildingRepository, memberRepository, new BCryptPasswordEncoder());
     }
 
     @DisplayName("관리자 정보가 없는 경우")
@@ -129,7 +130,7 @@ public class AdminCreateServiceTest {
                 .filter(houseHold -> houseHold.getHouseHolder() != null)
                 .count()).isEqualTo(1);
         assertThat(savedMember.getLoginId()).isEqualTo("loginId");
-        assertThat(savedMember.getPassword().getValue()).isEqualTo("qwer1234!@");
+        assertThat(savedMember.getPassword().match("qwer1234!@", new BCryptPasswordEncoder())).isTrue();
         assertThat(savedMember.getMobile().toString()).isEqualTo("01012345678");
         assertThat(savedMember.getName()).isEqualTo("홍길동");
     }

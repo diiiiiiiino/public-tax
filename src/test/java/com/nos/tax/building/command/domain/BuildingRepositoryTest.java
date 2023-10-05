@@ -15,6 +15,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
@@ -110,11 +112,12 @@ public class BuildingRepositoryTest {
     private Building createBuilding() {
         List<Function<Building, HouseHold>> houseHolds = new ArrayList<>();
         List<Member> members = new ArrayList<>();
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         for(int i = 1; i <= 6; i++){
             Member member = MemberCreateHelperBuilder.builder()
                     .loginId("loginId" + i)
-                    .password(Password.of("qwer1234!@"))
+                    .password(Password.of("qwer1234!@", passwordEncoder))
                     .name("세대주" + i)
                     .mobile(Mobile.of("010" + String.valueOf(i).repeat(4) + String.valueOf(i).repeat(4)))
                     .build();

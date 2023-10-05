@@ -24,6 +24,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.BDDMockito;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -53,7 +54,7 @@ public class MemberCreateServiceTest {
         houseHoldRepository = mock(HouseHoldRepository.class);
         memberRepository = mock(MemberRepository.class);
         validator = new MemberCreateRequestValidator();
-        memberCreateService = new MemberCreateService(dateUtils, memberInviteCodeRepository, houseHoldRepository, memberRepository, validator);
+        memberCreateService = new MemberCreateService(dateUtils, new BCryptPasswordEncoder(), memberInviteCodeRepository, houseHoldRepository, memberRepository, validator);
     }
 
     @DisplayName("생성 요청 파라미터 유효성 오류")
@@ -141,7 +142,7 @@ public class MemberCreateServiceTest {
 
         Member savedMember = memberCaptor.getValue();
         assertThat(savedMember.getLoginId()).isEqualTo("loginId");
-        assertThat(savedMember.getPassword().getValue()).isEqualTo("qwer1234!@");
+        assertThat(savedMember.getPassword().match("qwer1234!@", new BCryptPasswordEncoder())).isTrue();
         assertThat(savedMember.getMobile().toString()).isEqualTo("01012345678");
         assertThat(savedMember.getName()).isEqualTo("홍길동");
 
@@ -155,7 +156,7 @@ public class MemberCreateServiceTest {
 
         HouseHolder houseHolder = houseHold.getHouseHolder();
         assertThat(houseHolder.getMember().getLoginId()).isEqualTo("loginId");
-        assertThat(houseHolder.getMember().getPassword().getValue()).isEqualTo("qwer1234!@");
+        assertThat(houseHolder.getMember().passwordMatch("qwer1234!@", new BCryptPasswordEncoder())).isTrue();
         assertThat(houseHolder.getMember().getName()).isEqualTo("홍길동");
         assertThat(houseHolder.getName()).isEqualTo("홍길동");
         assertThat(houseHolder.getMobile().toString()).isEqualTo("01012345678");

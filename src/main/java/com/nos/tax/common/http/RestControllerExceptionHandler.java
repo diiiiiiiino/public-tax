@@ -1,6 +1,9 @@
 package com.nos.tax.common.http;
 
-import com.nos.tax.common.exception.*;
+import com.nos.tax.common.exception.ApplicationException;
+import com.nos.tax.common.exception.CustomIllegalArgumentException;
+import com.nos.tax.common.exception.CustomNullPointerException;
+import com.nos.tax.common.exception.ValidationErrorException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

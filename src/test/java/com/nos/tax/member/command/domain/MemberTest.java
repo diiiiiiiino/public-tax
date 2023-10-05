@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Set;
@@ -22,6 +24,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class MemberTest {
+
+    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @DisplayName("회원 이름 변경 시 null 또는 빈 문자열 전달 시 실패")
     @ParameterizedTest
@@ -72,7 +76,7 @@ public class MemberTest {
         String updateValue = "sprtjtm13$$@@";
         Member member = MemberCreateHelperBuilder.builder().build();
 
-        assertThatThrownBy(() -> member.changePassword(value, updateValue))
+        assertThatThrownBy(() -> member.changePassword(value, updateValue, passwordEncoder))
                 .isInstanceOf(PasswordNotMatchedException.class)
                 .hasMessage("password is not matched");
     }
@@ -82,13 +86,13 @@ public class MemberTest {
     @ValueSource(strings = { "1234567", "12345678912345678" })
     void whenPasswordChangeDigitsAreNot8To16Digits(String value) {
         String originValue = "qwer1234!@#$";
-        Password password = Password.of(originValue);
+        Password password = Password.of(originValue, passwordEncoder);
 
         Member member = MemberCreateHelperBuilder.builder()
                 .password(password)
                 .build();
 
-        assertThatThrownBy(() -> member.changePassword(originValue, value))
+        assertThatThrownBy(() -> member.changePassword(originValue, value, passwordEncoder))
                 .isInstanceOf(PasswordOutOfConditionException.class)
                 .hasMessage("Length condition not matched");
     }
@@ -98,12 +102,12 @@ public class MemberTest {
     @NullAndEmptySource
     void whenPasswordChangeOriginValueIsNullOrEmptyString(String value) {
         String updateValue = "qwer1234!@#$";
-        Password password = Password.of(updateValue);
+        Password password = Password.of(updateValue, passwordEncoder);
         Member member = MemberCreateHelperBuilder.builder()
                 .password(password)
                 .build();
 
-        assertThatThrownBy(() -> member.changePassword(value, updateValue))
+        assertThatThrownBy(() -> member.changePassword(value, updateValue, passwordEncoder))
                 .isInstanceOf(CustomIllegalArgumentException.class)
                 .hasMessage("memberOriginPassword has no text");
     }
@@ -113,12 +117,12 @@ public class MemberTest {
     @NullAndEmptySource
     void whenPasswordChangeUpdateValueIsNullOrEmptyString(String value) {
         String originValue = "qwer1234!@#$";
-        Password password = Password.of(originValue);
+        Password password = Password.of(originValue, passwordEncoder);
         Member member = MemberCreateHelperBuilder.builder()
                 .password(password)
                 .build();
 
-        assertThatThrownBy(() -> member.changePassword(originValue, value))
+        assertThatThrownBy(() -> member.changePassword(originValue, value, passwordEncoder))
                 .isInstanceOf(CustomIllegalArgumentException.class)
                 .hasMessage("memberUpdatePassword has no text");
     }
@@ -128,12 +132,12 @@ public class MemberTest {
     @ValueSource(strings = { "비밀번호1234!@#$", "12341234!@#$", "가나다라마바차카" })
     void whenThePasswordChangeDoesNotContainEnglishCharacters(String value) {
         String originValue = "qwer1234!@#$";
-        Password password = Password.of(originValue);
+        Password password = Password.of(originValue, passwordEncoder);
         Member member = MemberCreateHelperBuilder.builder()
                 .password(password)
                 .build();
 
-        assertThatThrownBy(() -> member.changePassword(originValue, value))
+        assertThatThrownBy(() -> member.changePassword(originValue, value, passwordEncoder))
                 .isInstanceOf(PasswordOutOfConditionException.class)
                 .hasMessage("Has no alphabet");
     }
@@ -143,12 +147,12 @@ public class MemberTest {
     @ValueSource(strings = { "abcdefgh!!@@", "aaaabbbbbe", "!@!@@#@$aa" })
     void whenPasswordChangeDoesntContainNumbers(String value) {
         String originValue = "qwer1234!@#$";
-        Password password = Password.of(originValue);
+        Password password = Password.of(originValue, passwordEncoder);
         Member member = MemberCreateHelperBuilder.builder()
                 .password(password)
                 .build();
 
-        assertThatThrownBy(() -> member.changePassword(originValue, value))
+        assertThatThrownBy(() -> member.changePassword(originValue, value, passwordEncoder))
                 .isInstanceOf(PasswordOutOfConditionException.class)
                 .hasMessage("Has no digit");
     }
@@ -158,12 +162,12 @@ public class MemberTest {
     void whenPasswordChangeOriginAndUpdatePasswordSame() {
         String originValue = "qwer1234!@#$";
         String updateValue = "qwer1234!@#$";
-        Password password = Password.of(originValue);
+        Password password = Password.of(originValue, passwordEncoder);
         Member member = MemberCreateHelperBuilder.builder()
                 .password(password)
                 .build();
 
-        assertThatThrownBy(() -> member.changePassword(originValue, updateValue))
+        assertThatThrownBy(() -> member.changePassword(originValue, updateValue, passwordEncoder))
                 .isInstanceOf(UpdatePasswordSameException.class)
                 .hasMessage("origin and update password same");
     }
@@ -173,16 +177,16 @@ public class MemberTest {
     void passwordChangeSuccessful() {
         String originValue = "qwer1234!@#$";
         String updateValue = "!@#$qwer1234";
-        Password password = Password.of(originValue);
+        Password password = Password.of(originValue, passwordEncoder);
         Member member = MemberCreateHelperBuilder.builder()
                 .password(password)
                 .build();
 
-        member.changePassword(originValue, updateValue);
+        member.changePassword(originValue, updateValue, passwordEncoder);
 
         Password updatePassword = member.getPassword();
 
-        assertThat(updatePassword.getValue()).isEqualTo(updateValue);
+        assertThat(updatePassword.match("!@#$qwer1234", passwordEncoder)).isTrue();
         assertThat(updatePassword.getValue()).isNotEqualTo(originValue);
     }
 
