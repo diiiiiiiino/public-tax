@@ -49,20 +49,20 @@ public class MemberController {
     }
 
     /**
-     * @param member
+     * @param securityMember
      * @param request
      * @return Response
      * @throws ValidationErrorException 유효하지 않은 값이 있을때
      * @throws MemberNotFoundException 회원이 조회되지 않을 때
      */
     @PatchMapping
-    public Response<Void> updateMember(Member member, @RequestBody MemberInfoChangeRequest request){
-        memberInfoChangeService.change(member.getId(), request);
+    public Response<Void> updateMember(@AuthenticationPrincipal SecurityMember securityMember, @RequestBody MemberInfoChangeRequest request){
+        memberInfoChangeService.change(securityMember.getMember().getId(), request);
         return Response.ok();
     }
 
     /**
-     * @param member
+     * @param securityMember
      * @param request
      * @return Response
      * @throws ValidationErrorException 유효하지 않은 값이 있을때
@@ -71,8 +71,8 @@ public class MemberController {
      * @throws UpdatePasswordSameException 변경하는 비밀번호가 기존가 동일할때
      */
     @PatchMapping("/password")
-    public Response<Void> updatePassword(Member member, @RequestBody PasswordChangeRequest request){
-        passwordChangeService.change(member.getId(), request);
+    public Response<Void> updatePassword(@AuthenticationPrincipal SecurityMember securityMember, @RequestBody PasswordChangeRequest request){
+        passwordChangeService.change(securityMember.getMember().getId(), request);
         return Response.ok();
     }
 
