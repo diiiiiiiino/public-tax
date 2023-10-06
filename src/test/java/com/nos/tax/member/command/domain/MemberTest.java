@@ -220,4 +220,14 @@ public class MemberTest {
 
         assertThat(authorities).containsAll(Set.of(AuthorityEnum.ROLE_MEMBER.getName(), AuthorityEnum.ROLE_ADMIN.getName()));
     }
+
+    @DisplayName("회원 비활성화 상태 변경")
+    @Test
+    void memberDisable(){
+        Member member = MemberCreateHelperBuilder.builder().build();
+
+        member.updateIsEnabled(false);
+
+        assertThat(member.isEnabled()).isFalse();
+    }
 }
