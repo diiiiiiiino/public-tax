@@ -7,10 +7,12 @@ import com.nos.tax.member.command.application.exception.MemberNotFoundException;
 import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.member.command.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Service
 @RequiredArgsConstructor
-public class MemberWithdrawalService {
+public class MemberWithdrawService {
 
     private final MemberRepository memberRepository;
     private final HouseHoldRepository houseHoldRepository;

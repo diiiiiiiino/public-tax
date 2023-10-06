@@ -13,6 +13,7 @@ import com.nos.tax.member.command.application.exception.InviteCodeNotFoundExcept
 import com.nos.tax.member.command.application.exception.MemberNotFoundException;
 import com.nos.tax.member.command.application.service.MemberCreateService;
 import com.nos.tax.member.command.application.service.MemberInfoChangeService;
+import com.nos.tax.member.command.application.service.MemberWithdrawService;
 import com.nos.tax.member.command.application.service.PasswordChangeService;
 import com.nos.tax.member.command.domain.exception.PasswordNotMatchedException;
 import com.nos.tax.member.command.domain.exception.PasswordOutOfConditionException;
@@ -49,6 +50,9 @@ public class MemberControllerTest extends BaseControllerTest {
 
     @MockBean
     private PasswordChangeService passwordChangeService;
+
+    @MockBean
+    private MemberWithdrawService memberWithdrawService;
 
     @BeforeEach
     void beforeEach() throws Exception {
@@ -249,11 +253,32 @@ public class MemberControllerTest extends BaseControllerTest {
                 .andExpect(status().isOk());
     }
 
-    private ResultActions perform(MockHttpServletRequestBuilder requestBuilder, Object request, ResultMatcher matcher) throws Exception {
-        return mockMvc.perform(requestBuilder
-                        .content(writeValueAsString(request))
-                        .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(matcher)
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+    @DisplayName("회원 탈퇴 시 회원 미조회")
+    @Test
+    void whenMemberWithdrawThenMemberNotFound() throws Exception {
+        doThrow(new MemberNotFoundException("Member not found"))
+                .when(memberWithdrawService).withDraw(any());
+
+        mvcPerform(post("/member/withdraw"), null)
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errorCode").value("MemberNotFound"));
+    }
+
+    @DisplayName("회원 탈퇴 시 세대 미조회")
+    @Test
+    void whenMemberWithdrawThenHouseHoldNotFound() throws Exception {
+        doThrow(new HouseHoldNotFoundException("Household not found"))
+                .when(memberWithdrawService).withDraw(any());
+
+        mvcPerform(post("/member/withdraw"), null)
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errorCode").value("HouseHoldNotFound"));
+    }
+
+    @DisplayName("회원 탈퇴 성공")
+    @Test
+    void whenMemberWithdrawSuccess() throws Exception {
+        mvcPerform(post("/member/withdraw"), null)
+                .andExpect(status().isOk());
     }
 }

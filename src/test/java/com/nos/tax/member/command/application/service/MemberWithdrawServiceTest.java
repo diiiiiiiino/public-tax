@@ -20,23 +20,23 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class MemberWithdrawalServiceTest {
+public class MemberWithdrawServiceTest {
 
     private MemberRepository memberRepository;
     private HouseHoldRepository houseHoldRepository;
-    private MemberWithdrawalService memberWithdrawalService;
+    private MemberWithdrawService memberWithdrawService;
 
-    public MemberWithdrawalServiceTest() {
+    public MemberWithdrawServiceTest() {
         memberRepository = mock(MemberRepository.class);
         houseHoldRepository = mock(HouseHoldRepository.class);
-        this.memberWithdrawalService = new MemberWithdrawalService(memberRepository, houseHoldRepository);
+        this.memberWithdrawService = new MemberWithdrawService(memberRepository, houseHoldRepository);
     }
 
     @DisplayName("탈퇴 하려는 회원이 존재하지 않을 때")
     @Test
     void withDrawMemberNotFound() {
         Member member = MemberCreateHelperBuilder.builder().build();
-        assertThatThrownBy(() -> memberWithdrawalService.withDraw(member))
+        assertThatThrownBy(() -> memberWithdrawService.withDraw(member))
                 .isInstanceOf(MemberNotFoundException.class)
                 .hasMessage("Member not found");
     }
@@ -48,7 +48,7 @@ public class MemberWithdrawalServiceTest {
 
         when(memberRepository.findByLoginIdAndIsEnabled(anyString(), anyBoolean())).thenReturn(Optional.of(member));
 
-        assertThatThrownBy(() -> memberWithdrawalService.withDraw(member))
+        assertThatThrownBy(() -> memberWithdrawService.withDraw(member))
                 .isInstanceOf(HouseHoldNotFoundException.class)
                 .hasMessage("HouseHold not found");
     }
@@ -62,7 +62,7 @@ public class MemberWithdrawalServiceTest {
         when(memberRepository.findByLoginIdAndIsEnabled(anyString(), anyBoolean())).thenReturn(Optional.of(member));
         when(houseHoldRepository.findByMemberId(anyLong())).thenReturn(Optional.of(houseHold));
 
-        memberWithdrawalService.withDraw(member);
+        memberWithdrawService.withDraw(member);
 
         assertThat(member.isEnabled()).isFalse();
         assertThat(houseHold.getHouseHolder()).isNull();

@@ -13,6 +13,7 @@ import com.nos.tax.member.command.application.exception.MemberNotFoundException;
 import com.nos.tax.member.command.application.security.SecurityMember;
 import com.nos.tax.member.command.application.service.MemberCreateService;
 import com.nos.tax.member.command.application.service.MemberInfoChangeService;
+import com.nos.tax.member.command.application.service.MemberWithdrawService;
 import com.nos.tax.member.command.application.service.PasswordChangeService;
 import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.member.command.domain.exception.PasswordNotMatchedException;
@@ -30,6 +31,7 @@ public class MemberController {
     private final MemberCreateService memberCreateService;
     private final MemberInfoChangeService memberInfoChangeService;
     private final PasswordChangeService passwordChangeService;
+    private final MemberWithdrawService memberWithdrawService;
 
     /**
      * @param request
@@ -81,5 +83,17 @@ public class MemberController {
     @GetMapping
     public Response<MemberResponse> getMember(@AuthenticationPrincipal SecurityMember securityMember){
         return Response.ok(MemberResponse.from(securityMember));
+    }
+
+    /**
+     * @param securityMember
+     * @return Response
+     * @throws MemberNotFoundException 회원이 조회되지 않을때
+     * @throws HouseHoldNotFoundException 세대가 조회되지 않을때
+     */
+    @PostMapping("/withdraw")
+    public Response<Void> withdraw(@AuthenticationPrincipal SecurityMember securityMember){
+        memberWithdrawService.withDraw(securityMember.getMember());
+        return Response.ok();
     }
 }
