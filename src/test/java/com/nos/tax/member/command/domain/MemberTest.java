@@ -4,6 +4,7 @@ import com.nos.tax.authority.command.domain.Authority;
 import com.nos.tax.authority.command.domain.enumeration.AuthorityEnum;
 import com.nos.tax.common.exception.CustomIllegalArgumentException;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
+import com.nos.tax.member.command.domain.enumeration.MemberState;
 import com.nos.tax.member.command.domain.exception.PasswordNotMatchedException;
 import com.nos.tax.member.command.domain.exception.PasswordOutOfConditionException;
 import com.nos.tax.member.command.domain.exception.UpdatePasswordSameException;
@@ -226,8 +227,8 @@ public class MemberTest {
     void memberDisable(){
         Member member = MemberCreateHelperBuilder.builder().build();
 
-        member.updateIsEnabled(false);
+        member.updateState(MemberState.DEACTIVATION);
 
-        assertThat(member.isEnabled()).isFalse();
+        assertThat(member.getState()).isEqualTo(MemberState.DEACTIVATION);
     }
 }

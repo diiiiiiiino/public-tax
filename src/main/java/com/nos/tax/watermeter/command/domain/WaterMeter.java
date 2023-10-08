@@ -1,4 +1,4 @@
-package com.nos.tax.watermeter.command.domain.repository;
+package com.nos.tax.watermeter.command.domain;
 
 import com.nos.tax.common.http.ErrorCode;
 import com.nos.tax.household.command.domain.HouseHold;
@@ -34,6 +34,9 @@ public class WaterMeter {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private HouseHold houseHold;
+
+    @Enumerated(EnumType.STRING)
+    private WaterMeterState state;
 
     @Convert(converter = YearMonthConverter.class)
     private YearMonth calculateYm;
@@ -87,6 +90,14 @@ public class WaterMeter {
      */
     public static WaterMeter of(Long id, int previousMeter, int presentMeter, YearMonth calculateYm, HouseHold houseHold) {
         return new WaterMeter(id, previousMeter, presentMeter, calculateYm, houseHold);
+    }
+
+    /**
+     * 수도 계량 상태 변경
+     * @param state 활성화 여부
+     */
+    public void updateState(WaterMeterState state){
+        this.state = state;
     }
 
     /**

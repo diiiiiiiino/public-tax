@@ -15,7 +15,6 @@ import com.nos.tax.member.command.application.service.MemberCreateService;
 import com.nos.tax.member.command.application.service.MemberInfoChangeService;
 import com.nos.tax.member.command.application.service.MemberWithdrawService;
 import com.nos.tax.member.command.application.service.PasswordChangeService;
-import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.member.command.domain.exception.PasswordNotMatchedException;
 import com.nos.tax.member.command.domain.exception.PasswordOutOfConditionException;
 import com.nos.tax.member.command.domain.exception.UpdatePasswordSameException;

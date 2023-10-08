@@ -2,6 +2,7 @@ package com.nos.tax.waterbill.command.application.service;
 
 import com.nos.tax.building.command.application.BuildingNotFoundException;
 import com.nos.tax.building.command.domain.Building;
+import com.nos.tax.building.command.domain.BuildingState;
 import com.nos.tax.building.command.domain.repository.BuildingRepository;
 import com.nos.tax.common.exception.ValidationError;
 import com.nos.tax.common.exception.ValidationErrorException;
@@ -47,7 +48,7 @@ public class WaterBillCreateService {
             throw new ValidationErrorException("Request has invalid values", errors);
         }
 
-        Building building = buildingRepository.findByMember(memberId)
+        Building building = buildingRepository.findByMember(memberId, BuildingState.ACTIVATION)
                 .orElseThrow(() -> new BuildingNotFoundException("Building not found"));
 
         waterBillRepository.findByBuildingAndCalculateYm(building, request.getCalculateYm())

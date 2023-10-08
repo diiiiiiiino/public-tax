@@ -7,7 +7,7 @@ import com.nos.tax.waterbill.command.domain.WaterBillDetail;
 import com.nos.tax.waterbill.command.domain.exception.WaterBillNotCalculateStateException;
 import com.nos.tax.waterbill.command.domain.exception.WaterBillNotReadyStateException;
 import com.nos.tax.waterbill.command.domain.exception.WaterMeterNotAllCreatedException;
-import com.nos.tax.watermeter.command.domain.repository.WaterMeter;
+import com.nos.tax.watermeter.command.domain.WaterMeter;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

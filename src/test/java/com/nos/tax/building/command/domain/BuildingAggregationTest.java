@@ -137,6 +137,15 @@ public class BuildingAggregationTest {
         assertThat(building.getHouseHolds()).hasSize(2);
     }
 
+    @DisplayName("건물 활성화 여부 변경")
+    @Test
+    void buildingUpdateEnabled() {
+        Building building = BuildingCreateHelperBuilder.builder().build();
+        building.updateState(BuildingState.DEACTIVATION);
+
+        assertThat(building.getState()).isEqualTo(BuildingState.DEACTIVATION);
+    }
+
     private static Stream<Arguments> provideArgsForAddress(){
         return Stream.of(
                 Arguments.of("", "1111", "2222"),

@@ -71,7 +71,7 @@ public class BuildingRepositoryTest {
 
         flushAndClear(entityManager);
 
-        Building findBuilding = buildingRepository.findById(building.getId()).get();
+        Building findBuilding = buildingRepository.findByIdAndState(building.getId(), BuildingState.ACTIVATION).get();
 
         assertThat(findBuilding.getName()).isEqualTo("자이");
     }

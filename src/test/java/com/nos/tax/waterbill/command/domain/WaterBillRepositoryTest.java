@@ -7,7 +7,7 @@ import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.waterbill.command.domain.enumeration.WaterBillState;
 import com.nos.tax.waterbill.command.domain.repository.WaterBillRepository;
 import com.nos.tax.waterbill.command.domain.service.WaterBillCalculateService;
-import com.nos.tax.watermeter.command.domain.repository.WaterMeter;
+import com.nos.tax.watermeter.command.domain.WaterMeter;
 import com.nos.tax.watermeter.command.domain.repository.WaterMeterRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;

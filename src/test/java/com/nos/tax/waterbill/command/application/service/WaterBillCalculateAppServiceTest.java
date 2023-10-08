@@ -2,6 +2,7 @@ package com.nos.tax.waterbill.command.application.service;
 
 import com.nos.tax.building.command.application.BuildingNotFoundException;
 import com.nos.tax.building.command.domain.Building;
+import com.nos.tax.building.command.domain.BuildingState;
 import com.nos.tax.building.command.domain.repository.BuildingRepository;
 import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
@@ -11,7 +12,7 @@ import com.nos.tax.waterbill.command.domain.WaterBill;
 import com.nos.tax.waterbill.command.domain.enumeration.WaterBillState;
 import com.nos.tax.waterbill.command.domain.repository.WaterBillRepository;
 import com.nos.tax.waterbill.command.domain.service.WaterBillCalculateService;
-import com.nos.tax.watermeter.command.domain.repository.WaterMeter;
+import com.nos.tax.watermeter.command.domain.WaterMeter;
 import com.nos.tax.watermeter.command.domain.repository.WaterMeterRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -67,7 +68,7 @@ public class WaterBillCalculateAppServiceTest {
 
         Building building = BuildingCreateHelperBuilder.builder().build();
 
-        when(buildingRepository.findByMember(anyLong())).thenReturn(Optional.of(building));
+        when(buildingRepository.findByMember(anyLong(), any(BuildingState.class))).thenReturn(Optional.of(building));
 
         assertThatThrownBy(() -> waterBillCalculateAppService.calculate(member.getId(), YearMonth.of(2023, 8)))
                 .isInstanceOf(WaterBillNotFoundException.class)
@@ -86,9 +87,9 @@ public class WaterBillCalculateAppServiceTest {
         Building building = BuildingCreateHelperBuilder.builder().build();
         WaterBill waterBill = WaterBill.of(building, 50000, YearMonth.of(2023, 8));
 
-        when(buildingRepository.findByMember(anyLong())).thenReturn(Optional.of(building));
+        when(buildingRepository.findByMember(anyLong(), any(BuildingState.class))).thenReturn(Optional.of(building));
         when(waterBillRepository.findByBuildingAndCalculateYm(any(Building.class), any(YearMonth.class))).thenReturn(Optional.of(waterBill));
-        when(waterMeterRepository.findAllByHouseHoldIn(anyIterable())).thenReturn(List.of(WaterMeter.of(0, 100, YearMonth.of(2023, 8), building.getHouseHolds().get(0))));
+        when(waterMeterRepository.findAllByHouseHoldInAndCalculateYm(anyIterable(), any(YearMonth.class))).thenReturn(List.of(WaterMeter.of(0, 100, YearMonth.of(2023, 8), building.getHouseHolds().get(0))));
 
         waterBillCalculateAppService.calculate(member.getId(), YearMonth.of(2023, 8));
 

@@ -1,5 +1,6 @@
 package com.nos.tax.member.command.application.security;
 
+import com.nos.tax.member.command.domain.enumeration.MemberState;
 import com.nos.tax.member.command.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +16,7 @@ public class MemberUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
-        return memberRepository.findByLoginIdAndIsEnabled(loginId, true)
+        return memberRepository.findByLoginIdAndState(loginId, MemberState.ACTIVATION)
                 .map(SecurityMember::from)
                 .orElseThrow(() -> new UsernameNotFoundException(loginId + " not found"));
     }

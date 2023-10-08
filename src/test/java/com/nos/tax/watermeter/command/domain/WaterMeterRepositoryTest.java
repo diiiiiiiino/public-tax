@@ -4,7 +4,6 @@ import com.nos.tax.building.command.domain.Building;
 import com.nos.tax.building.command.domain.repository.BuildingRepository;
 import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
 import com.nos.tax.member.command.domain.repository.MemberRepository;
-import com.nos.tax.watermeter.command.domain.repository.WaterMeter;
 import com.nos.tax.watermeter.command.domain.repository.WaterMeterRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -58,18 +57,19 @@ public class WaterMeterRepositoryTest {
 
     @DisplayName("세대주 ID 목록으로 수도 계량기 조회")
     @Test
-    void findAllByHouseHoldIn() {
+    void findAllByHouseHoldInAndCalculateYm() {
         Building building = BuildingCreateHelperBuilder.builder().build();
 
         buildingRepository.save(building);
 
+        YearMonth calculateYm = YearMonth.of(2023, 7);
         WaterMeter waterMeter = WaterMeter.of(650, 760, YearMonth.of(2023, 7), building.getHouseHolds().get(0));
 
         waterMeterRepository.save(waterMeter);
 
         flushAndClear(entityManager);
 
-        List<WaterMeter> waterMeters = waterMeterRepository.findAllByHouseHoldIn(building.getHouseHolds());
+        List<WaterMeter> waterMeters = waterMeterRepository.findAllByHouseHoldInAndCalculateYm(building.getHouseHolds(), calculateYm);
 
         assertThat(waterMeters.size()).isEqualTo(1);
     }

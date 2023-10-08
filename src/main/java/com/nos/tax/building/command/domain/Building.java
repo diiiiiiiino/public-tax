@@ -30,6 +30,9 @@ public class Building {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
+    private BuildingState state = BuildingState.ACTIVATION;
+
     @Column(nullable = false)
     private String name;
 
@@ -140,6 +143,14 @@ public class Building {
     public void addHouseHolds(List<HouseHold> newHouseHolds) {
         verifyAtLeastOneOrMoreHouseHold(newHouseHolds);
         this.houseHolds.addAll(newHouseHolds);
+    }
+
+    /**
+     * 건물 상태 변경
+     * @param state 활성화 여부
+     */
+    public void updateState(BuildingState state){
+        this.state = state;
     }
 
     /**

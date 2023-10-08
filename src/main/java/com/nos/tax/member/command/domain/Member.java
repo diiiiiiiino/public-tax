@@ -3,6 +3,7 @@ package com.nos.tax.member.command.domain;
 import com.nos.tax.common.entity.BaseEntity;
 import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.member.command.domain.converter.MobileConverter;
+import com.nos.tax.member.command.domain.enumeration.MemberState;
 import com.nos.tax.member.command.domain.exception.PasswordNotMatchedException;
 import com.nos.tax.member.command.domain.exception.UpdatePasswordSameException;
 import com.nos.tax.util.VerifyUtil;
@@ -38,6 +39,9 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
+    private MemberState state = MemberState.ACTIVATION;
+
     @Column(nullable = false)
     private String loginId;
 
@@ -57,8 +61,6 @@ public class Member extends BaseEntity {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, mappedBy = "member")
     private Set<MemberAuthority> authorities = new HashSet<>();
-
-    private boolean isEnabled = true;
 
     /**
      * @param loginId 로그인 ID
@@ -181,10 +183,10 @@ public class Member extends BaseEntity {
 
     /**
      * 활성화 여부 변경
-     * @param isEnabled 활성화 여부
+     * @param state 활성화 여부
      */
-    public void updateIsEnabled(boolean isEnabled){
-        this.isEnabled = isEnabled;
+    public void updateState(MemberState state){
+        this.state = state;
     }
 
     /**

@@ -5,6 +5,7 @@ import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
 import com.nos.tax.member.command.application.security.MemberUserDetailsService;
 import com.nos.tax.member.command.application.security.SecurityMember;
 import com.nos.tax.member.command.domain.Member;
+import com.nos.tax.member.command.domain.enumeration.MemberState;
 import com.nos.tax.member.command.domain.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -49,7 +50,7 @@ public class MemberUserDetailsServiceTest {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         Member member = MemberCreateHelperBuilder.builder().build();
 
-        when(memberRepository.findByLoginIdAndIsEnabled(anyString(), anyBoolean())).thenReturn(Optional.of(member));
+        when(memberRepository.findByLoginIdAndState(anyString(), any(MemberState.class))).thenReturn(Optional.of(member));
 
         UserDetails userDetails = memberUserDetailsService.loadUserByUsername("loginId");
 

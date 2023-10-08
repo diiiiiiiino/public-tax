@@ -5,7 +5,10 @@ import com.nos.tax.common.exception.ValidationError;
 import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.helper.BaseControllerTest;
 import com.nos.tax.watermeter.command.application.dto.WaterMeterCreateRequest;
+import com.nos.tax.watermeter.command.application.exception.WaterMeterDeleteStateException;
+import com.nos.tax.watermeter.command.application.exception.WaterMeterNotFoundException;
 import com.nos.tax.watermeter.command.application.service.WaterMeterCreateService;
+import com.nos.tax.watermeter.command.application.service.WaterMeterDeleteService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,7 +20,9 @@ import java.time.YearMonth;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doThrow;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -28,6 +33,9 @@ public class WaterMeterControllerTest extends BaseControllerTest {
 
     @MockBean
     private WaterMeterCreateService waterMeterCreateService;
+
+    @MockBean
+    private WaterMeterDeleteService waterMeterDeleteService;
 
     @BeforeEach
     void beforeEach() throws Exception {
@@ -51,5 +59,34 @@ public class WaterMeterControllerTest extends BaseControllerTest {
         mvcPerform(post("/water-meter"), request)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errors").isNotEmpty());
+    }
+
+    @DisplayName("수도계량 데이터 삭제 시 미조회")
+    @Test
+    void whenWaterMeterDeleteThenNotFound() throws Exception {
+        doThrow(new WaterMeterNotFoundException("WaterMeter not found"))
+                .when(waterMeterDeleteService).delete(anyLong());
+
+        mvcPerform(delete("/water-meter/1"), null)
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.errorCode").value("WaterMeterNotFound"));
+    }
+
+    @DisplayName("수도 계량 삭제 시 수도 요금 정산 중일때")
+    @Test
+    void whenWaterMeterDeleteThenWaterBillProcessing() throws Exception {
+        doThrow(new WaterMeterDeleteStateException("WaterMeter can be deleted before the water bill is settled"))
+                .when(waterMeterDeleteService).delete(anyLong());
+
+        mvcPerform(delete("/water-meter/1"), null)
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.errorCode").value("WaterMeterDeleteState"));
+    }
+
+    @DisplayName("수도 계량 삭제 성공")
+    @Test
+    void whenWaterMeterDeleteSuccess() throws Exception {
+        mvcPerform(delete("/water-meter/1"), null)
+                .andExpect(status().isOk());
     }
 }

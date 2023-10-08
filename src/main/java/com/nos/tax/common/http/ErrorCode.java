@@ -41,6 +41,9 @@ public enum ErrorCode {
     /**수도요금 미존재*/
     WATER_BILL_NOT_FOUND(HttpStatus.NOT_FOUND, "WaterBillNotFound"),
 
+    /**수도계량 미존재*/
+    WATER_METER_NOT_FOUND(HttpStatus.NOT_FOUND, "WaterMeterNotFound"),
+
     /**수도계량 데이터가 세대 수 만큼 생성되지 않음*/
     WATER_METER_NOT_ALL_CREATED(HttpStatus.UNPROCESSABLE_ENTITY, "WaterMeterNotAllCreated"),
 
@@ -69,7 +72,10 @@ public enum ErrorCode {
     PRESENT_METER_SMALLER(HttpStatus.BAD_REQUEST, "PresentMeterSmaller"),
 
     /** Server 에러*/
-    SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "ServerError");
+    SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "ServerError"),
+
+    /** 수도 계량 삭제 불가 상태 */
+    WATER_METER_DELETE_STATE(HttpStatus.FORBIDDEN, "WaterMeterDeleteState");
 
     /**HttpStatus*/
     private HttpStatus status;

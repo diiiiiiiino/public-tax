@@ -6,6 +6,7 @@ import com.nos.tax.login.command.domain.LoginRecord;
 import com.nos.tax.login.command.domain.LoginRecordRepository;
 import com.nos.tax.member.command.application.exception.MemberNotFoundException;
 import com.nos.tax.member.command.domain.Member;
+import com.nos.tax.member.command.domain.enumeration.MemberState;
 import com.nos.tax.member.command.domain.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,7 +34,7 @@ public class LoginServiceTest {
     void memberNotfoundWhenLoggingIn() {
         Member member = MemberCreateHelperBuilder.builder().build();
 
-        when(memberRepository.findByLoginIdAndIsEnabled(anyString(), anyBoolean())).thenReturn(Optional.empty());
+        when(memberRepository.findByLoginIdAndState(anyString(), any(MemberState.class))).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> loginService.login(member, "userAgent"))
                 .isInstanceOf(MemberNotFoundException.class)
@@ -44,7 +45,7 @@ public class LoginServiceTest {
     @Test
     void loginSuccess() {
         Member member = MemberCreateHelperBuilder.builder().build();
-        when(memberRepository.findByLoginIdAndIsEnabled(anyString(), anyBoolean())).thenReturn(Optional.of(member));
+        when(memberRepository.findByLoginIdAndState(anyString(), any(MemberState.class))).thenReturn(Optional.of(member));
 
         loginService.login(member, "userAgent");
 

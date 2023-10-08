@@ -45,7 +45,6 @@ public class WaterBillControllerTest extends BaseControllerTest {
         login("abcde", "qwer1234!@");
     }
 
-
     @DisplayName("수도요금 정산 데이터 생성 파라미터 유효성 에러")
     @Test
     void whenWaterBillCreateThenInvalidRequest() throws Exception {

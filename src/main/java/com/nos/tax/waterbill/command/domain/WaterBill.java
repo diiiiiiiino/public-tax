@@ -6,7 +6,7 @@ import com.nos.tax.waterbill.command.domain.converter.YearMonthConverter;
 import com.nos.tax.waterbill.command.domain.enumeration.WaterBillState;
 import com.nos.tax.waterbill.command.domain.exception.WaterBillNotCalculateStateException;
 import com.nos.tax.waterbill.command.domain.exception.WaterBillNotReadyStateException;
-import com.nos.tax.watermeter.command.domain.repository.WaterMeter;
+import com.nos.tax.watermeter.command.domain.WaterMeter;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -35,6 +35,9 @@ public class WaterBill {
     @ManyToOne(fetch = FetchType.LAZY)
     private Building building;
 
+    @Enumerated(EnumType.STRING)
+    private WaterBillState state;
+
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "water_bill_detail", joinColumns = @JoinColumn(name = "water_bill_id"))
     @OrderColumn(name = "line_idx")
@@ -45,9 +48,6 @@ public class WaterBill {
 
     @Convert(converter = YearMonthConverter.class)
     private YearMonth calculateYm;
-
-    @Enumerated(EnumType.STRING)
-    private WaterBillState state;
 
     /**
      * @param building 건물 객체

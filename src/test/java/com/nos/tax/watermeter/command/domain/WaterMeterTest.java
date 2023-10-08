@@ -5,7 +5,6 @@ import com.nos.tax.common.exception.CustomIllegalArgumentException;
 import com.nos.tax.common.exception.CustomNullPointerException;
 import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
 import com.nos.tax.watermeter.command.domain.exception.PresentMeterSmallerException;
-import com.nos.tax.watermeter.command.domain.repository.WaterMeter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -67,5 +66,16 @@ public class WaterMeterTest {
         WaterMeter waterMeter = WaterMeter.of(100, 200, YearMonth.of(2023, 7), building.getHouseHolds().get(0));
 
         assertThat(waterMeter.getUsage()).isEqualTo(100);
+    }
+
+    @DisplayName("수도 계량 삭제 상태로 변경")
+    @Test
+    void whenWaterMeterDelete() {
+        Building building = BuildingCreateHelperBuilder.builder().build();
+        WaterMeter waterMeter = WaterMeter.of(100, 200, YearMonth.of(2023, 7), building.getHouseHolds().get(0));
+
+        waterMeter.updateState(WaterMeterState.DEACTIVATION);
+
+        assertThat(waterMeter.getState()).isEqualTo(WaterMeterState.DEACTIVATION);
     }
 }

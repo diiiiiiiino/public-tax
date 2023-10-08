@@ -7,7 +7,7 @@ import com.nos.tax.waterbill.command.domain.enumeration.WaterBillState;
 import com.nos.tax.waterbill.command.domain.exception.WaterBillNotCalculateStateException;
 import com.nos.tax.waterbill.command.domain.exception.WaterMeterNotAllCreatedException;
 import com.nos.tax.waterbill.command.domain.service.WaterBillCalculateService;
-import com.nos.tax.watermeter.command.domain.repository.WaterMeter;
+import com.nos.tax.watermeter.command.domain.WaterMeter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

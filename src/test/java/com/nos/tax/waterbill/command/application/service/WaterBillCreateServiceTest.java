@@ -2,6 +2,7 @@ package com.nos.tax.waterbill.command.application.service;
 
 import com.nos.tax.building.command.application.BuildingNotFoundException;
 import com.nos.tax.building.command.domain.Building;
+import com.nos.tax.building.command.domain.BuildingState;
 import com.nos.tax.building.command.domain.repository.BuildingRepository;
 import com.nos.tax.common.exception.ValidationCode;
 import com.nos.tax.common.exception.ValidationError;
@@ -63,7 +64,7 @@ public class WaterBillCreateServiceTest {
         Member member = MemberCreateHelperBuilder.builder().id(1L).build();
         WaterBillCreateRequest request = WaterBillCreateRequest.of(77000, YearMonth.of(2023, 7));
 
-        when(buildingRepository.findByMember(any())).thenReturn(Optional.empty());
+        when(buildingRepository.findByMember(any(), any(BuildingState.class))).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> waterBillCreateService.create(member.getId(), request))
                 .isInstanceOf(BuildingNotFoundException.class)
@@ -79,7 +80,7 @@ public class WaterBillCreateServiceTest {
         WaterBill waterBill = WaterBill.of(building, 77000, YearMonth.of(2023, 7));
         WaterBillCreateRequest request = WaterBillCreateRequest.of(77000, YearMonth.of(2023, 7));
 
-        when(buildingRepository.findByMember(any())).thenReturn(Optional.of(building));
+        when(buildingRepository.findByMember(any(), any(BuildingState.class))).thenReturn(Optional.of(building));
         when(waterBillRepository.findByBuildingAndCalculateYm(any(), any())).thenReturn(Optional.of(waterBill));
 
         assertThatThrownBy(() -> waterBillCreateService.create(member.getId(), request))
@@ -95,7 +96,7 @@ public class WaterBillCreateServiceTest {
         WaterBill waterBill = WaterBill.of(building, 77000, YearMonth.of(2023, 7));
         WaterBillCreateRequest request = WaterBillCreateRequest.of(77000, YearMonth.of(2023, 7));
 
-        when(buildingRepository.findByMember(any())).thenReturn(Optional.of(building));
+        when(buildingRepository.findByMember(any(), any(BuildingState.class))).thenReturn(Optional.of(building));
         when(waterBillRepository.save(any())).thenReturn(waterBill);
 
         waterBill = waterBillCreateService.create(admin.getId(), request);

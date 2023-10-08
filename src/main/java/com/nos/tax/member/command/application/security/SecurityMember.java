@@ -1,6 +1,7 @@
 package com.nos.tax.member.command.application.security;
 
 import com.nos.tax.member.command.domain.Member;
+import com.nos.tax.member.command.domain.enumeration.MemberState;
 import com.nos.tax.util.VerifyUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -25,6 +26,10 @@ public class SecurityMember implements UserDetails {
         VerifyUtil.verifyNull(member, "member");
 
         return new SecurityMember(member);
+    }
+
+    public Long getMemberId(){
+        return member.getId();
     }
 
     @Override
@@ -59,6 +64,6 @@ public class SecurityMember implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return member.isEnabled();
+        return member.getState() == MemberState.ACTIVATION;
     }
 }

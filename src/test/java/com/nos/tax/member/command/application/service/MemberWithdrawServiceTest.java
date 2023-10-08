@@ -8,6 +8,7 @@ import com.nos.tax.household.command.domain.repository.HouseHoldRepository;
 import com.nos.tax.member.command.application.exception.HouseHoldNotFoundException;
 import com.nos.tax.member.command.application.exception.MemberNotFoundException;
 import com.nos.tax.member.command.domain.Member;
+import com.nos.tax.member.command.domain.enumeration.MemberState;
 import com.nos.tax.member.command.domain.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,7 +47,7 @@ public class MemberWithdrawServiceTest {
     void householdNotFound() {
         Member member = MemberCreateHelperBuilder.builder().build();
 
-        when(memberRepository.findByLoginIdAndIsEnabled(anyString(), anyBoolean())).thenReturn(Optional.of(member));
+        when(memberRepository.findByLoginIdAndState(anyString(), any(MemberState.class))).thenReturn(Optional.of(member));
 
         assertThatThrownBy(() -> memberWithdrawService.withDraw(member))
                 .isInstanceOf(HouseHoldNotFoundException.class)
@@ -59,12 +60,12 @@ public class MemberWithdrawServiceTest {
         Member member = MemberCreateHelperBuilder.builder().id(1L).build();
         HouseHold houseHold = HouseHoldCreateHelperBuilder.builder().member(member).build();
 
-        when(memberRepository.findByLoginIdAndIsEnabled(anyString(), anyBoolean())).thenReturn(Optional.of(member));
+        when(memberRepository.findByLoginIdAndState(anyString(), any(MemberState.class))).thenReturn(Optional.of(member));
         when(houseHoldRepository.findByMemberId(anyLong())).thenReturn(Optional.of(houseHold));
 
         memberWithdrawService.withDraw(member);
 
-        assertThat(member.isEnabled()).isFalse();
+        assertThat(member.getState()).isEqualTo(MemberState.DEACTIVATION);
         assertThat(houseHold.getHouseHolder()).isNull();
         assertThat(houseHold.getHouseHoldState()).isEqualTo(HouseHoldState.EMPTY);
     }
