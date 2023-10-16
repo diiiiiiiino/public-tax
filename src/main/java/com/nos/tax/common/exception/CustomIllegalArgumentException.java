@@ -5,8 +5,12 @@ import lombok.Getter;
 
 import java.util.Map;
 
+/**
+ * {@code IllegalArgumentException}를 상속한 예외
+ */
 @Getter
 public class CustomIllegalArgumentException extends IllegalArgumentException{
+    /**예외 원인의 상세 정보*/
     private Map<String, String> detail;
     private ErrorCode errorCode;
 

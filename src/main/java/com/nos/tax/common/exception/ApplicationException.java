@@ -5,6 +5,9 @@ import lombok.Getter;
 
 import java.util.Map;
 
+/**
+ * 애플리케이션에서 발생한 예외를 나타낸 예외
+ */
 @Getter
 public abstract class ApplicationException extends RuntimeException {
     protected ErrorCode errorCode;

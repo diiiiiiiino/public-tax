@@ -5,6 +5,9 @@ import lombok.Getter;
 
 import java.util.Objects;
 
+/**
+ * 유효성 검증 실패 내용을 관리하는 클래스
+ */
 @Getter
 @AllArgsConstructor
 public class ValidationError {

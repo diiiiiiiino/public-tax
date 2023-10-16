@@ -5,6 +5,9 @@ import lombok.Getter;
 
 import java.util.List;
 
+/**
+ * 유효성 검증 실패 예외
+ */
 @Getter
 public class ValidationErrorException extends ApplicationException{
     private List<ValidationError> errors;

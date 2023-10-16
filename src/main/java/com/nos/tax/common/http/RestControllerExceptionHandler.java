@@ -9,6 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+/**
+ * {@code RestController}의 예외를 처리하는 핸들러
+ */
 @RestControllerAdvice
 public class RestControllerExceptionHandler {
 

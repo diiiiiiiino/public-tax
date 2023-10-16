@@ -32,7 +32,10 @@ public enum TextLengthRange {
     /**로그인 UserAgent*/
     LOGIN_RECORD_USER_AGENT(1, 200);
 
+    /**최소 값*/
     private int min;
+
+    /**최대 값*/
     private int max;
 
     TextLengthRange(int min, int max) {
