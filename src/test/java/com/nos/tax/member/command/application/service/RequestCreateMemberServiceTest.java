@@ -7,6 +7,7 @@ import com.nos.tax.helper.builder.HouseHoldCreateHelperBuilder;
 import com.nos.tax.household.command.domain.repository.HouseHoldRepository;
 import com.nos.tax.invite.command.domain.repository.MemberInviteCodeRepository;
 import com.nos.tax.member.command.application.dto.RequestCreateMemberRequest;
+import com.nos.tax.member.command.application.exception.HouseHoldNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -70,7 +71,7 @@ public class RequestCreateMemberServiceTest {
         when(houseHoldRepository.findAllById(anyList())).thenReturn(List.of());
 
         assertThatThrownBy(() -> requestCreateMemberService.request(requests))
-                .isInstanceOf(NotFoundException.class)
+                .isInstanceOf(HouseHoldNotFoundException.class)
                 .hasMessage("household is not found");
     }
 

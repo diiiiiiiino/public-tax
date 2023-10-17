@@ -12,16 +12,25 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
+/**
+ * 로그인 이력 기록 서비스
+ */
 @Service
 @RequiredArgsConstructor
-public class LoginServiceImpl implements LoginService {
+public class LoginRecordServiceImpl implements LoginRecordService {
 
     private final MemberRepository memberRepository;
     private final LoginRecordRepository loginRecordRepository;
 
+    /**
+     * 로그인 이력 기록
+     * @param member 로그인 회원
+     * @param userAgent 유저 에이전트
+     * @throws MemberNotFoundException 회원 미조회
+     */
     @Transactional
     @Override
-    public void login(Member member, String userAgent) {
+    public void loginRecord(Member member, String userAgent) {
         member = memberRepository.findByLoginIdAndState(member.getLoginId(), MemberState.ACTIVATION)
                 .orElseThrow(() -> new MemberNotFoundException("Member not found"));
 

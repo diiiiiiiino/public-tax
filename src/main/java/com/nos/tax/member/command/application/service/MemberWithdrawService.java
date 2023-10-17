@@ -11,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 회원 탈퇴 서비스
+ */
 @Service
 @RequiredArgsConstructor
 public class MemberWithdrawService {
@@ -18,6 +21,12 @@ public class MemberWithdrawService {
     private final MemberRepository memberRepository;
     private final HouseHoldRepository houseHoldRepository;
 
+    /**
+     * 회원 탈퇴
+     * @param member 회원
+     * @throws MemberNotFoundException 회원 미조회
+     * @throws HouseHoldNotFoundException 세대 미조회
+     */
     @Transactional
     public void withDraw(Member member) {
         member = memberRepository.findByLoginIdAndState(member.getLoginId(), MemberState.ACTIVATION)

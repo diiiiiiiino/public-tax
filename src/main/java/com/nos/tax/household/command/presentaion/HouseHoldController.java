@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 세대 관련 API를 처리하는 Controller
+ */
 @RestController
 @RequestMapping("/household")
 @RequiredArgsConstructor

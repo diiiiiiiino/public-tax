@@ -13,9 +13,18 @@ import java.util.List;
 
 import static com.nos.tax.common.enumeration.TextLengthRange.*;
 
+/**
+ * {@code MemberCreateRequest}의 변수의 유효성을 검증하는 클래스
+ */
 @Validator
 @MemberCreateRequestQualifier
 public class MemberCreateRequestValidator implements RequestValidator<MemberCreateRequest> {
+
+    /**
+     * {@code MemberCreateRequest} 유효성 검증
+     * @param request 회원 생성 요청
+     * @return List<ValidationError>
+     */
     public List<ValidationError> validate(MemberCreateRequest request){
         List<ValidationError> errors = new ArrayList<>();
 

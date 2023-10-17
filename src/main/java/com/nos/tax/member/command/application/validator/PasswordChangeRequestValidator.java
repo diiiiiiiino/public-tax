@@ -13,9 +13,18 @@ import java.util.List;
 
 import static com.nos.tax.common.enumeration.TextLengthRange.PASSWORD;
 
+/**
+ * {@code PasswordChangeRequest}의 변수의 유효성을 검증하는 클래스
+ */
 @Validator
 @PasswordChangeRequestQualifier
 public class PasswordChangeRequestValidator implements RequestValidator<PasswordChangeRequest> {
+
+    /**
+     * {@code PasswordChangeRequest} 유효성 검증
+     * @param request 비밀번호 변경요청
+     * @return List<ValidationError>
+     */
     public List<ValidationError> validate(PasswordChangeRequest request){
         List<ValidationError> errors = new ArrayList<>();
         if(request == null){

@@ -14,9 +14,18 @@ import java.util.List;
 import static com.nos.tax.common.enumeration.TextLengthRange.MEMBER_NAME;
 import static com.nos.tax.common.enumeration.TextLengthRange.MOBILE;
 
+/**
+ * {@code MemberInfoChangeRequest}의 변수의 유효성을 검증하는 클래스
+ */
 @Validator
 @MemberInfoChangeRequestQualifier
 public class MemberInfoChangeRequestValidator implements RequestValidator<MemberInfoChangeRequest> {
+
+    /**
+     * {@code MemberInfoChangeRequest} 유효성 검증
+     * @param request 회원정보 변경 요청
+     * @return List<ValidationError>
+     */
     public List<ValidationError> validate(MemberInfoChangeRequest request){
         List<ValidationError> errors = new ArrayList<>();
         if(request == null){

@@ -22,6 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * 회원 생성 서비스
+ */
 @Service
 public class MemberCreateService {
     private final DateUtils dateUtils;
@@ -45,6 +48,22 @@ public class MemberCreateService {
         this.validator = validator;
     }
 
+    /**
+     * 회원 생성
+     * @param request 회원 생성 요청
+     * @throws ValidationErrorException
+     * <ul>
+     *     <li>{@code loginId}가 {@code null}이거나 문자가 없을 경우, 길이가 1~15 아닌 경우
+     *     <li>{@code password}가 {@code null}이거나 문자가 없을 경우, 길이가 8~16 아닌 경우
+     *     <li>{@code name}이 {@code null}이거나 문자가 없을 경우, 길이가 1~15 아닌 경우
+     *     <li>{@code mobile}이 {@code null}이거나 문자가 없을 경우, 길이가 11자리가 아닌 경우
+     *     <li>{@code inviteCode}가 {@code null}이거나 문자가 없을 경우, 길이가 6자리가 아닌 경우
+     *     <li>{@code houseHoldId}가 {@code null}인 경우
+     * </ul>
+     * @throws InviteCodeNotFoundException 초대코드 미조회
+     * @throws ExpiredInviteCodeException 초대코드 만료
+     * @throws HouseHoldNotFoundException 세대 미조회
+     */
     @Transactional
     public void create(MemberCreateRequest request) {
         List<ValidationError> errors = validator.validate(request);

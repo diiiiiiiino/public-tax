@@ -1,7 +1,7 @@
 package com.nos.tax.login.command.application;
 
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
-import com.nos.tax.login.command.application.service.LoginServiceImpl;
+import com.nos.tax.login.command.application.service.LoginRecordServiceImpl;
 import com.nos.tax.login.command.domain.LoginRecord;
 import com.nos.tax.login.command.domain.LoginRecordRepository;
 import com.nos.tax.member.command.application.exception.MemberNotFoundException;
@@ -18,15 +18,15 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-public class LoginServiceTest {
-    LoginServiceImpl loginService;
+public class LoginRecordServiceTest {
+    LoginRecordServiceImpl loginService;
     MemberRepository memberRepository;
     LoginRecordRepository loginRecordRepository;
 
-    public LoginServiceTest() {
+    public LoginRecordServiceTest() {
         memberRepository = mock(MemberRepository.class);
         loginRecordRepository = mock(LoginRecordRepository.class);
-        loginService = new LoginServiceImpl(memberRepository, loginRecordRepository);
+        loginService = new LoginRecordServiceImpl(memberRepository, loginRecordRepository);
     }
 
     @DisplayName("로그인 시 회원 미조회")
@@ -36,7 +36,7 @@ public class LoginServiceTest {
 
         when(memberRepository.findByLoginIdAndState(anyString(), any(MemberState.class))).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> loginService.login(member, "userAgent"))
+        assertThatThrownBy(() -> loginService.loginRecord(member, "userAgent"))
                 .isInstanceOf(MemberNotFoundException.class)
                 .hasMessage("Member not found");
     }
@@ -47,7 +47,7 @@ public class LoginServiceTest {
         Member member = MemberCreateHelperBuilder.builder().build();
         when(memberRepository.findByLoginIdAndState(anyString(), any(MemberState.class))).thenReturn(Optional.of(member));
 
-        loginService.login(member, "userAgent");
+        loginService.loginRecord(member, "userAgent");
 
         verify(loginRecordRepository, times(1)).save(any(LoginRecord.class));
     }

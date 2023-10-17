@@ -14,6 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * 회원 정보 변경 서비스
+ */
 @Service
 public class MemberInfoChangeService {
 
@@ -26,6 +29,17 @@ public class MemberInfoChangeService {
         this.validator = validator;
     }
 
+    /**
+     * 회원 정보 변경
+     * @param memberId 회원 ID
+     * @param request 회원 정보 변경 요청
+     * @throws MemberNotFoundException 회원 미조회
+     * @throws ValidationErrorException
+     * <ul>
+     *     <li>{@code name}이 {@code null}이거나 문자가 없을 경우, 길이가 1~15 아닌 경우
+     *     <li>{@code mobile}이 {@code null}이거나 문자가 없을 경우, 길이가 11자리가 아닌 경우
+     * </ul>
+     */
     @Transactional
     public void change(Long memberId, MemberInfoChangeRequest request) {
         List<ValidationError> errors = validator.validate(request);

@@ -21,6 +21,9 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * 관리자 생성 서비스
+ */
 @Service
 @RequiredArgsConstructor
 public class AdminCreateService {
@@ -28,6 +31,10 @@ public class AdminCreateService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * 관리자 생성
+     * @param request 관리자 생성 요청 데이터
+     */
     @Transactional
     public void create(AdminCreateRequest request) {
         VerifyUtil.verifyNull(request.getMemberCreateRequest(), "request");

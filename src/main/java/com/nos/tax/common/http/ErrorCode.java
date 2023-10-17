@@ -75,7 +75,10 @@ public enum ErrorCode {
     SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "ServerError"),
 
     /** 수도 계량 삭제 불가 상태 */
-    WATER_METER_DELETE_STATE(HttpStatus.FORBIDDEN, "WaterMeterDeleteState");
+    WATER_METER_DELETE_STATE(HttpStatus.FORBIDDEN, "WaterMeterDeleteState"),
+
+    /**권한 미존재*/
+    AUTHORITY_NOT_FOUND(HttpStatus.NOT_FOUND, "AuthorityNotFound");
 
     /**HttpStatus*/
     private HttpStatus status;

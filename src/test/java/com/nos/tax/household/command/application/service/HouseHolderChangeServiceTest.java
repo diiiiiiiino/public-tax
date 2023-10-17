@@ -1,6 +1,5 @@
 package com.nos.tax.household.command.application.service;
 
-import com.nos.tax.common.exception.NotFoundException;
 import com.nos.tax.common.exception.ValidationCode;
 import com.nos.tax.common.exception.ValidationError;
 import com.nos.tax.common.exception.ValidationErrorException;
@@ -12,6 +11,7 @@ import com.nos.tax.household.command.domain.HouseHolder;
 import com.nos.tax.household.command.domain.enumeration.HouseHoldState;
 import com.nos.tax.household.command.domain.repository.HouseHoldRepository;
 import com.nos.tax.member.command.application.exception.HouseHoldNotFoundException;
+import com.nos.tax.member.command.application.exception.MemberNotFoundException;
 import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.member.command.domain.Mobile;
 import com.nos.tax.member.command.domain.repository.MemberRepository;
@@ -69,7 +69,7 @@ public class HouseHolderChangeServiceTest {
         when(houseHoldRepository.findByIdAndHouseHoldState(anyLong(), any(HouseHoldState.class))).thenReturn(Optional.of(houseHold));
 
         Assertions.assertThatThrownBy(() -> householderChangeService.change(1L, 1L))
-                .isInstanceOf(NotFoundException.class)
+                .isInstanceOf(MemberNotFoundException.class)
                 .hasMessage("Member not found");
     }
 
