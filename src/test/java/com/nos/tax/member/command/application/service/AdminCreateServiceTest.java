@@ -2,13 +2,13 @@ package com.nos.tax.member.command.application.service;
 
 import com.nos.tax.building.command.domain.Building;
 import com.nos.tax.building.command.domain.repository.BuildingRepository;
-import com.nos.tax.common.exception.CustomIllegalArgumentException;
-import com.nos.tax.common.exception.CustomNullPointerException;
-import com.nos.tax.common.exception.ValidationErrorException;
+import com.nos.tax.common.exception.*;
 import com.nos.tax.member.command.application.dto.AdminCreateRequest;
 import com.nos.tax.member.command.application.dto.BuildingInfo;
 import com.nos.tax.member.command.application.dto.HouseHoldInfo;
 import com.nos.tax.member.command.application.dto.MemberCreateRequest;
+import com.nos.tax.member.command.application.validator.AdminCreateRequestValidator;
+import com.nos.tax.member.command.application.validator.MemberCreateRequestValidator;
 import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.member.command.domain.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -33,24 +33,30 @@ public class AdminCreateServiceTest {
     private BuildingRepository buildingRepository;
     private MemberRepository memberRepository;
     private AdminCreateService adminCreateService;
+    private AdminCreateRequestValidator validator;
+    private MemberCreateRequestValidator memberCreateRequestValidator;
 
     public AdminCreateServiceTest() {
         buildingRepository = mock(BuildingRepository.class);
         memberRepository = mock(MemberRepository.class);
-        adminCreateService = new AdminCreateService(buildingRepository, memberRepository, new BCryptPasswordEncoder());
+        memberCreateRequestValidator = new MemberCreateRequestValidator();
+        validator = new AdminCreateRequestValidator(memberCreateRequestValidator);
+        adminCreateService = new AdminCreateService(buildingRepository, memberRepository, new BCryptPasswordEncoder(), validator);
     }
 
     @DisplayName("관리자 정보가 없는 경우")
     @Test
     void createAdminWithMissMemberCreateRequest() {
-        BuildingInfo buildingInfo = BuildingInfo.of("광동빌라", "서울특별시 강남구 대치동", "광동빌라 A동", "123456");;
+        BuildingInfo buildingInfo = BuildingInfo.of("광동빌라", "서울특별시 강남구 대치동", "광동빌라 A동", "12345");
         List<HouseHoldInfo> houseHoldInfos = List.of(HouseHoldInfo.of("101호", false), HouseHoldInfo.of("102호", true), HouseHoldInfo.of("103호", false), HouseHoldInfo.of("104호", false));
 
         AdminCreateRequest adminCreateRequest = AdminCreateRequest.of(null, buildingInfo, houseHoldInfos);
 
         assertThatThrownBy(() -> adminCreateService.create(adminCreateRequest))
-                .isInstanceOf(CustomNullPointerException.class)
-                .hasMessage("request is null");
+                .hasMessage("Request has invalid values")
+                .hasFieldOrPropertyWithValue("errors", List.of(
+                        ValidationError.of("request", ValidationCode.NULL.getValue())
+                ));
     }
 
     @DisplayName("건물 정보가 없는 경우")
@@ -62,8 +68,10 @@ public class AdminCreateServiceTest {
         AdminCreateRequest adminCreateRequest = AdminCreateRequest.of(memberCreateRequest, null, houseHoldInfos);
 
         assertThatThrownBy(() -> adminCreateService.create(adminCreateRequest))
-                .isInstanceOf(CustomNullPointerException.class)
-                .hasMessage("buildingInfo is null");
+                .hasMessage("Request has invalid values")
+                .hasFieldOrPropertyWithValue("errors", List.of(
+                        ValidationError.of("buildingInfo", ValidationCode.NULL.getValue())
+                ));
     }
 
     @DisplayName("세대 목록이 null 또는 비어있는 경우")
@@ -71,13 +79,15 @@ public class AdminCreateServiceTest {
     @NullAndEmptySource
     void createAdminWithNullAndEmptyHouseholds(List<HouseHoldInfo> houseHoldInfos) {
         MemberCreateRequest memberCreateRequest = new MemberCreateRequest("loginId", "qwer1234!@", "홍길동", "01012345678", 1L,"123456");
-        BuildingInfo buildingInfo = BuildingInfo.of("광동빌라", "서울특별시 강남구 대치동", "광동빌라 A동", "123456");
+        BuildingInfo buildingInfo = BuildingInfo.of("광동빌라", "서울특별시 강남구 대치동", "광동빌라 A동", "12345");
 
         AdminCreateRequest adminCreateRequest = AdminCreateRequest.of(memberCreateRequest, buildingInfo, houseHoldInfos);
 
         assertThatThrownBy(() -> adminCreateService.create(adminCreateRequest))
-                .isInstanceOf(CustomIllegalArgumentException.class)
-                .hasMessage("houseHoldInfos no element");
+                .hasMessage("Request has invalid values")
+                .hasFieldOrPropertyWithValue("errors", List.of(
+                        ValidationError.of("houseHoldInfos", ValidationCode.EMPTY.getValue())
+                ));
     }
 
     @DisplayName("관리자의 세대 선택이 없거나 1개 이상 있을 때")
@@ -85,13 +95,15 @@ public class AdminCreateServiceTest {
     @MethodSource("HouseHoldInfosMethodSource")
     void createAdminWithSelectHouseHoldNoneAndOneMore(List<HouseHoldInfo> houseHoldInfos) {
         MemberCreateRequest memberCreateRequest = new MemberCreateRequest("loginId", "qwer1234!@", "홍길동", "01012345678", 1L,"123456");
-        BuildingInfo buildingInfo = BuildingInfo.of("광동빌라", "서울특별시 강남구 대치동", "광동빌라 A동", "123456");
+        BuildingInfo buildingInfo = BuildingInfo.of("광동빌라", "서울특별시 강남구 대치동", "광동빌라 A동", "12345");
 
         AdminCreateRequest adminCreateRequest = AdminCreateRequest.of(memberCreateRequest, buildingInfo, houseHoldInfos);
 
         assertThatThrownBy(() -> adminCreateService.create(adminCreateRequest))
-                .isInstanceOf(ValidationErrorException.class)
-                .hasMessage("select just one HouseHold");
+                .hasMessage("Request has invalid values")
+                .hasFieldOrPropertyWithValue("errors", List.of(
+                        ValidationError.of("houseHoldInfos", ValidationCode.SELECT_ONE.getValue())
+                ));
     }
 
     private static Stream<Arguments> HouseHoldInfosMethodSource(){

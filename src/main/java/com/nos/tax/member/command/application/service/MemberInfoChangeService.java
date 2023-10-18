@@ -21,10 +21,10 @@ import java.util.List;
 public class MemberInfoChangeService {
 
     private final MemberRepository memberRepository;
-    private final RequestValidator validator;
+    private final RequestValidator<MemberInfoChangeRequest> validator;
 
     public MemberInfoChangeService(MemberRepository memberRepository,
-                                   @MemberInfoChangeRequestQualifier RequestValidator validator) {
+                                   @MemberInfoChangeRequestQualifier RequestValidator<MemberInfoChangeRequest> validator) {
         this.memberRepository = memberRepository;
         this.validator = validator;
     }

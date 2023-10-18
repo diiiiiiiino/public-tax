@@ -29,7 +29,7 @@ public class MemberCreateRequestValidator implements RequestValidator<MemberCrea
         List<ValidationError> errors = new ArrayList<>();
 
         if(request == null){
-            errors.add(ValidationError.of("request", ValidationCode.EMPTY.getValue()));
+            errors.add(ValidationError.of("request", ValidationCode.NULL.getValue()));
         } else {
             String loginId = request.getLoginId();
             String password = request.getPassword();

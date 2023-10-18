@@ -16,7 +16,9 @@ public enum ValidationCode {
     /** 문자 데이터가 비어있는 경우 */
     NO_TEXT("no text"),
     /** 문자,배열,컬렉션 등이 지정된 길이와 다를 경우*/
-    LENGTH("length");
+    LENGTH("length"),
+    /** 체크박스를 하나만 선택해야 하는 경우 */
+    SELECT_ONE("selectOne");
 
     private String value;
 
