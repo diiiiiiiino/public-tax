@@ -11,6 +11,9 @@ import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * {@code WaterBillCreateRequest}의 변수의 유효성을 검증하는 클래스
+ */
 @Validator
 @WaterBillCreateRequestQualifier
 public class WaterBillCreateRequestValidator implements RequestValidator<WaterBillCreateRequest> {

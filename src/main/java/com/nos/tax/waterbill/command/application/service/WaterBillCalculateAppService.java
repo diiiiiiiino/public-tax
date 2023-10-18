@@ -22,6 +22,9 @@ import java.util.List;
 
 import static com.nos.tax.common.validator.RequestValidator.validateId;
 
+/**
+ * 수도요금 계산 서비스
+ */
 @Service
 @RequiredArgsConstructor
 public class WaterBillCalculateAppService {
@@ -31,6 +34,13 @@ public class WaterBillCalculateAppService {
     private final WaterMeterRepository waterMeterRepository;
     private final WaterBillCalculateService waterBillCalculateService;
 
+    /**
+     * 수도요금 계산
+     * @param memberId 회원 ID
+     * @param calculateYm 수도요금 계산 년월
+     * @throws BuildingNotFoundException 건물 미조회
+     * @throws WaterBillNotFoundException 수도요금 미조회
+     */
     @Transactional
     public void calculate(Long memberId, YearMonth calculateYm) {
         validateRequest(memberId, calculateYm);
@@ -46,6 +56,12 @@ public class WaterBillCalculateAppService {
         waterBillCalculateService.calculate(building, waterBill, waterMeters);
     }
 
+    /**
+     * 수도요금 계산 파라미터 유효성 검증
+     * @param memberId 회원 ID
+     * @param yearMonth 수도요금 계산 년월
+     * @return List<ValidationError>
+     */
     private List<ValidationError> validateRequest(Long memberId, YearMonth yearMonth){
         List<ValidationError> errors = new ArrayList<>();
 

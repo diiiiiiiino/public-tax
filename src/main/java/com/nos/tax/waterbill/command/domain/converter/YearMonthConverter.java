@@ -5,6 +5,9 @@ import org.springframework.util.StringUtils;
 
 import java.time.YearMonth;
 
+/**
+ * {@code YearMonth}클래스와 년월 값을 변환하기 위한 Converter
+ */
 public class YearMonthConverter implements AttributeConverter<YearMonth, String> {
 
     @Override

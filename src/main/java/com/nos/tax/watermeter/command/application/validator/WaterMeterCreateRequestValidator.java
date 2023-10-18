@@ -9,6 +9,9 @@ import com.nos.tax.watermeter.command.application.dto.WaterMeterCreateRequest;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * {@code WaterMeterCreateRequest}의 변수의 유효성을 검증하는 클래스
+ */
 @Validator
 @WaterMeterCreateRequestQualifier
 public class WaterMeterCreateRequestValidator implements RequestValidator<WaterMeterCreateRequest> {

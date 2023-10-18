@@ -5,6 +5,9 @@ import com.nos.tax.common.http.ErrorCode;
 
 import java.util.Map;
 
+/**
+ * 이번달 수도계량이 저번달 수도계량보다 작았을 때 발생하는 예외 
+ */
 public class PresentMeterSmallerException extends ApplicationException {
     public PresentMeterSmallerException(String message, ErrorCode errorCode) {
         super(message, errorCode);

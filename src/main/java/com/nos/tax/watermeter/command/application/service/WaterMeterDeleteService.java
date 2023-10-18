@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 수도계량 삭제 서비스
+ */
 @Service
 @RequiredArgsConstructor
 public class WaterMeterDeleteService {

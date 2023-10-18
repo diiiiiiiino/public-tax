@@ -22,8 +22,8 @@ public class WaterMeterController {
     private final WaterMeterDeleteService waterMeterDeleteService;
 
     /**
-     * @param securityMember
-     * @param request
+     * @param securityMember 인증 회원
+     * @param request 수도계량 생성 요청
      * @return Response
      * @throws ValidationErrorException 유효성 에러
      * <ul>

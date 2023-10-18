@@ -19,6 +19,9 @@ import java.util.List;
 
 import static com.nos.tax.common.validator.RequestValidator.validateId;
 
+/**
+ * 수도요금 생성 서비스
+ */
 @Service
 public class WaterBillCreateService {
 
@@ -38,6 +41,14 @@ public class WaterBillCreateService {
      * @param memberId
      * @param request
      * @return WaterBill
+     * @throws BuildingNotFoundException 건물 미조회
+     * @throws WaterBillDuplicateException 수도요금 중복
+     * @throws ValidationErrorException
+     * <ul>
+     *     <li>{@code request}가 {@code null}일 때
+     *     <li>{@code totalAmount}가 {@code null}이거나 음수일때
+     *     <li>{@code calculateYm}가 {@code null}일 때
+     * </ul>
      */
     @Transactional
     public WaterBill create(Long memberId, WaterBillCreateRequest request) {

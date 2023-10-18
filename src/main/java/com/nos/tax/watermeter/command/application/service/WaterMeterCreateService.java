@@ -15,6 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * 수도계량 생성 서비스
+ */
 @Service
 public class WaterMeterCreateService {
 
@@ -29,8 +32,8 @@ public class WaterMeterCreateService {
     }
 
     /**
-     * @param memberId
-     * @param request
+     * @param memberId 회원 ID
+     * @param request 수도 계량 생성 요청
      * @throws ValidationErrorException 유효성 에러
      * <ul>
      *     <li>{@code previousMeter}가 음수일때</li>

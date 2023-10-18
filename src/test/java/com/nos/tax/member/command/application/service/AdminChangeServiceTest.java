@@ -1,10 +1,12 @@
 package com.nos.tax.member.command.application.service;
 
+import com.nos.tax.authority.command.application.exception.AuthorityNotFoundException;
 import com.nos.tax.authority.command.domain.Authority;
 import com.nos.tax.authority.command.domain.enumeration.AuthorityEnum;
 import com.nos.tax.authority.command.domain.repositoy.AuthorityRepository;
 import com.nos.tax.common.exception.NotFoundException;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
+import com.nos.tax.member.command.application.exception.MemberNotFoundException;
 import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.member.command.domain.MemberAuthority;
 import com.nos.tax.member.command.domain.repository.MemberRepository;
@@ -44,7 +46,7 @@ public class AdminChangeServiceTest {
         when(memberRepository.findById(1L)).thenReturn(Optional.of(admin));
 
         Assertions.assertThatThrownBy(() -> adminChangeService.change(admin, 2L))
-                .isInstanceOf(NotFoundException.class)
+                .isInstanceOf(MemberNotFoundException.class)
                 .hasMessage("Target member not found");
     }
 
@@ -59,7 +61,7 @@ public class AdminChangeServiceTest {
         when(authorityRepository.findAllByNameInAndIsActive(anyList(), anyBoolean())).thenReturn(List.of());
 
         Assertions.assertThatThrownBy(() -> adminChangeService.change(admin, 2L))
-                .isInstanceOf(NotFoundException.class)
+                .isInstanceOf(AuthorityNotFoundException.class)
                 .hasMessage("Authority not found");
     }
 

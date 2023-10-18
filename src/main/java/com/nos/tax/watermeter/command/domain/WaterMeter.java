@@ -141,7 +141,7 @@ public class WaterMeter {
     }
 
     /**
-     * @param presentMeter
+     * @param presentMeter 이번달 수도계량
      */
     private void checkPresentMeterBiggerThanPreviousMeter(int presentMeter) {
         if(this.previousMeter > presentMeter){

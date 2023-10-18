@@ -14,13 +14,16 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 
+/**
+ * 수도요금 정산 서비스
+ */
 @Service
 public class WaterBillCalculateService {
 
     /**
-     * @param building
-     * @param waterBill
-     * @param waterMeters
+     * @param building 건물
+     * @param waterBill 수도요금
+     * @param waterMeters 수도계량
      * @throws WaterMeterNotAllCreatedException - 수도 계량 데이터가 세대수 만큼 생성되지 않았을 경우
      * @throws WaterBillNotReadyStateException - 수도 요금 상태가 준비 상태가 아닌 경우
      * @throws WaterBillNotCalculateStateException - 수도 요금 상태가 계산 상태가 아닌 경우
