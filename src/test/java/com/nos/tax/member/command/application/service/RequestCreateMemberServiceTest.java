@@ -1,7 +1,6 @@
 package com.nos.tax.member.command.application.service;
 
 import com.nos.tax.common.exception.CustomIllegalArgumentException;
-import com.nos.tax.common.exception.NotFoundException;
 import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.helper.builder.HouseHoldCreateHelperBuilder;
 import com.nos.tax.household.command.domain.repository.HouseHoldRepository;

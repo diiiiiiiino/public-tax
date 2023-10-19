@@ -3,7 +3,7 @@ package com.nos.tax.infra.security.jwt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nos.tax.common.exception.CustomIllegalArgumentException;
 import com.nos.tax.common.http.ErrorCode;
-import com.nos.tax.login.command.application.service.LoginRequest;
+import com.nos.tax.login.command.application.dto.LoginRequest;
 import com.nos.tax.member.command.application.security.SecurityMember;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

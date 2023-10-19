@@ -2,7 +2,8 @@ package com.nos.tax.member.command.application.service;
 
 import com.nos.tax.building.command.domain.Building;
 import com.nos.tax.building.command.domain.repository.BuildingRepository;
-import com.nos.tax.common.exception.*;
+import com.nos.tax.common.exception.ValidationCode;
+import com.nos.tax.common.exception.ValidationError;
 import com.nos.tax.member.command.application.dto.AdminCreateRequest;
 import com.nos.tax.member.command.application.dto.BuildingInfo;
 import com.nos.tax.member.command.application.dto.HouseHoldInfo;

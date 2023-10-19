@@ -1,4 +1,4 @@
-package com.nos.tax.login.command.application.service;
+package com.nos.tax.login.command.application.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

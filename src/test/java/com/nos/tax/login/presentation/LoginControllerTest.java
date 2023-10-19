@@ -1,7 +1,7 @@
 package com.nos.tax.login.presentation;
 
 import com.nos.tax.helper.BaseControllerTest;
-import com.nos.tax.login.command.application.service.LoginRequest;
+import com.nos.tax.login.command.application.dto.LoginRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

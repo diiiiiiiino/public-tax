@@ -4,7 +4,6 @@ import com.nos.tax.authority.command.application.exception.AuthorityNotFoundExce
 import com.nos.tax.authority.command.domain.Authority;
 import com.nos.tax.authority.command.domain.enumeration.AuthorityEnum;
 import com.nos.tax.authority.command.domain.repositoy.AuthorityRepository;
-import com.nos.tax.common.exception.NotFoundException;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
 import com.nos.tax.member.command.application.exception.MemberNotFoundException;
 import com.nos.tax.member.command.domain.Member;

@@ -14,8 +14,6 @@ import com.nos.tax.member.command.application.dto.MemberCreateRequest;
 import com.nos.tax.member.command.application.validator.annotation.AdminCreateRequestQualifier;
 import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.member.command.domain.repository.MemberRepository;
-import com.nos.tax.util.VerifyUtil;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

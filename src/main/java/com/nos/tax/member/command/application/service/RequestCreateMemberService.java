@@ -1,6 +1,5 @@
 package com.nos.tax.member.command.application.service;
 
-import com.nos.tax.common.exception.NotFoundException;
 import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.household.command.domain.repository.HouseHoldRepository;

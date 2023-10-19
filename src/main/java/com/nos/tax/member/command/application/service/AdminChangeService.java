@@ -4,7 +4,6 @@ import com.nos.tax.authority.command.application.exception.AuthorityNotFoundExce
 import com.nos.tax.authority.command.domain.Authority;
 import com.nos.tax.authority.command.domain.enumeration.AuthorityEnum;
 import com.nos.tax.authority.command.domain.repositoy.AuthorityRepository;
-import com.nos.tax.common.exception.NotFoundException;
 import com.nos.tax.member.command.application.exception.MemberNotFoundException;
 import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.member.command.domain.MemberAuthority;
@@ -30,7 +29,7 @@ public class AdminChangeService {
      * 관리자 변경
      * @param admin 관리자
      * @param memberId 변경대상 회원 ID
-     * @throws MemberNotFoundException 회원 미조회
+     * @throws MemberNotFoundException 관리자로 변경할 회원 미조회
      * @throws AuthorityNotFoundException 권한 미조회
      */
     @Transactional
