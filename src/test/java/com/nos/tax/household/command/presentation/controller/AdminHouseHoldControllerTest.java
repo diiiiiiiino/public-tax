@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @ActiveProfiles("test")
-public class HouseHoldControllerTest extends BaseControllerTest {
+public class AdminHouseHoldControllerTest extends BaseControllerTest {
 
     @MockBean
     private HouseHoldMoveOutService houseHoldMoveOutService;
@@ -36,7 +36,7 @@ public class HouseHoldControllerTest extends BaseControllerTest {
 
     @BeforeEach
     void beforeEach() throws Exception {
-        login("abcde", "qwer1234!@");
+        login("admin", "qwer1234!@");
     }
 
     @DisplayName("세대 이사시 세대 ID NULL인 경우")
@@ -45,7 +45,7 @@ public class HouseHoldControllerTest extends BaseControllerTest {
         doThrow(new ValidationErrorException("householdId is null"))
                 .when(houseHoldMoveOutService).leave(anyLong());
 
-        mvcPerform(post("/household/move-out/1"), null)
+        mvcPerform(post("/admin/household/move-out/1"), null)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errorCode").value("InvalidRequest"));
     }
@@ -56,7 +56,7 @@ public class HouseHoldControllerTest extends BaseControllerTest {
         doThrow(new HouseHoldNotFoundException("Household not found"))
                 .when(houseHoldMoveOutService).leave(anyLong());
 
-        mvcPerform(post("/household/move-out/1"), null)
+        mvcPerform(post("/admin/household/move-out/1"), null)
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.errorCode").value("HouseHoldNotFound"));
     }
@@ -64,7 +64,7 @@ public class HouseHoldControllerTest extends BaseControllerTest {
     @DisplayName("세대 이사 성공")
     @Test
     void whenHouseHoldMoveOutThenSuccess() throws Exception {
-        mvcPerform(post("/household/move-out/1"), null)
+        mvcPerform(post("/admin/household/move-out/1"), null)
                 .andExpect(status().isOk());
     }
 
@@ -78,7 +78,7 @@ public class HouseHoldControllerTest extends BaseControllerTest {
         doThrow(new ValidationErrorException("Request has invalid values", errors))
                 .when(houseHolderChangeService).change(anyLong(), anyLong());
 
-        mvcPerform(post("/household/householder/1/1"), null)
+        mvcPerform(post("/admin/household/householder/1/1"), null)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errors").isNotEmpty());
     }
@@ -89,7 +89,7 @@ public class HouseHoldControllerTest extends BaseControllerTest {
         doThrow(new HouseHoldNotFoundException("Household not found"))
                 .when(houseHolderChangeService).change(anyLong(), anyLong());
 
-        mvcPerform(post("/household/householder/1/1"), null)
+        mvcPerform(post("/admin/household/householder/1/1"), null)
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.errorCode").value("HouseHoldNotFound"));
     }
@@ -100,7 +100,7 @@ public class HouseHoldControllerTest extends BaseControllerTest {
         doThrow(new MemberNotFoundException("Member not found"))
                 .when(houseHolderChangeService).change(anyLong(), anyLong());
 
-        mvcPerform(post("/household/householder/1/1"), null)
+        mvcPerform(post("/admin/household/householder/1/1"), null)
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.errorCode").value("MemberNotFound"));
     }
@@ -108,7 +108,7 @@ public class HouseHoldControllerTest extends BaseControllerTest {
     @DisplayName("세대주 변경 성공")
     @Test
     void whenHouseHolderChangeThenSuccess() throws Exception {
-        mvcPerform(post("/household/householder/1/1"), null)
+        mvcPerform(post("/admin/household/householder/1/1"), null)
                 .andExpect(status().isOk());
     }
 }

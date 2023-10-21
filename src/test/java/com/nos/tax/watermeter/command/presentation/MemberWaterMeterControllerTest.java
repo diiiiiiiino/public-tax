@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @ActiveProfiles("test")
-public class WaterMeterControllerTest extends BaseControllerTest {
+public class MemberWaterMeterControllerTest extends BaseControllerTest {
 
     @MockBean
     private WaterMeterCreateService waterMeterCreateService;
@@ -56,7 +56,7 @@ public class WaterMeterControllerTest extends BaseControllerTest {
         doThrow(new ValidationErrorException("Request has invalid values", errors))
                 .when(waterMeterCreateService).create(any(), any(WaterMeterCreateRequest.class));
 
-        mvcPerform(post("/water-meter"), request)
+        mvcPerform(post("/member/water-meter"), request)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errors").isNotEmpty());
     }
@@ -67,7 +67,7 @@ public class WaterMeterControllerTest extends BaseControllerTest {
         doThrow(new WaterMeterNotFoundException("WaterMeter not found"))
                 .when(waterMeterDeleteService).delete(anyLong());
 
-        mvcPerform(delete("/water-meter/1"), null)
+        mvcPerform(delete("/member/water-meter/1"), null)
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.errorCode").value("WaterMeterNotFound"));
     }
@@ -78,7 +78,7 @@ public class WaterMeterControllerTest extends BaseControllerTest {
         doThrow(new WaterMeterDeleteStateException("WaterMeter can be deleted before the water bill is settled"))
                 .when(waterMeterDeleteService).delete(anyLong());
 
-        mvcPerform(delete("/water-meter/1"), null)
+        mvcPerform(delete("/member/water-meter/1"), null)
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.errorCode").value("WaterMeterDeleteState"));
     }
@@ -86,7 +86,7 @@ public class WaterMeterControllerTest extends BaseControllerTest {
     @DisplayName("수도 계량 삭제 성공")
     @Test
     void whenWaterMeterDeleteSuccess() throws Exception {
-        mvcPerform(delete("/water-meter/1"), null)
+        mvcPerform(delete("/member/water-meter/1"), null)
                 .andExpect(status().isOk());
     }
 }

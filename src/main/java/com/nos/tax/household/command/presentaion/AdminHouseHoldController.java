@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
  * 세대 관련 API를 처리하는 Controller
  */
 @RestController
-@RequestMapping("/household")
+@RequestMapping("/admin/household")
 @RequiredArgsConstructor
-public class HouseHoldController {
+public class AdminHouseHoldController {
 
     private final HouseHoldMoveOutService houseHoldMoveOutService;
     private final HouseHolderChangeService houseHolderChangeService;

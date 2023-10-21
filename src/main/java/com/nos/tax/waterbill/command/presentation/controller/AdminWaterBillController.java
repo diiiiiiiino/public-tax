@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.*;
 import java.time.YearMonth;
 
 @RestController
-@RequestMapping("/water-bill")
+@RequestMapping("/admin/water-bill")
 @RequiredArgsConstructor
-public class WaterBillController {
+public class AdminWaterBillController {
 
     private final WaterBillCreateService waterBillCreateService;
     private final WaterBillCalculateAppService waterBillCalculateAppService;

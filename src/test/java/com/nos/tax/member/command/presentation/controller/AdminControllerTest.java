@@ -52,7 +52,7 @@ public class AdminControllerTest extends BaseControllerTest {
 
     @BeforeEach
     void beforeEach() throws Exception {
-        login("abcde", "qwer1234!@");
+        login("admin", "qwer1234!@");
     }
 
     @DisplayName("관리자 생성 요청이 비정상적일 때")

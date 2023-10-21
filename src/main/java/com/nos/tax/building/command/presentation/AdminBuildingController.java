@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/building")
+@RequestMapping("/admin/building")
 @RestController
 @RequiredArgsConstructor
-public class BuildingController {
+public class AdminBuildingController {
 
     private final BuildingDeleteService buildingDeleteService;
 

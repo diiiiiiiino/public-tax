@@ -18,14 +18,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @ActiveProfiles("test")
-public class BuildingControllerTest extends BaseControllerTest {
+public class AdminBuildingControllerTest extends BaseControllerTest {
 
     @MockBean
     private BuildingDeleteService buildingDeleteService;
 
     @BeforeEach
     void beforeEach() throws Exception {
-        login("abcde", "qwer1234!@");
+        login("admin", "qwer1234!@");
     }
 
     @DisplayName("건물 삭제 시 건물이 조회되지 않았을 때")
@@ -34,7 +34,7 @@ public class BuildingControllerTest extends BaseControllerTest {
         doThrow(new BuildingNotFoundException("BuildingNotFound"))
                 .when(buildingDeleteService).delete(anyLong());
 
-        mvcPerform(delete("/building/1"), null)
+        mvcPerform(delete("/admin/building/1"), null)
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.errorCode").value("BuildingNotFound"));
     }
@@ -42,7 +42,7 @@ public class BuildingControllerTest extends BaseControllerTest {
     @DisplayName("건물 삭제 완료")
     @Test
     void whenBuildingDeleteThenSuccess() throws Exception {
-        mvcPerform(delete("/building/1"), null)
+        mvcPerform(delete("/admin/building/1"), null)
                 .andExpect(status().isOk());
     }
 }

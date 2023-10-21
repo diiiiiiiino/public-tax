@@ -14,9 +14,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/water-meter")
+@RequestMapping("/member/water-meter")
 @RequiredArgsConstructor
-public class WaterMeterController {
+public class MemberWaterMeterController {
 
     private final WaterMeterCreateService waterMeterCreateService;
     private final WaterMeterDeleteService waterMeterDeleteService;

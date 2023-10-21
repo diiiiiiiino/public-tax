@@ -73,6 +73,8 @@ public class SecurityConfig {
         http.authorizeHttpRequests(registry -> registry
                         .requestMatchers(AUTH_WHITELIST).permitAll()
                         .requestMatchers("/member/**").hasRole("MEMBER")
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/login/**").hasAnyRole("MEMBER", "ADMIN")
                         .anyRequest().authenticated())
                 .cors(configure -> configure.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())

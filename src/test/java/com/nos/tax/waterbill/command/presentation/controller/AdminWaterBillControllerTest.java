@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @ActiveProfiles("test")
-public class WaterBillControllerTest extends BaseControllerTest {
+public class AdminWaterBillControllerTest extends BaseControllerTest {
 
     @MockBean
     private WaterBillCreateService waterBillCreateService;
@@ -42,7 +42,7 @@ public class WaterBillControllerTest extends BaseControllerTest {
 
     @BeforeEach
     void beforeEach() throws Exception {
-        login("abcde", "qwer1234!@");
+        login("admin", "qwer1234!@");
     }
 
     @DisplayName("수도요금 정산 데이터 생성 파라미터 유효성 에러")
@@ -57,7 +57,7 @@ public class WaterBillControllerTest extends BaseControllerTest {
         doThrow(new ValidationErrorException("Request has invalid values", errors))
                 .when(waterBillCreateService).create(any(), any(WaterBillCreateRequest.class));
 
-        mvcPerform(post("/water-bill"), request)
+        mvcPerform(post("/admin/water-bill"), request)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errors").isNotEmpty());
     }
@@ -70,7 +70,7 @@ public class WaterBillControllerTest extends BaseControllerTest {
         doThrow(new BuildingNotFoundException("Building not found"))
                 .when(waterBillCreateService).create(any(), any(WaterBillCreateRequest.class));
 
-        mvcPerform(post("/water-bill"), request)
+        mvcPerform(post("/admin/water-bill"), request)
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.errorCode").value("BuildingNotFound"));
     }
@@ -83,7 +83,7 @@ public class WaterBillControllerTest extends BaseControllerTest {
         doThrow(new WaterBillDuplicateException("2023-08 WaterBill is exists"))
                 .when(waterBillCreateService).create(any(), any(WaterBillCreateRequest.class));
 
-        mvcPerform(post("/water-bill"), request)
+        mvcPerform(post("/admin/water-bill"), request)
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.errorCode").value("WaterBillDuplicate"));
     }
@@ -93,7 +93,7 @@ public class WaterBillControllerTest extends BaseControllerTest {
     void whenWaterBillCreateThenSuccess() throws Exception {
         WaterBillCreateRequest request = WaterBillCreateRequest.of(40000, YearMonth.of(2023, 8));
 
-        mvcPerform(post("/water-bill"), request)
+        mvcPerform(post("/admin/water-bill"), request)
                 .andExpect(status().isOk());
     }
 
@@ -107,7 +107,7 @@ public class WaterBillControllerTest extends BaseControllerTest {
         doThrow(new ValidationErrorException("Request has invalid values", errors))
                 .when(waterBillCalculateAppService).calculate(any(), any(YearMonth.class));
 
-        mvcPerform(post("/water-bill/calculate/2023-08"), null)
+        mvcPerform(post("/admin/water-bill/calculate/2023-08"), null)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errors").isNotEmpty());
     }
@@ -118,7 +118,7 @@ public class WaterBillControllerTest extends BaseControllerTest {
         doThrow(new BuildingNotFoundException("Building not found"))
                 .when(waterBillCalculateAppService).calculate(any(), any(YearMonth.class));
 
-        mvcPerform(post("/water-bill/calculate/2023-08"), null)
+        mvcPerform(post("/admin/water-bill/calculate/2023-08"), null)
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.errorCode").value("BuildingNotFound"));
     }
@@ -129,7 +129,7 @@ public class WaterBillControllerTest extends BaseControllerTest {
         doThrow(new WaterBillNotFoundException("WaterBill not found"))
                 .when(waterBillCalculateAppService).calculate(any(), any(YearMonth.class));
 
-        mvcPerform(post("/water-bill/calculate/2023-08"), null)
+        mvcPerform(post("/admin/water-bill/calculate/2023-08"), null)
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.errorCode").value("WaterBillNotFound"));
     }
@@ -140,7 +140,7 @@ public class WaterBillControllerTest extends BaseControllerTest {
         doThrow(new WaterMeterNotAllCreatedException("Water meter not all created"))
                 .when(waterBillCalculateAppService).calculate(any(), any(YearMonth.class));
 
-        mvcPerform(post("/water-bill/calculate/2023-08"), null)
+        mvcPerform(post("/admin/water-bill/calculate/2023-08"), null)
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.errorCode").value("WaterMeterNotAllCreated"));
     }
@@ -151,7 +151,7 @@ public class WaterBillControllerTest extends BaseControllerTest {
         doThrow(new WaterBillNotReadyStateException("You can only calculate the water bill when you are ready"))
                 .when(waterBillCalculateAppService).calculate(any(), any(YearMonth.class));
 
-        mvcPerform(post("/water-bill/calculate/2023-08"), null)
+        mvcPerform(post("/admin/water-bill/calculate/2023-08"), null)
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.errorCode").value("WaterBillNotReadyState"));
     }
@@ -162,7 +162,7 @@ public class WaterBillControllerTest extends BaseControllerTest {
         doThrow(new WaterBillNotCalculateStateException("WaterBillDetail addition is possible when calculating state"))
                 .when(waterBillCalculateAppService).calculate(any(), any(YearMonth.class));
 
-        mvcPerform(post("/water-bill/calculate/2023-08"), null)
+        mvcPerform(post("/admin/water-bill/calculate/2023-08"), null)
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.errorCode").value("WaterBillNotCalculateState"));
     }
@@ -170,7 +170,7 @@ public class WaterBillControllerTest extends BaseControllerTest {
     @DisplayName("수도요금 계산 성공")
     @Test
     void whenWaterBillCalculateThenSuccess() throws Exception {
-        mvcPerform(post("/water-bill/calculate/2023-08"), null)
+        mvcPerform(post("/admin/water-bill/calculate/2023-08"), null)
                 .andExpect(status().isOk());
     }
 }
