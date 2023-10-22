@@ -4,6 +4,9 @@ import com.nos.tax.common.http.Response;
 import com.nos.tax.login.command.application.service.LoginRecordService;
 import com.nos.tax.member.command.application.exception.MemberNotFoundException;
 import com.nos.tax.member.command.application.security.SecurityMember;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -29,6 +32,12 @@ public class LoginController {
      * @return Response
      * @throws MemberNotFoundException 회원 미조회
      */
+    @Operation(summary = "로그인 이력 기록", description = "로그인 이력 기록")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "정상"),
+            @ApiResponse(responseCode = "404", description = "회원 미조회"),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류")
+    })
     @PostMapping
     public Response<Void> login(@AuthenticationPrincipal SecurityMember securityMember,
                                 HttpServletRequest request) {
