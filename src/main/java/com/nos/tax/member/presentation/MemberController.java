@@ -18,6 +18,9 @@ import com.nos.tax.member.command.application.service.PasswordChangeService;
 import com.nos.tax.member.command.domain.exception.PasswordNotMatchedException;
 import com.nos.tax.member.command.domain.exception.PasswordOutOfConditionException;
 import com.nos.tax.member.command.domain.exception.UpdatePasswordSameException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +36,7 @@ public class MemberController {
     private final MemberWithdrawService memberWithdrawService;
 
     /**
-     * @param request
+     * @param request 멤버 생성 요청
      * @return Response
      * @throws ValidationErrorException 유효하지 않은 값이 있을때
      * @throws InviteCodeNotFoundException 초대코드가 조회되지 않을 때
@@ -41,6 +44,13 @@ public class MemberController {
      * @throws HouseHoldNotFoundException 세대가 조회되지 않을 때
      * @throws PasswordOutOfConditionException 비밀번호 정책에 맞지 않을 때
      */
+    @Operation(summary = "회원 생성", description = "회원 생성")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "정상"),
+            @ApiResponse(responseCode = "400", description = "유효하지 않은 값이 있을때 / 초대코드 만료 / 비밀번호 정책에 맞지 않을 때"),
+            @ApiResponse(responseCode = "404", description = "초대코드 / 세대 미조회"),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류")
+    })
     @PostMapping
     public Response<Void> createMember(@RequestBody MemberCreateRequest request){
         memberCreateService.create(request);
@@ -48,12 +58,19 @@ public class MemberController {
     }
 
     /**
-     * @param securityMember
+     * @param securityMember 인증완료 회원
      * @param request
      * @return Response
      * @throws ValidationErrorException 유효하지 않은 값이 있을때
      * @throws MemberNotFoundException 회원이 조회되지 않을 때
      */
+    @Operation(summary = "회원 생성", description = "회원 생성")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "정상"),
+            @ApiResponse(responseCode = "400", description = "유효하지 않은 값이 있을때 / 초대코드 만료 / 비밀번호 정책에 맞지 않을 때"),
+            @ApiResponse(responseCode = "404", description = "초대코드 / 세대 미조회"),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류")
+    })
     @PatchMapping
     public Response<Void> updateMember(@AuthenticationPrincipal SecurityMember securityMember, @RequestBody MemberInfoChangeRequest request){
         memberInfoChangeService.change(securityMember.getMember().getId(), request);
@@ -61,7 +78,7 @@ public class MemberController {
     }
 
     /**
-     * @param securityMember
+     * @param securityMember 인증완료 회원
      * @param request
      * @return Response
      * @throws ValidationErrorException 유효하지 않은 값이 있을때
@@ -69,6 +86,13 @@ public class MemberController {
      * @throws PasswordNotMatchedException 비밀번호가 틀렸을때
      * @throws UpdatePasswordSameException 변경하는 비밀번호가 기존가 동일할때
      */
+    @Operation(summary = "회원 생성", description = "회원 생성")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "정상"),
+            @ApiResponse(responseCode = "400", description = "비밀번호가 틀렸을때 / 변경하는 비밀번호가 기존가 동일할때"),
+            @ApiResponse(responseCode = "404", description = "회원 미조회"),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류")
+    })
     @PatchMapping("/password")
     public Response<Void> updatePassword(@AuthenticationPrincipal SecurityMember securityMember, @RequestBody PasswordChangeRequest request){
         passwordChangeService.change(securityMember.getMember().getId(), request);
@@ -79,17 +103,28 @@ public class MemberController {
      * @param securityMember 인증완료 회원
      * @return {@code Http Response} 회원
      */
+    @Operation(summary = "회원 조회", description = "회원 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "정상"),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류")
+    })
     @GetMapping
     public Response<MemberResponse> getMember(@AuthenticationPrincipal SecurityMember securityMember){
         return Response.ok(MemberResponse.from(securityMember));
     }
 
     /**
-     * @param securityMember
+     * @param securityMember 인증완료 회원
      * @return Response
      * @throws MemberNotFoundException 회원이 조회되지 않을때
      * @throws HouseHoldNotFoundException 세대가 조회되지 않을때
      */
+    @Operation(summary = "회원 생성", description = "회원 생성")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "정상"),
+            @ApiResponse(responseCode = "404", description = "회원 / 세대 미조회"),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류")
+    })
     @PostMapping("/withdraw")
     public Response<Void> withdraw(@AuthenticationPrincipal SecurityMember securityMember){
         memberWithdrawService.withDraw(securityMember.getMember());

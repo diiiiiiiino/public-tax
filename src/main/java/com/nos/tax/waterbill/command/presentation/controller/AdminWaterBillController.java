@@ -9,6 +9,9 @@ import com.nos.tax.waterbill.command.application.exception.WaterBillNotFoundExce
 import com.nos.tax.waterbill.command.application.service.WaterBillCalculateAppService;
 import com.nos.tax.waterbill.command.application.service.WaterBillCreateService;
 import com.nos.tax.waterbill.command.domain.exception.WaterBillDuplicateException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +39,13 @@ public class AdminWaterBillController {
      *     <li>{@code calculateYm}가 {@code null}일 때
      * </ul>
      */
+    @Operation(summary = "수도요금 생성", description = "수도요금 생성")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "정상"),
+            @ApiResponse(responseCode = "404", description = "건물 미조회"),
+            @ApiResponse(responseCode = "409", description = "수도요금 중복"),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류")
+    })
     @PostMapping
     public Response<Void> createWaterBill(Member admin, @RequestBody WaterBillCreateRequest request){
         waterBillCreateService.create(admin.getId(), request);
@@ -50,6 +60,12 @@ public class AdminWaterBillController {
      * @throws BuildingNotFoundException 건물 미조회
      * @throws WaterBillNotFoundException 수도요금 미조회
      */
+    @Operation(summary = "수도요금 정산", description = "수도요금 정산")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "정상"),
+            @ApiResponse(responseCode = "404", description = "건물 / 수도요금 미조회"),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류")
+    })
     @PostMapping("/calculate/{calculateYm}")
     public Response<Void> calculateWaterBill(Member admin, @PathVariable YearMonth calculateYm){
         waterBillCalculateAppService.calculate(admin.getId(), calculateYm);

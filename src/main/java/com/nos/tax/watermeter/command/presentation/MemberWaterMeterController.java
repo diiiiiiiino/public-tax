@@ -9,6 +9,9 @@ import com.nos.tax.watermeter.command.application.exception.WaterMeterDeleteStat
 import com.nos.tax.watermeter.command.application.exception.WaterMeterNotFoundException;
 import com.nos.tax.watermeter.command.application.service.WaterMeterCreateService;
 import com.nos.tax.watermeter.command.application.service.WaterMeterDeleteService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +25,7 @@ public class MemberWaterMeterController {
     private final WaterMeterDeleteService waterMeterDeleteService;
 
     /**
+     * 수도계량 데이터 생성
      * @param securityMember 인증 회원
      * @param request 수도계량 생성 요청
      * @return Response
@@ -33,6 +37,13 @@ public class MemberWaterMeterController {
      * </ul>
      * @throws HouseHoldNotFoundException 세대 미조회
      */
+    @Operation(summary = "수도계량 데이터 생성", description = "수도계량 데이터 생성")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "정상"),
+            @ApiResponse(responseCode = "400", description = "유효성 에러"),
+            @ApiResponse(responseCode = "404", description = "세대 미조회"),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류")
+    })
     @PostMapping
     public Response<Void> create(
             @AuthenticationPrincipal SecurityMember securityMember, 
@@ -44,11 +55,19 @@ public class MemberWaterMeterController {
     }
 
     /**
+     * 수도계량 데이터 삭제
      * @param id
      * @return Response
      * @throws WaterMeterNotFoundException 수도 계량 미조회
      * @throws WaterMeterDeleteStateException 수도 계량 삭제 조건 미충족
      */
+    @Operation(summary = "수도계량 데이터 삭제", description = "수도계량 데이터 삭제")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "정상"),
+            @ApiResponse(responseCode = "403", description = "수도 계량 삭제 조건 미충족"),
+            @ApiResponse(responseCode = "404", description = "수도 계량 미조회"),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류")
+    })
     @DeleteMapping("/{id}")
     public Response<Void> delete(
             @PathVariable Long id
