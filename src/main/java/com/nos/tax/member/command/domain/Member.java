@@ -39,23 +39,24 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, columnDefinition = "char(12)")
     @Enumerated(EnumType.STRING)
     private MemberState state = MemberState.ACTIVATION;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "char(20)")
     private String loginId;
 
     @Embedded
     @AttributeOverrides(value = {
             @AttributeOverride(name = "value", column = @Column(name = "password"))
     })
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "char(16)")
     private Password password;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "char(15)")
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "char(11)")
     @Convert(converter = MobileConverter.class)
     private Mobile mobile;
 

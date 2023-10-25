@@ -30,10 +30,11 @@ public class Building {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, columnDefinition = "char(10)")
     @Enumerated(EnumType.STRING)
     private BuildingState state = BuildingState.ACTIVATION;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "char(20)")
     private String name;
 
     @Embedded

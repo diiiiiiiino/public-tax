@@ -33,14 +33,14 @@ public class MemberInvite {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private HouseHold houseHold;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, columnDefinition = "char(11)")
     @Convert(converter = MobileConverter.class)
     private Mobile mobile;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, columnDefinition = "char(6)")
     private String code;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "timestamp(4)")
     private LocalDateTime expireDateTime;
 
     /**

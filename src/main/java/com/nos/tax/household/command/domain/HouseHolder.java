@@ -4,10 +4,7 @@ import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.member.command.domain.Mobile;
 import com.nos.tax.member.command.domain.converter.MobileConverter;
 import com.nos.tax.util.VerifyUtil;
-import jakarta.persistence.Convert;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,8 +27,10 @@ public class HouseHolder {
     @OneToOne(fetch = FetchType.LAZY)
     private Member member;
 
+    @Column(nullable = false, columnDefinition = "char(20)")
     private String name;
 
+    @Column(nullable = false, columnDefinition = "char(11)")
     @Convert(converter = MobileConverter.class)
     private Mobile mobile;
 

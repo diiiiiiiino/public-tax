@@ -35,13 +35,21 @@ public class WaterMeter {
     @ManyToOne(fetch = FetchType.LAZY)
     private HouseHold houseHold;
 
+    @Column(nullable = false, columnDefinition = "char(12)")
     @Enumerated(EnumType.STRING)
     private WaterMeterState state;
 
+    @Column(nullable = false, columnDefinition = "char(6)")
     @Convert(converter = YearMonthConverter.class)
     private YearMonth calculateYm;
+
+    @Column(nullable = false, columnDefinition = "smallint")
     private int previousMeter;
+
+    @Column(nullable = false, columnDefinition = "smallint")
     private int presentMeter;
+
+    @Column(nullable = false, columnDefinition = "smallint")
     private int usage;
 
     /**

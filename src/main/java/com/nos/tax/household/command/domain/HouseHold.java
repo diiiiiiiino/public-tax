@@ -34,9 +34,10 @@ public class HouseHold {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Building building;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false, columnDefinition = "char(6)")
     private String room;
 
+    @Column(nullable = false, columnDefinition = "char(10)")
     @Enumerated(EnumType.STRING)
     private HouseHoldState houseHoldState = HouseHoldState.EMPTY;
 

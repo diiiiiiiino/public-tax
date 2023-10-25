@@ -35,6 +35,7 @@ public class WaterBill {
     @ManyToOne(fetch = FetchType.LAZY)
     private Building building;
 
+    @Column(nullable = false, columnDefinition = "char(11)")
     @Enumerated(EnumType.STRING)
     private WaterBillState state;
 
@@ -43,9 +44,13 @@ public class WaterBill {
     @OrderColumn(name = "line_idx")
     private List<WaterBillDetail> waterBillDetails = new ArrayList<>();
 
+    @Column(nullable = false, columnDefinition = "int")
     private int totalAmount;
+
+    @Column(columnDefinition = "decimal(8, 2)")
     private double unitAmount;
 
+    @Column(nullable = false, columnDefinition = "char(6)")
     @Convert(converter = YearMonthConverter.class)
     private YearMonth calculateYm;
 

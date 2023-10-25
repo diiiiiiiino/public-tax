@@ -3,10 +3,7 @@ package com.nos.tax.waterbill.command.domain;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.util.VerifyUtil;
 import com.nos.tax.watermeter.command.domain.WaterMeter;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,7 +26,10 @@ public class WaterBillDetail {
     @OneToOne(fetch = FetchType.LAZY)
     private WaterMeter waterMeter;
 
+    @Column(nullable = false, columnDefinition = "int")
     private int amount;
+
+    @Column(nullable = false, columnDefinition = "int")
     private int difference;
 
     /**
