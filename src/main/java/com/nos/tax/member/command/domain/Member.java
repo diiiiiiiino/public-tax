@@ -39,7 +39,7 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, columnDefinition = "char(12)")
+    @Column(nullable = false, columnDefinition = "varchar(12)")
     @Enumerated(EnumType.STRING)
     private MemberState state = MemberState.ACTIVATION;
 
