@@ -51,7 +51,7 @@ public class WaterMeterRepositoryTest {
 
         assertThat(waterMeter.getPreviousMeter()).isEqualTo(650);
         assertThat(waterMeter.getPresentMeter()).isEqualTo(760);
-        assertThat(waterMeter.getUsage()).isEqualTo(110);
+        assertThat(waterMeter.getWaterUsage()).isEqualTo(110);
         assertThat(waterMeter.getCalculateYm()).isEqualTo(YearMonth.of(2023, 7));
     }
 

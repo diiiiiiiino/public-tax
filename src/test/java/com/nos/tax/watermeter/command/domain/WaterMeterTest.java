@@ -65,7 +65,7 @@ public class WaterMeterTest {
         Building building = BuildingCreateHelperBuilder.builder().build();
         WaterMeter waterMeter = WaterMeter.of(100, 200, YearMonth.of(2023, 7), building.getHouseHolds().get(0));
 
-        assertThat(waterMeter.getUsage()).isEqualTo(100);
+        assertThat(waterMeter.getWaterUsage()).isEqualTo(100);
     }
 
     @DisplayName("수도 계량 삭제 상태로 변경")

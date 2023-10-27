@@ -1,5 +1,6 @@
 package com.nos.tax.waterbill.command.domain;
 
+import com.nos.tax.common.entity.BaseEntity;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.util.VerifyUtil;
 import com.nos.tax.watermeter.command.domain.WaterMeter;
@@ -18,12 +19,12 @@ import lombok.NoArgsConstructor;
 @Getter
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class WaterBillDetail {
+public class WaterBillDetail extends BaseEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private HouseHold houseHold;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     private WaterMeter waterMeter;
 
     @Column(nullable = false, columnDefinition = "int")

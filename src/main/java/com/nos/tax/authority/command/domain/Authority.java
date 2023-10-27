@@ -1,6 +1,7 @@
 package com.nos.tax.authority.command.domain;
 
 import com.nos.tax.authority.command.domain.enumeration.AuthorityEnum;
+import com.nos.tax.common.entity.BaseEntity;
 import com.nos.tax.util.VerifyUtil;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -19,14 +20,14 @@ import static com.nos.tax.common.enumeration.TextLengthRange.AUTHORITY_NAME;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Authority {
+public class Authority extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false, columnDefinition = "varchar(20)")
     private String name;
 
-    @Column(name = "active_yn")
+    @Column(name = "active_yn", nullable = false, columnDefinition = "tinyint(1)")
     private boolean isActive = true;
 
     /**

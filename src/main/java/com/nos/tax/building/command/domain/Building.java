@@ -1,5 +1,6 @@
 package com.nos.tax.building.command.domain;
 
+import com.nos.tax.common.entity.BaseEntity;
 import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.util.VerifyUtil;
@@ -25,12 +26,12 @@ import static com.nos.tax.common.enumeration.TextLengthRange.BUILDING_NAME;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Building {
+public class Building extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, columnDefinition = "char(10)")
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private BuildingState state = BuildingState.ACTIVATION;
 

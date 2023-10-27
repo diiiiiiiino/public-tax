@@ -1,5 +1,6 @@
 package com.nos.tax.watermeter.command.domain;
 
+import com.nos.tax.common.entity.BaseEntity;
 import com.nos.tax.common.http.ErrorCode;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.util.VerifyUtil;
@@ -27,15 +28,15 @@ import java.util.Map;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class WaterMeter {
+public class WaterMeter extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private HouseHold houseHold;
 
-    @Column(nullable = false, columnDefinition = "char(12)")
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private WaterMeterState state;
 
@@ -50,7 +51,7 @@ public class WaterMeter {
     private int presentMeter;
 
     @Column(nullable = false, columnDefinition = "smallint")
-    private int usage;
+    private int waterUsage;
 
     /**
      * @param previousMeter 이전 달 수도계량 값
@@ -112,7 +113,7 @@ public class WaterMeter {
      * 이번달 수도사용량을 계산한다.
      */
     private void calculateUsage() {
-        usage = presentMeter - previousMeter;
+        waterUsage = presentMeter - previousMeter;
     }
 
     /**

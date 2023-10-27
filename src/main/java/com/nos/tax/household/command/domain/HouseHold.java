@@ -1,6 +1,7 @@
 package com.nos.tax.household.command.domain;
 
 import com.nos.tax.building.command.domain.Building;
+import com.nos.tax.common.entity.BaseEntity;
 import com.nos.tax.common.exception.CustomNullPointerException;
 import com.nos.tax.household.command.domain.enumeration.HouseHoldState;
 import com.nos.tax.member.command.domain.Member;
@@ -27,7 +28,7 @@ import static com.nos.tax.common.enumeration.TextLengthRange.HOUSEHOLD_ROOM;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class HouseHold {
+public class HouseHold extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -37,13 +38,13 @@ public class HouseHold {
     @Column(unique = true, nullable = false, columnDefinition = "char(6)")
     private String room;
 
-    @Column(nullable = false, columnDefinition = "char(10)")
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private HouseHoldState houseHoldState = HouseHoldState.EMPTY;
 
     @AttributeOverrides(value = {
-            @AttributeOverride(name = "name", column = @Column(name = "house_holder_name")),
-            @AttributeOverride(name = "mobile", column = @Column(name = "house_holder_mobile")),
+            @AttributeOverride(name = "name", column = @Column(name = "house_holder_name", nullable = false, columnDefinition = "char(20)")),
+            @AttributeOverride(name = "mobile", column = @Column(name = "house_holder_mobile", nullable = false, columnDefinition = "char(11)")),
     })
     @Embedded
     private HouseHolder houseHolder;

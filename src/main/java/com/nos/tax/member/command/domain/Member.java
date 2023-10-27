@@ -39,7 +39,7 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, columnDefinition = "varchar(12)")
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private MemberState state = MemberState.ACTIVATION;
 
@@ -48,9 +48,8 @@ public class Member extends BaseEntity {
 
     @Embedded
     @AttributeOverrides(value = {
-            @AttributeOverride(name = "value", column = @Column(name = "password"))
+            @AttributeOverride(name = "value", column = @Column(name = "password", nullable = false, columnDefinition = "char(128)"))
     })
-    @Column(nullable = false, columnDefinition = "char(16)")
     private Password password;
 
     @Column(nullable = false, columnDefinition = "char(15)")

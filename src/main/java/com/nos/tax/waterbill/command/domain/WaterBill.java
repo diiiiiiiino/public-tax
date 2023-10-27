@@ -1,6 +1,7 @@
 package com.nos.tax.waterbill.command.domain;
 
 import com.nos.tax.building.command.domain.Building;
+import com.nos.tax.common.entity.BaseEntity;
 import com.nos.tax.util.VerifyUtil;
 import com.nos.tax.waterbill.command.domain.converter.YearMonthConverter;
 import com.nos.tax.waterbill.command.domain.enumeration.WaterBillState;
@@ -27,15 +28,15 @@ import java.util.List;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class WaterBill {
+public class WaterBill extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Building building;
 
-    @Column(nullable = false, columnDefinition = "char(11)")
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private WaterBillState state;
 
@@ -82,7 +83,7 @@ public class WaterBill {
     public int getTotalUsage(){
         return waterBillDetails.stream()
                 .map(WaterBillDetail::getWaterMeter)
-                .map(WaterMeter::getUsage)
+                .map(WaterMeter::getWaterUsage)
                 .mapToInt(Integer::intValue)
                 .sum();
     }

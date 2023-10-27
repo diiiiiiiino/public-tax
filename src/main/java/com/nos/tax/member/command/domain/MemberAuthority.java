@@ -1,6 +1,7 @@
 package com.nos.tax.member.command.domain;
 
 import com.nos.tax.authority.command.domain.Authority;
+import com.nos.tax.common.entity.BaseEntity;
 import com.nos.tax.util.VerifyUtil;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -19,15 +20,15 @@ import java.util.Objects;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MemberAuthority implements GrantedAuthority {
+public class MemberAuthority extends BaseEntity implements GrantedAuthority  {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Authority authority;
 
     /**

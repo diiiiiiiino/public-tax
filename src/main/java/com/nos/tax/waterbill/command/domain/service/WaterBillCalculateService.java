@@ -41,7 +41,7 @@ public class WaterBillCalculateService {
 
         int totalAmount = waterBill.getTotalAmount();
         int totalUsage = waterMeters.stream()
-                .map(WaterMeter::getUsage)
+                .map(WaterMeter::getWaterUsage)
                 .mapToInt(Integer::intValue)
                 .sum();
 
@@ -49,7 +49,7 @@ public class WaterBillCalculateService {
         int unitAmount = Math.toIntExact(Math.round(orgUnitAmount.doubleValue()));
 
         for(WaterMeter meter : waterMeters){
-            int usage = meter.getUsage();
+            int usage = meter.getWaterUsage();
             int orgAmount = usage * unitAmount;
             int amount = Math.toIntExact(Math.round((usage * unitAmount) / 100.0) * 100);
             int difference = amount - orgAmount;
