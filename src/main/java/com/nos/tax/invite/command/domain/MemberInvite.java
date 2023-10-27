@@ -1,5 +1,6 @@
 package com.nos.tax.invite.command.domain;
 
+import com.nos.tax.common.entity.BaseEntity;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.member.command.domain.Mobile;
 import com.nos.tax.member.command.domain.converter.MobileConverter;
@@ -25,7 +26,7 @@ import static com.nos.tax.common.enumeration.TextLengthRange.MEMBER_INVITE_CODE;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MemberInvite {
+public class MemberInvite extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
