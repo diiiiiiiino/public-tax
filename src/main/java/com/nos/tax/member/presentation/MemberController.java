@@ -64,7 +64,7 @@ public class MemberController {
      * @throws ValidationErrorException 유효하지 않은 값이 있을때
      * @throws MemberNotFoundException 회원이 조회되지 않을 때
      */
-    @Operation(summary = "회원 생성", description = "회원 생성")
+    @Operation(summary = "회원 정보 수정", description = "회원 정보 수정")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "정상"),
             @ApiResponse(responseCode = "400", description = "유효하지 않은 값이 있을때 / 초대코드 만료 / 비밀번호 정책에 맞지 않을 때"),
