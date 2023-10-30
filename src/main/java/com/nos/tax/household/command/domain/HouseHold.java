@@ -43,8 +43,8 @@ public class HouseHold extends BaseEntity {
     private HouseHoldState houseHoldState = HouseHoldState.EMPTY;
 
     @AttributeOverrides(value = {
-            @AttributeOverride(name = "name", column = @Column(name = "house_holder_name", nullable = false, columnDefinition = "char(20)")),
-            @AttributeOverride(name = "mobile", column = @Column(name = "house_holder_mobile", nullable = false, columnDefinition = "char(11)")),
+            @AttributeOverride(name = "name", column = @Column(name = "house_holder_name", columnDefinition = "char(20)")),
+            @AttributeOverride(name = "mobile", column = @Column(name = "house_holder_mobile", columnDefinition = "char(11)")),
     })
     @Embedded
     private HouseHolder houseHolder;

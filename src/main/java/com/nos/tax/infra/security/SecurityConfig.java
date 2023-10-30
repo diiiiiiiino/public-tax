@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -40,7 +41,7 @@ public class SecurityConfig {
     private static final String[] AUTH_WHITELIST = {
             "/swagger-ui/**",
             "/swagger.html",
-            "/api-docs/**"
+            "/api-docs/**",
     };
 
     @Bean
@@ -72,6 +73,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(registry -> registry
                         .requestMatchers(AUTH_WHITELIST).permitAll()
+                        .requestMatchers(HttpMethod.POST, "/member").permitAll()
                         .requestMatchers("/member/**").hasRole("MEMBER")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/login/**").hasAnyRole("MEMBER", "ADMIN")

@@ -25,7 +25,7 @@ public class AdminBuildingController {
      * @return Response
      * @throws BuildingNotFoundException 건물 미조회
      */
-    @Operation(summary = "전담공무원 코드 조회", description = "전담공무원 코드 조회")
+    @Operation(summary = "건물 삭제", description = "건물 삭제")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "정상"),
             @ApiResponse(responseCode = "404", description = "건물 미조회"),

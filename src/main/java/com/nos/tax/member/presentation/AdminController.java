@@ -78,7 +78,7 @@ public class AdminController {
      * @throws HouseHoldNotFoundException 세대 미조회
      * @throws ValidationErrorException 회원 생성 요청 대상 유효성 검증 에러
      */
-    @Operation(summary = "관리자 변경", description = "관리자 변경")
+    @Operation(summary = "회원 생성 요청", description = "회원 생성 요청")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "정상"),
             @ApiResponse(responseCode = "400", description = "회원 생성 요청 대상 유효성 검증 에러"),
