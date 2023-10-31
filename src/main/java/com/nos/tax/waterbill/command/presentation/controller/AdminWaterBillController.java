@@ -3,6 +3,7 @@ package com.nos.tax.waterbill.command.presentation.controller;
 import com.nos.tax.building.command.application.BuildingNotFoundException;
 import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.common.http.Response;
+import com.nos.tax.member.command.application.security.SecurityMember;
 import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.waterbill.command.application.dto.WaterBillCreateRequest;
 import com.nos.tax.waterbill.command.application.exception.WaterBillNotFoundException;
@@ -13,6 +14,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.YearMonth;
@@ -47,8 +49,8 @@ public class AdminWaterBillController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류")
     })
     @PostMapping
-    public Response<Void> createWaterBill(Member admin, @RequestBody WaterBillCreateRequest request){
-        waterBillCreateService.create(admin.getId(), request);
+    public Response<Void> createWaterBill(@AuthenticationPrincipal SecurityMember admin, @RequestBody WaterBillCreateRequest request){
+        waterBillCreateService.create(admin.getMemberId(), request);
 
         return Response.ok();
     }
