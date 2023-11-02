@@ -4,7 +4,6 @@ import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.common.http.Response;
 import com.nos.tax.member.command.application.dto.MemberCreateRequest;
 import com.nos.tax.member.command.application.dto.MemberInfoChangeRequest;
-import com.nos.tax.member.command.application.dto.MemberResponse;
 import com.nos.tax.member.command.application.dto.PasswordChangeRequest;
 import com.nos.tax.member.command.application.exception.ExpiredInviteCodeException;
 import com.nos.tax.member.command.application.exception.HouseHoldNotFoundException;
@@ -18,6 +17,8 @@ import com.nos.tax.member.command.application.service.PasswordChangeService;
 import com.nos.tax.member.command.domain.exception.PasswordNotMatchedException;
 import com.nos.tax.member.command.domain.exception.PasswordOutOfConditionException;
 import com.nos.tax.member.command.domain.exception.UpdatePasswordSameException;
+import com.nos.tax.member.query.MemberDto;
+import com.nos.tax.member.query.MemberQueryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -34,6 +35,7 @@ public class MemberController {
     private final MemberInfoChangeService memberInfoChangeService;
     private final PasswordChangeService passwordChangeService;
     private final MemberWithdrawService memberWithdrawService;
+    private final MemberQueryService memberQueryService;
 
     /**
      * @param request 멤버 생성 요청
@@ -109,8 +111,8 @@ public class MemberController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류")
     })
     @GetMapping
-    public Response<MemberResponse> getMember(@AuthenticationPrincipal SecurityMember securityMember){
-        return Response.ok(MemberResponse.from(securityMember));
+    public Response<MemberDto> getMember(@AuthenticationPrincipal SecurityMember securityMember){
+        return Response.ok(memberQueryService.getMember(securityMember.getMemberId()));
     }
 
     /**

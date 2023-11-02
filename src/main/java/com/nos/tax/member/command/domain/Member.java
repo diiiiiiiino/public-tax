@@ -2,7 +2,6 @@ package com.nos.tax.member.command.domain;
 
 import com.nos.tax.common.entity.BaseEntity;
 import com.nos.tax.common.exception.ValidationErrorException;
-import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.member.command.domain.converter.MobileConverter;
 import com.nos.tax.member.command.domain.enumeration.MemberState;
 import com.nos.tax.member.command.domain.exception.PasswordNotMatchedException;
@@ -39,9 +38,6 @@ public class Member extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    private HouseHold houseHold;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
