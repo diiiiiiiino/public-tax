@@ -1,4 +1,4 @@
-package com.nos.tax.building.command.presentation;
+package com.nos.tax.building.presentation;
 
 import com.nos.tax.building.command.application.BuildingDeleteService;
 import com.nos.tax.building.command.application.BuildingNotFoundException;

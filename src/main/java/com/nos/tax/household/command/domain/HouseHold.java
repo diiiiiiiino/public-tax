@@ -6,11 +6,13 @@ import com.nos.tax.common.exception.CustomNullPointerException;
 import com.nos.tax.household.command.domain.enumeration.HouseHoldState;
 import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.util.VerifyUtil;
+import com.nos.tax.watermeter.command.domain.WaterMeter;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Objects;
 
 import static com.nos.tax.common.enumeration.TextLengthRange.HOUSEHOLD_ROOM;
@@ -34,6 +36,9 @@ public class HouseHold extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Building building;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "houseHold")
+    private List<WaterMeter> waterMeters;
 
     @Column(unique = true, nullable = false, columnDefinition = "char(6)")
     private String room;

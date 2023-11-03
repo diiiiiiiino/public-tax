@@ -77,6 +77,7 @@ public class SecurityConfig {
                         .requestMatchers("/member/**").hasRole("MEMBER")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/login/**").hasAnyRole("MEMBER", "ADMIN")
+                        .requestMatchers("/common/**").hasAnyRole("MEMBER", "ADMIN")
                         .anyRequest().authenticated())
                 .cors(configure -> configure.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())

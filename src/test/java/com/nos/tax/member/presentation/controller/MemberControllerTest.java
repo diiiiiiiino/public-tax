@@ -1,4 +1,4 @@
-package com.nos.tax.member.command.presentation.controller;
+package com.nos.tax.member.presentation.controller;
 
 import com.nos.tax.common.exception.ValidationCode;
 import com.nos.tax.common.exception.ValidationError;

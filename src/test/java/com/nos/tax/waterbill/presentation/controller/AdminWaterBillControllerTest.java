@@ -1,4 +1,4 @@
-package com.nos.tax.waterbill.command.presentation.controller;
+package com.nos.tax.waterbill.presentation.controller;
 
 import com.nos.tax.building.command.application.BuildingNotFoundException;
 import com.nos.tax.common.exception.ValidationCode;

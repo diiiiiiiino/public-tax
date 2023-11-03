@@ -51,7 +51,7 @@ public class WaterBill extends BaseEntity {
     @Column(columnDefinition = "decimal(8, 2)")
     private double unitAmount;
 
-    @Column(nullable = false, columnDefinition = "char(6)")
+    @Column(nullable = false, columnDefinition = "char(7)")
     @Convert(converter = YearMonthConverter.class)
     private YearMonth calculateYm;
 

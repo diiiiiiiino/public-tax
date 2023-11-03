@@ -1,4 +1,4 @@
-package com.nos.tax.watermeter.command.presentation;
+package com.nos.tax.watermeter.presentation;
 
 import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.common.http.Response;

@@ -1,4 +1,4 @@
-package com.nos.tax.member.command.presentation.controller;
+package com.nos.tax.member.presentation.controller;
 
 import com.nos.tax.authority.command.application.exception.AuthorityNotFoundException;
 import com.nos.tax.authority.command.domain.Authority;

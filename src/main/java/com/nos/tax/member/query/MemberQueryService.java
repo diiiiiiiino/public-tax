@@ -11,6 +11,12 @@ public class MemberQueryService {
 
     private final MemberQueryDslRepository memberQueryDslRepository;
 
+    /**
+     * 회원 정보 조회
+     * @param memberId 회원 ID
+     * @return MemberDto
+     * @throws MemberNotFoundException 회원 미조회
+     */
     @Transactional(readOnly = true)
     public MemberDto getMember(Long memberId){
         return memberQueryDslRepository.findByMemberId(memberId)

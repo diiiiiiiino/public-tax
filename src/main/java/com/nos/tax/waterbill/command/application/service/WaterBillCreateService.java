@@ -12,6 +12,7 @@ import com.nos.tax.waterbill.command.application.validator.annotation.WaterBillC
 import com.nos.tax.waterbill.command.domain.WaterBill;
 import com.nos.tax.waterbill.command.domain.exception.WaterBillDuplicateException;
 import com.nos.tax.waterbill.command.domain.repository.WaterBillRepository;
+import com.nos.tax.watermeter.command.application.service.WaterMeterCreateService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,11 +28,16 @@ public class WaterBillCreateService {
 
     private final BuildingRepository buildingRepository;
     private final WaterBillRepository waterBillRepository;
+    private final WaterMeterCreateService waterMeterCreateService;
     private final RequestValidator validator;
 
-    public WaterBillCreateService(BuildingRepository buildingRepository, WaterBillRepository waterBillRepository, @WaterBillCreateRequestQualifier RequestValidator validator) {
+    public WaterBillCreateService(BuildingRepository buildingRepository,
+                                  WaterBillRepository waterBillRepository,
+                                  WaterMeterCreateService waterMeterCreateService,
+                                  @WaterBillCreateRequestQualifier RequestValidator validator) {
         this.buildingRepository = buildingRepository;
         this.waterBillRepository = waterBillRepository;
+        this.waterMeterCreateService = waterMeterCreateService;
         this.validator = validator;
     }
 
