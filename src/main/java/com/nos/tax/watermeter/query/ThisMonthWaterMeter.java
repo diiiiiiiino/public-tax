@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class ThisMonthWaterMeterDto {
+public class ThisMonthWaterMeter {
     Long houseHoldId;
     String room;
     Integer previousMeter;

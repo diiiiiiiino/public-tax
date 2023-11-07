@@ -1,12 +1,15 @@
 package com.nos.tax.watermeter.query;
 
+import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.household.command.domain.QHouseHold;
 import com.nos.tax.watermeter.command.domain.QWaterMeter;
 import com.querydsl.core.types.ConstructorExpression;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.time.YearMonth;
@@ -20,13 +23,29 @@ public class WaterMeterQueryDslRepository {
     private QWaterMeter wm1 = new QWaterMeter("wm1");
     private QWaterMeter wm2 = new QWaterMeter("wm2");
 
-    public List<ThisMonthWaterMeterDto> getThisMonthWaterMeters(Long buildingId, YearMonth calculateYm){
-        return from(buildingId, calculateYm)
+    public List<ThisMonthWaterMeter> getThisMonthWaterMeters(Pageable pageable, ThisMonthWaterMeterSearch search){
+        List<ThisMonthWaterMeter> meters = from(search.getCalculateYm())
+                .where(eqBuildingId(search.getBuildingId()), eqHouseHoldId(search.getHouseHoldId()))
+                .select(select())
+                .limit(pageable.getPageSize())
                 .orderBy(hh.id.asc())
                 .fetch();
+
+        Long lastHouseHoldId = meters.get(meters.size() - 1).getHouseHoldId();
+        boolean hasNext = existsNextList(search.getBuildingId(), lastHouseHoldId);
+
+        return meters;
     }
 
-    private JPAQuery<ThisMonthWaterMeterDto> from(Long buildingId, YearMonth calculateYm){
+    public boolean existsNextList(Long buildingId, Long houseHoldId){
+        HouseHold houseHold = (HouseHold) jpaQueryFactory.from(hh)
+                .where(eqBuildingId(buildingId), eqHouseHoldId(houseHoldId))
+                .fetchFirst();
+
+        return houseHold != null;
+    }
+
+    private JPAQuery<?> from(YearMonth calculateYm){
         return jpaQueryFactory
                 .from(hh)
                 .leftJoin(wm1)
@@ -34,13 +53,23 @@ public class WaterMeterQueryDslRepository {
                         .and(wm1.calculateYm.eq(calculateYm.minusMonths(1))))
                 .leftJoin(wm2)
                 .on(hh.id.eq(wm2.houseHold.id)
-                        .and(wm2.calculateYm.eq(calculateYm)))
-                .where(hh.building.id.eq(buildingId))
-                .select(select());
+                        .and(wm2.calculateYm.eq(calculateYm)));
     }
 
-    private ConstructorExpression<ThisMonthWaterMeterDto> select() {
-        return Projections.constructor(ThisMonthWaterMeterDto.class,
+    private Predicate eqBuildingId(Long buildingId){
+        return hh.building.id.eq(buildingId);
+    }
+
+    private Predicate eqHouseHoldId(Long houseHoldId){
+        if(houseHoldId == null){
+            return null;
+        }
+
+        return hh.id.gt(houseHoldId);
+    }
+
+    private ConstructorExpression<ThisMonthWaterMeter> select() {
+        return Projections.constructor(ThisMonthWaterMeter.class,
                 hh.id,
                 hh.room,
                 wm1.presentMeter,

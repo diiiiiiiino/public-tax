@@ -1,10 +1,10 @@
 package com.nos.tax.watermeter.query;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.YearMonth;
 import java.util.List;
 
 @Service
@@ -14,12 +14,13 @@ public class WaterMeterQueryService {
 
     /**
      * 금월 수도계량 조회
-     * @param buildingId 건물 ID
-     * @param calculateYm 정산년월
+     *
+     * @param pageable
+     * @param search 조회 정보
      * @return
      */
     @Transactional(readOnly = true)
-    public List<ThisMonthWaterMeterDto> getThisMonthWaterMeters(Long buildingId, YearMonth calculateYm){
-        return waterMeterQueryDslRepository.getThisMonthWaterMeters(buildingId, calculateYm);
+    public List<ThisMonthWaterMeter> getThisMonthWaterMeters(Pageable pageable, ThisMonthWaterMeterSearch search){
+        return waterMeterQueryDslRepository.getThisMonthWaterMeters(pageable, search);
     }
 }
