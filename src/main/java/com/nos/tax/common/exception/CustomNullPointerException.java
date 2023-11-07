@@ -1,6 +1,6 @@
 package com.nos.tax.common.exception;
 
-import com.nos.tax.common.http.ErrorCode;
+import com.nos.tax.common.http.response.ErrorCode;
 import lombok.Getter;
 
 import java.util.Map;

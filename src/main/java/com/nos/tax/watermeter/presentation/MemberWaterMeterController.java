@@ -1,7 +1,7 @@
 package com.nos.tax.watermeter.presentation;
 
 import com.nos.tax.common.exception.ValidationErrorException;
-import com.nos.tax.common.http.Response;
+import com.nos.tax.common.http.response.Response;
 import com.nos.tax.member.command.application.exception.HouseHoldNotFoundException;
 import com.nos.tax.member.command.application.security.SecurityMember;
 import com.nos.tax.watermeter.command.application.dto.WaterMeterCreateRequest;
@@ -45,7 +45,7 @@ public class MemberWaterMeterController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류")
     })
     @PostMapping
-    public Response<Void> create(
+    public Response create(
             @AuthenticationPrincipal SecurityMember securityMember, 
             @RequestBody WaterMeterCreateRequest request
     ){
@@ -69,7 +69,7 @@ public class MemberWaterMeterController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류")
     })
     @DeleteMapping("/{id}")
-    public Response<Void> delete(
+    public Response delete(
             @PathVariable Long id
     ){
         waterMeterDeleteService.delete(id);

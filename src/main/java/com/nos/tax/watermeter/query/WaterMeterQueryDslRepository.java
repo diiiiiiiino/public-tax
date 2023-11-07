@@ -1,5 +1,6 @@
 package com.nos.tax.watermeter.query;
 
+import com.nos.tax.common.http.Paging;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.household.command.domain.QHouseHold;
 import com.nos.tax.watermeter.command.domain.QWaterMeter;
@@ -23,7 +24,7 @@ public class WaterMeterQueryDslRepository {
     private QWaterMeter wm1 = new QWaterMeter("wm1");
     private QWaterMeter wm2 = new QWaterMeter("wm2");
 
-    public List<ThisMonthWaterMeter> getThisMonthWaterMeters(Pageable pageable, ThisMonthWaterMeterSearch search){
+    public Paging<List<ThisMonthWaterMeter>> getThisMonthWaterMeters(Pageable pageable, ThisMonthWaterMeterSearch search){
         List<ThisMonthWaterMeter> meters = from(search.getCalculateYm())
                 .where(eqBuildingId(search.getBuildingId()), eqHouseHoldId(search.getHouseHoldId()))
                 .select(select())
@@ -34,7 +35,7 @@ public class WaterMeterQueryDslRepository {
         Long lastHouseHoldId = meters.get(meters.size() - 1).getHouseHoldId();
         boolean hasNext = existsNextList(search.getBuildingId(), lastHouseHoldId);
 
-        return meters;
+        return Paging.of(hasNext, lastHouseHoldId, meters);
     }
 
     public boolean existsNextList(Long buildingId, Long houseHoldId){

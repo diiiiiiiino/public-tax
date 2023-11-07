@@ -1,7 +1,7 @@
 package com.nos.tax.watermeter.command.application.exception;
 
 import com.nos.tax.common.exception.ApplicationException;
-import com.nos.tax.common.http.ErrorCode;
+import com.nos.tax.common.http.response.ErrorCode;
 
 /**
  * 수도계량 삭제 불가 상태 예외

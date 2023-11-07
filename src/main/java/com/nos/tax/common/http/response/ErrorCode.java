@@ -1,4 +1,4 @@
-package com.nos.tax.common.http;
+package com.nos.tax.common.http.response;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

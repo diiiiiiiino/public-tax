@@ -1,7 +1,7 @@
 package com.nos.tax.household.command.presentaion;
 
 import com.nos.tax.common.exception.ValidationErrorException;
-import com.nos.tax.common.http.Response;
+import com.nos.tax.common.http.response.Response;
 import com.nos.tax.household.command.application.HouseHoldMoveOutService;
 import com.nos.tax.household.command.application.HouseHolderChangeService;
 import com.nos.tax.member.command.application.exception.HouseHoldNotFoundException;
@@ -38,7 +38,7 @@ public class AdminHouseHoldController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류")
     })
     @PostMapping(value = "/move-out/{houseHoldId}")
-    public Response<Void> moveOut(@PathVariable Long houseHoldId){
+    public Response moveOut(@PathVariable Long houseHoldId){
         houseHoldMoveOutService.leave(houseHoldId);
 
         return Response.ok();
@@ -59,7 +59,7 @@ public class AdminHouseHoldController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류")
     })
     @PostMapping(value = "/householder/{houseHoldId}/{memberId}")
-    public Response<Void> houseHolderChange(@PathVariable Long houseHoldId, @PathVariable Long memberId){
+    public Response houseHolderChange(@PathVariable Long houseHoldId, @PathVariable Long memberId){
         houseHolderChangeService.change(houseHoldId, memberId);
 
         return Response.ok();

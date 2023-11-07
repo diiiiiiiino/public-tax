@@ -4,6 +4,9 @@ import com.nos.tax.common.exception.ApplicationException;
 import com.nos.tax.common.exception.CustomIllegalArgumentException;
 import com.nos.tax.common.exception.CustomNullPointerException;
 import com.nos.tax.common.exception.ValidationErrorException;
+import com.nos.tax.common.http.response.ErrorCode;
+import com.nos.tax.common.http.response.ErrorResponse;
+import com.nos.tax.common.http.response.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,7 +20,7 @@ public class RestControllerExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> totalHandle(Exception exception) {
-        Response<?> response = Response.builder()
+        ErrorResponse response = ErrorResponse.builder()
                 .message(exception.getMessage())
                 .errorCode(ErrorCode.SERVER_ERROR.getCode())
                 .build();
@@ -30,14 +33,14 @@ public class RestControllerExceptionHandler {
     public ResponseEntity<?> totalHandle(ApplicationException exception) {
         ErrorCode errorCode = exception.getErrorCode();
 
-        Response.ResponseBuilder builder = Response.builder();
+        ErrorResponse.ErrorResponseBuilder builder = ErrorResponse.builder();
 
         if(exception instanceof ValidationErrorException){
             ValidationErrorException validationErrorException = (ValidationErrorException) exception;
             builder.errors(validationErrorException.getErrors());
         }
 
-        Response<?> response = builder.message(exception.getMessage())
+        Response response = builder.message(exception.getMessage())
                 .errorCode(errorCode.getCode())
                 .build();
 
@@ -47,7 +50,7 @@ public class RestControllerExceptionHandler {
 
     @ExceptionHandler({IllegalArgumentException.class})
     public ResponseEntity<?> totalHandle(IllegalArgumentException exception) {
-        Response.ResponseBuilder builder = Response.builder()
+        ErrorResponse.ErrorResponseBuilder builder = ErrorResponse.builder()
                 .message(exception.getMessage());
 
         if(exception instanceof CustomIllegalArgumentException){
@@ -55,7 +58,7 @@ public class RestControllerExceptionHandler {
             ErrorCode errorCode = customEx.getErrorCode();
 
             builder.errorCode(errorCode.getCode())
-                    .data(customEx.getDetail());
+                    .errorDetail(customEx.getDetail());
 
             return ResponseEntity.status(errorCode.getStatus())
                     .body(builder.build());
@@ -67,7 +70,7 @@ public class RestControllerExceptionHandler {
 
     @ExceptionHandler({NullPointerException.class})
     public ResponseEntity<?> totalHandle(NullPointerException exception) {
-        Response.ResponseBuilder builder = Response.builder()
+        ErrorResponse.ErrorResponseBuilder builder = ErrorResponse.builder()
                 .message(exception.getMessage());
 
         if(exception instanceof CustomNullPointerException){
@@ -75,7 +78,7 @@ public class RestControllerExceptionHandler {
             ErrorCode errorCode = customEx.getErrorCode();
 
             builder.errorCode(errorCode.getCode())
-                    .data(customEx.getDetail());
+                    .errorDetail(customEx.getDetail());
 
             return ResponseEntity.status(errorCode.getStatus())
                     .body(builder.build());

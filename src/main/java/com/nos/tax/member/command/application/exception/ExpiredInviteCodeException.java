@@ -1,7 +1,7 @@
 package com.nos.tax.member.command.application.exception;
 
 import com.nos.tax.common.exception.ApplicationException;
-import com.nos.tax.common.http.ErrorCode;
+import com.nos.tax.common.http.response.ErrorCode;
 
 /**
  * 초대코드 만료 예외

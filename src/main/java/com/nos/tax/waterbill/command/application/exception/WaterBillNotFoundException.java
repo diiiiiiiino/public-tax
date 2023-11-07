@@ -1,7 +1,7 @@
 package com.nos.tax.waterbill.command.application.exception;
 
 import com.nos.tax.common.exception.ApplicationException;
-import com.nos.tax.common.http.ErrorCode;
+import com.nos.tax.common.http.response.ErrorCode;
 
 /**
  * 수도요금 미조회 예외

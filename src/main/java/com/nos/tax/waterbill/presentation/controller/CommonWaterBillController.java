@@ -1,6 +1,6 @@
 package com.nos.tax.waterbill.presentation.controller;
 
-import com.nos.tax.common.http.Response;
+import com.nos.tax.common.http.response.PagingResponse;
 import com.nos.tax.waterbill.query.ThisMonthWaterBillInfo;
 import com.nos.tax.waterbill.query.WaterBillQueryService;
 import com.nos.tax.watermeter.query.ThisMonthWaterMeterSearch;
@@ -30,11 +30,11 @@ public class CommonWaterBillController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류")
     })
     @GetMapping
-    Response<ThisMonthWaterBillInfo> getThisMonthWaterMeters(
+    PagingResponse<ThisMonthWaterBillInfo> getThisMonthWaterMeters(
             @PageableDefault(size = 20) Pageable pageable,
             @RequestParam Long buildingId,
             @RequestParam YearMonth calculateYm,
             @RequestParam(required = false) Long houseHoldId){
-        return Response.ok(waterBillQueryService.getThisMonthWaterBillInfo(pageable, ThisMonthWaterMeterSearch.of(buildingId, calculateYm, houseHoldId)));
+        return PagingResponse.ok(waterBillQueryService.getThisMonthWaterBillInfo(pageable, ThisMonthWaterMeterSearch.of(buildingId, calculateYm, houseHoldId)));
     }
 }

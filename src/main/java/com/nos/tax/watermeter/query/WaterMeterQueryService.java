@@ -1,5 +1,6 @@
 package com.nos.tax.watermeter.query;
 
+import com.nos.tax.common.http.Paging;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class WaterMeterQueryService {
      * @return
      */
     @Transactional(readOnly = true)
-    public List<ThisMonthWaterMeter> getThisMonthWaterMeters(Pageable pageable, ThisMonthWaterMeterSearch search){
+    public Paging<List<ThisMonthWaterMeter>> getThisMonthWaterMeters(Pageable pageable, ThisMonthWaterMeterSearch search){
         return waterMeterQueryDslRepository.getThisMonthWaterMeters(pageable, search);
     }
 }

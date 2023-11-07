@@ -2,7 +2,7 @@ package com.nos.tax.waterbill.presentation.controller;
 
 import com.nos.tax.building.command.application.BuildingNotFoundException;
 import com.nos.tax.common.exception.ValidationErrorException;
-import com.nos.tax.common.http.Response;
+import com.nos.tax.common.http.response.Response;
 import com.nos.tax.member.command.application.security.SecurityMember;
 import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.waterbill.command.application.dto.WaterBillCreateRequest;
@@ -49,7 +49,7 @@ public class AdminWaterBillController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류")
     })
     @PostMapping
-    public Response<Void> createWaterBill(@AuthenticationPrincipal SecurityMember admin, @RequestBody WaterBillCreateRequest request){
+    public Response createWaterBill(@AuthenticationPrincipal SecurityMember admin, @RequestBody WaterBillCreateRequest request){
         waterBillCreateService.create(admin.getMemberId(), request);
 
         return Response.ok();
@@ -69,7 +69,7 @@ public class AdminWaterBillController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류")
     })
     @PostMapping("/calculate/{calculateYm}")
-    public Response<Void> calculateWaterBill(Member admin, @PathVariable YearMonth calculateYm){
+    public Response calculateWaterBill(Member admin, @PathVariable YearMonth calculateYm){
         waterBillCalculateAppService.calculate(admin.getId(), calculateYm);
 
         return Response.ok();

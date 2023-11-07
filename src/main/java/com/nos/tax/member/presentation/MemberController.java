@@ -1,7 +1,8 @@
 package com.nos.tax.member.presentation;
 
 import com.nos.tax.common.exception.ValidationErrorException;
-import com.nos.tax.common.http.Response;
+import com.nos.tax.common.http.response.DataResponse;
+import com.nos.tax.common.http.response.Response;
 import com.nos.tax.member.command.application.dto.MemberCreateRequest;
 import com.nos.tax.member.command.application.dto.MemberInfoChangeRequest;
 import com.nos.tax.member.command.application.dto.PasswordChangeRequest;
@@ -54,7 +55,7 @@ public class MemberController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류")
     })
     @PostMapping
-    public Response<Void> createMember(@RequestBody MemberCreateRequest request){
+    public Response createMember(@RequestBody MemberCreateRequest request){
         memberCreateService.create(request);
         return Response.ok();
     }
@@ -74,7 +75,7 @@ public class MemberController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류")
     })
     @PatchMapping
-    public Response<Void> updateMember(@AuthenticationPrincipal SecurityMember securityMember, @RequestBody MemberInfoChangeRequest request){
+    public Response updateMember(@AuthenticationPrincipal SecurityMember securityMember, @RequestBody MemberInfoChangeRequest request){
         memberInfoChangeService.change(securityMember.getMember().getId(), request);
         return Response.ok();
     }
@@ -96,7 +97,7 @@ public class MemberController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류")
     })
     @PatchMapping("/password")
-    public Response<Void> updatePassword(@AuthenticationPrincipal SecurityMember securityMember, @RequestBody PasswordChangeRequest request){
+    public Response updatePassword(@AuthenticationPrincipal SecurityMember securityMember, @RequestBody PasswordChangeRequest request){
         passwordChangeService.change(securityMember.getMember().getId(), request);
         return Response.ok();
     }
@@ -111,8 +112,8 @@ public class MemberController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류")
     })
     @GetMapping
-    public Response<MemberDto> getMember(@AuthenticationPrincipal SecurityMember securityMember){
-        return Response.ok(memberQueryService.getMember(securityMember.getMemberId()));
+    public DataResponse<MemberDto> getMember(@AuthenticationPrincipal SecurityMember securityMember){
+        return DataResponse.ok(memberQueryService.getMember(securityMember.getMemberId()));
     }
 
     /**
@@ -128,7 +129,7 @@ public class MemberController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류")
     })
     @PostMapping("/withdraw")
-    public Response<Void> withdraw(@AuthenticationPrincipal SecurityMember securityMember){
+    public Response withdraw(@AuthenticationPrincipal SecurityMember securityMember){
         memberWithdrawService.withDraw(securityMember.getMember());
         return Response.ok();
     }

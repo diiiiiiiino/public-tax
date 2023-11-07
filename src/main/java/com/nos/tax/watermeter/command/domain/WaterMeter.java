@@ -1,7 +1,7 @@
 package com.nos.tax.watermeter.command.domain;
 
 import com.nos.tax.common.entity.BaseEntity;
-import com.nos.tax.common.http.ErrorCode;
+import com.nos.tax.common.http.response.ErrorCode;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.util.VerifyUtil;
 import com.nos.tax.waterbill.command.domain.converter.YearMonthConverter;

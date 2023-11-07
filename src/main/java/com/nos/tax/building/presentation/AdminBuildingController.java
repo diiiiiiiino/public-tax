@@ -2,7 +2,7 @@ package com.nos.tax.building.presentation;
 
 import com.nos.tax.building.command.application.BuildingDeleteService;
 import com.nos.tax.building.command.application.BuildingNotFoundException;
-import com.nos.tax.common.http.Response;
+import com.nos.tax.common.http.response.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -32,7 +32,7 @@ public class AdminBuildingController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류")
     })
     @DeleteMapping("/{buildingId}")
-    public Response<Void> deleteBuilding(@PathVariable Long buildingId){
+    public Response deleteBuilding(@PathVariable Long buildingId){
         buildingDeleteService.delete(buildingId);
 
         return Response.ok();

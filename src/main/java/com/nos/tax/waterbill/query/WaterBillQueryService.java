@@ -1,5 +1,6 @@
 package com.nos.tax.waterbill.query;
 
+import com.nos.tax.common.http.Paging;
 import com.nos.tax.waterbill.command.application.exception.WaterBillNotFoundException;
 import com.nos.tax.waterbill.command.domain.WaterBill;
 import com.nos.tax.watermeter.query.ThisMonthWaterMeter;
@@ -26,12 +27,12 @@ public class WaterBillQueryService {
      * @throws WaterBillNotFoundException 수도요금 정보 미조회
      */
     @Transactional(readOnly = true)
-    public ThisMonthWaterBillInfo getThisMonthWaterBillInfo(Pageable pageable, ThisMonthWaterMeterSearch search){
+    public Paging<ThisMonthWaterBillInfo> getThisMonthWaterBillInfo(Pageable pageable, ThisMonthWaterMeterSearch search){
         WaterBill waterBill = waterBillQueryRepository.findByBuildingIdAndCalculateYm(search.getBuildingId(), search.getCalculateYm())
                 .orElseThrow(() -> new WaterBillNotFoundException("WaterBill not found"));
 
-        List<ThisMonthWaterMeter> thisMonthWaterMeters = waterMeterQueryService.getThisMonthWaterMeters(pageable, search);
-        
-        return ThisMonthWaterBillInfo.of(waterBill, thisMonthWaterMeters);
+        Paging<List<ThisMonthWaterMeter>> paging = waterMeterQueryService.getThisMonthWaterMeters(pageable, search);
+
+        return Paging.of(paging, ThisMonthWaterBillInfo.of(waterBill, paging.getData()));
     }
 }

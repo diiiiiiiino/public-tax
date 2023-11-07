@@ -2,7 +2,7 @@ package com.nos.tax.util;
 
 import com.nos.tax.common.exception.CustomIllegalArgumentException;
 import com.nos.tax.common.exception.CustomNullPointerException;
-import com.nos.tax.common.http.ErrorCode;
+import com.nos.tax.common.http.response.ErrorCode;
 import org.springframework.util.StringUtils;
 
 import java.util.Collection;

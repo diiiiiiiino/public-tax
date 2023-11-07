@@ -1,7 +1,7 @@
 package com.nos.tax.watermeter.command.domain.exception;
 
 import com.nos.tax.common.exception.ApplicationException;
-import com.nos.tax.common.http.ErrorCode;
+import com.nos.tax.common.http.response.ErrorCode;
 
 import java.util.Map;
 

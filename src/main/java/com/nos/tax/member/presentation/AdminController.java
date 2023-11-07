@@ -2,7 +2,7 @@ package com.nos.tax.member.presentation;
 
 import com.nos.tax.authority.command.application.exception.AuthorityNotFoundException;
 import com.nos.tax.common.exception.ValidationErrorException;
-import com.nos.tax.common.http.Response;
+import com.nos.tax.common.http.response.Response;
 import com.nos.tax.member.command.application.dto.AdminCreateRequest;
 import com.nos.tax.member.command.application.dto.RequestCreateMemberRequest;
 import com.nos.tax.member.command.application.exception.HouseHoldNotFoundException;
@@ -32,7 +32,7 @@ public class AdminController {
     /**
      * 관리자 생성
      * @param request 관리자 생성 요청
-     * @return Response<Void>
+     * @return Response2
      * @throws ValidationErrorException 관리자 생성 요청 유효성 에러
      */
     @Operation(summary = "관리자 생성", description = "관리자 생성")
@@ -42,7 +42,7 @@ public class AdminController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류")
     })
     @PostMapping
-    public Response<Void> createAdmin(@RequestBody AdminCreateRequest request){
+    public Response createAdmin(@RequestBody AdminCreateRequest request){
         adminCreateService.create(request);
 
         return Response.ok();
@@ -52,7 +52,7 @@ public class AdminController {
      * 관리자 변경
      * @param securityAdmin 인증 관리자
      * @param memberId 관리자로 변경할 회원 ID
-     * @return Response<Void>
+     * @return Response2
      * @throws MemberNotFoundException 관리자로 변경할 회원 미조회
      * @throws AuthorityNotFoundException 권한 미조회
      */
@@ -63,7 +63,7 @@ public class AdminController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류")
     })
     @PatchMapping("/{memberId}")
-    public Response<Void> changeAdmin(
+    public Response changeAdmin(
             @AuthenticationPrincipal SecurityMember securityAdmin,
             @PathVariable Long memberId
     ){
@@ -74,7 +74,7 @@ public class AdminController {
     /**
      * 회원 생성 요청
      * @param requests 회원 생성 요청 대상 리스트
-     * @return Response<Void>
+     * @return Response2
      * @throws HouseHoldNotFoundException 세대 미조회
      * @throws ValidationErrorException 회원 생성 요청 대상 유효성 검증 에러
      */
@@ -86,7 +86,7 @@ public class AdminController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류")
     })
     @PostMapping("/member")
-    public Response<Void> requestCreateMember(@RequestBody List<RequestCreateMemberRequest> requests){
+    public Response requestCreateMember(@RequestBody List<RequestCreateMemberRequest> requests){
         requestCreateMemberService.request(requests);
 
         return Response.ok();
