@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @ActiveProfiles("test")
-public class MemberWaterMeterControllerTest extends BaseControllerTest {
+public class CommonWaterMeterControllerTest extends BaseControllerTest {
 
     @MockBean
     private WaterMeterCreateService waterMeterCreateService;

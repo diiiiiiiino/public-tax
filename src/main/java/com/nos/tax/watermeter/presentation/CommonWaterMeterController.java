@@ -24,9 +24,9 @@ import java.time.YearMonth;
 import java.util.List;
 
 @RestController
-@RequestMapping("/member/water-meter")
+@RequestMapping("/common/water-meter")
 @RequiredArgsConstructor
-public class MemberWaterMeterController {
+public class CommonWaterMeterController {
 
     private final WaterMeterCreateService waterMeterCreateService;
     private final WaterMeterDeleteService waterMeterDeleteService;
@@ -91,11 +91,10 @@ public class MemberWaterMeterController {
     })
     @GetMapping
     public DataResponse<List<TotalMonthWaterMeter>> getTotalMonthWaterMeters(
-            @RequestParam Long buildingId,
-            @RequestParam Long houseHoldId,
+            @AuthenticationPrincipal SecurityMember securityMember,
             @RequestParam YearMonth start,
             @RequestParam YearMonth end
     ){
-        return DataResponse.ok(waterMeterQueryService.getTotalMonthWaterMeters(TotalMonthWaterMeterSearch.of(buildingId, houseHoldId, start, end)));
+        return DataResponse.ok(waterMeterQueryService.getTotalMonthWaterMeters(TotalMonthWaterMeterSearch.of(securityMember.getBuildingId(), securityMember.getHouseHoldId(), start, end)));
     }
 }

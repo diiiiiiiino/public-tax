@@ -1,6 +1,7 @@
 package com.nos.tax.waterbill.presentation.controller;
 
 import com.nos.tax.common.http.response.PagingResponse;
+import com.nos.tax.member.command.application.security.SecurityMember;
 import com.nos.tax.waterbill.query.ThisMonthWaterBillInfo;
 import com.nos.tax.waterbill.query.WaterBillQueryService;
 import com.nos.tax.watermeter.query.ThisMonthWaterMeterSearch;
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,10 +33,10 @@ public class CommonWaterBillController {
     })
     @GetMapping
     PagingResponse<ThisMonthWaterBillInfo> getThisMonthWaterMeters(
+            @AuthenticationPrincipal SecurityMember securityMember,
             @PageableDefault(size = 20) Pageable pageable,
-            @RequestParam Long buildingId,
             @RequestParam YearMonth calculateYm,
             @RequestParam(required = false) Long houseHoldId){
-        return PagingResponse.ok(waterBillQueryService.getThisMonthWaterBillInfo(pageable, ThisMonthWaterMeterSearch.of(buildingId, calculateYm, houseHoldId)));
+        return PagingResponse.ok(waterBillQueryService.getThisMonthWaterBillInfo(pageable, ThisMonthWaterMeterSearch.of(securityMember.getBuildingId(), calculateYm, houseHoldId)));
     }
 }

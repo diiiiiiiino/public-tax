@@ -1,7 +1,10 @@
 package com.nos.tax.member.query;
 
+import com.nos.tax.member.command.domain.QMember;
+import com.nos.tax.member.command.domain.enumeration.MemberState;
 import com.querydsl.core.types.ConstructorExpression;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -16,19 +19,42 @@ import static com.nos.tax.member.command.domain.QMember.member;
 @RequiredArgsConstructor
 public class MemberQueryDslRepository {
     private final JPAQueryFactory jpaQueryFactory;
+    private QMember m = member;
 
     public Optional<MemberDto> findByMemberId(Long memberId){
         return Optional.ofNullable(
-                from(memberId).fetchOne()
+                from()
+                .where(whereState(), whereMemberId(memberId))
+                .select(select())
+                .fetchOne()
         );
     }
 
-    private JPAQuery<MemberDto> from(Long memberId){
+    public Optional<LoginDto> findByLoginId(String loginId){
+        return Optional.ofNullable(
+                from()
+                        .where(whereState(), whereLoginId(loginId))
+                        .select(selectLogin())
+                        .fetchOne()
+        );
+    }
+
+    private JPAQuery<?> from(){
         return jpaQueryFactory.from(houseHold)
-                .join(member)
-                .on(houseHold.houseHolder.member.eq(member))
-                .where(houseHold.houseHolder.member.id.eq(memberId))
-                .select(select());
+                .join(m)
+                .on(m.eq(houseHold.houseHolder.member));
+    }
+
+    private BooleanExpression whereState() {
+        return member.state.eq(MemberState.ACTIVATION);
+    }
+
+    private BooleanExpression whereMemberId(Long memberId) {
+        return m.id.eq(memberId);
+    }
+
+    private BooleanExpression whereLoginId(String loginId) {
+        return m.loginId.eq(loginId);
     }
 
     private ConstructorExpression<MemberDto> select() {
@@ -36,6 +62,13 @@ public class MemberQueryDslRepository {
                 member.loginId,
                 member.name,
                 member.mobile,
+                houseHold.id,
+                houseHold.building.id);
+    }
+
+    private ConstructorExpression<LoginDto> selectLogin() {
+        return Projections.constructor(LoginDto.class,
+                member,
                 houseHold.id,
                 houseHold.building.id);
     }

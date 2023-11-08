@@ -2,6 +2,7 @@ package com.nos.tax.member.command.application.security;
 
 import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.member.command.domain.enumeration.MemberState;
+import com.nos.tax.member.query.LoginDto;
 import com.nos.tax.util.VerifyUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -16,16 +17,18 @@ import java.util.Collection;
 public class SecurityMember implements UserDetails {
 
     private final Member member;
+    private final Long buildingId;
+    private final Long houseHoldId;
 
     /**
-     * @param member 회원
+     * @param loginDto 로그인 회원 정보
      * @return 인증완료 회원
      * @throws NullPointerException member가 {@code null}일때
      */
-    public static SecurityMember from(Member member){
-        VerifyUtil.verifyNull(member, "member");
+    public static SecurityMember from(LoginDto loginDto){
+        VerifyUtil.verifyNull(loginDto, "loginDto");
 
-        return new SecurityMember(member);
+        return new SecurityMember(loginDto.getMember(), loginDto.getBuildingId(), loginDto.getHouseHoldId());
     }
 
     public Long getMemberId(){

@@ -88,9 +88,9 @@ public class AdminWaterBillController {
     })
     @GetMapping
     DataResponse<List<TotalMonthWaterBillInfo>> getTotalMonthWaterBills(
-            @RequestParam Long buildingId,
+            @AuthenticationPrincipal SecurityMember securityMember,
             @RequestParam YearMonth start,
             @RequestParam YearMonth end){
-        return DataResponse.ok(waterBillQueryService.getTotalMonthWaterBillInfo(TotalMonthWaterBillSearch.of(buildingId, start, end)));
+        return DataResponse.ok(waterBillQueryService.getTotalMonthWaterBillInfo(TotalMonthWaterBillSearch.of(securityMember.getBuildingId(), start, end)));
     }
 }
