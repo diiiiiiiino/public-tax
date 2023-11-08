@@ -18,16 +18,16 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class WaterMeterQueryDslRepository {
+public class ThisMonthWaterMeterRepository {
     private final JPAQueryFactory jpaQueryFactory;
     private QHouseHold hh = QHouseHold.houseHold;
     private QWaterMeter wm1 = new QWaterMeter("wm1");
     private QWaterMeter wm2 = new QWaterMeter("wm2");
 
     public Paging<List<ThisMonthWaterMeter>> getThisMonthWaterMeters(Pageable pageable, ThisMonthWaterMeterSearch search){
-        List<ThisMonthWaterMeter> meters = from(search.getCalculateYm())
+        List<ThisMonthWaterMeter> meters = fromThisMonthWaterMeter(search.getCalculateYm())
                 .where(eqBuildingId(search.getBuildingId()), eqHouseHoldId(search.getHouseHoldId()))
-                .select(select())
+                .select(selectThisMonthWaterMeter())
                 .limit(pageable.getPageSize())
                 .orderBy(hh.id.asc())
                 .fetch();
@@ -46,7 +46,7 @@ public class WaterMeterQueryDslRepository {
         return houseHold != null;
     }
 
-    private JPAQuery<?> from(YearMonth calculateYm){
+    private JPAQuery<?> fromThisMonthWaterMeter(YearMonth calculateYm){
         return jpaQueryFactory
                 .from(hh)
                 .leftJoin(wm1)
@@ -69,7 +69,7 @@ public class WaterMeterQueryDslRepository {
         return hh.id.gt(houseHoldId);
     }
 
-    private ConstructorExpression<ThisMonthWaterMeter> select() {
+    private ConstructorExpression<ThisMonthWaterMeter> selectThisMonthWaterMeter() {
         return Projections.constructor(ThisMonthWaterMeter.class,
                 hh.id,
                 hh.room,

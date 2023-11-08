@@ -11,7 +11,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class WaterMeterQueryService {
-    private final WaterMeterQueryDslRepository waterMeterQueryDslRepository;
+    private final ThisMonthWaterMeterRepository thisMonthWaterMeterRepository;
+    private final TotalMonthWaterMeterRepository totalMonthWaterMeterRepository;
 
     /**
      * 금월 수도계량 조회
@@ -21,7 +22,18 @@ public class WaterMeterQueryService {
      * @return
      */
     @Transactional(readOnly = true)
-    public Paging<List<ThisMonthWaterMeter>> getThisMonthWaterMeters(Pageable pageable, ThisMonthWaterMeterSearch search){
-        return waterMeterQueryDslRepository.getThisMonthWaterMeters(pageable, search);
+    public Paging<List<ThisMonthWaterMeter>> getTotalMonthWaterMeters(Pageable pageable, ThisMonthWaterMeterSearch search){
+        return thisMonthWaterMeterRepository.getThisMonthWaterMeters(pageable, search);
+    }
+
+    /**
+     * 월별 수도계량 조회
+     *
+     * @param search 조회 정보
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public List<TotalMonthWaterMeter> getTotalMonthWaterMeters(TotalMonthWaterMeterSearch search){
+        return totalMonthWaterMeterRepository.getTotalMonthWaterMeters(search);
     }
 }

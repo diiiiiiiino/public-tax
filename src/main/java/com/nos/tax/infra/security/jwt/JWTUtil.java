@@ -11,7 +11,7 @@ import java.time.Instant;
 
 @Component
 public class JWTUtil {
-    private static final long AUTH_TIME = 1*24*60*60;
+    private static final long AUTH_TIME = 7*24*60*60;
     private static Algorithm ALGORITHM;
 
     @Value("${JWT_SECRET}")

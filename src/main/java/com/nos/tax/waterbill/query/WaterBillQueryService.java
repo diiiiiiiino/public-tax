@@ -18,6 +18,7 @@ import java.util.List;
 public class WaterBillQueryService {
     private final WaterBillQueryRepository waterBillQueryRepository;
     private final WaterMeterQueryService waterMeterQueryService;
+    private final TotalMonthWaterBillRepository totalMonthWaterBillRepository;
 
     /**
      * 금월 수도요금 조회
@@ -31,8 +32,18 @@ public class WaterBillQueryService {
         WaterBill waterBill = waterBillQueryRepository.findByBuildingIdAndCalculateYm(search.getBuildingId(), search.getCalculateYm())
                 .orElseThrow(() -> new WaterBillNotFoundException("WaterBill not found"));
 
-        Paging<List<ThisMonthWaterMeter>> paging = waterMeterQueryService.getThisMonthWaterMeters(pageable, search);
+        Paging<List<ThisMonthWaterMeter>> paging = waterMeterQueryService.getTotalMonthWaterMeters(pageable, search);
 
         return Paging.of(paging, ThisMonthWaterBillInfo.of(waterBill, paging.getData()));
+    }
+
+    /**
+     * 월별 수도요금 조회
+     * @param search 조회 정보
+     * @return TotalMonthWaterBillInfo
+     */
+    @Transactional(readOnly = true)
+    public List<TotalMonthWaterBillInfo> getTotalMonthWaterBillInfo(TotalMonthWaterBillSearch search){
+        return totalMonthWaterBillRepository.getTotalMonthWaterBills(search);
     }
 }

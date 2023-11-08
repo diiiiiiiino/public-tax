@@ -1,6 +1,7 @@
 package com.nos.tax.watermeter.presentation;
 
 import com.nos.tax.common.exception.ValidationErrorException;
+import com.nos.tax.common.http.response.DataResponse;
 import com.nos.tax.common.http.response.Response;
 import com.nos.tax.member.command.application.exception.HouseHoldNotFoundException;
 import com.nos.tax.member.command.application.security.SecurityMember;
@@ -9,12 +10,18 @@ import com.nos.tax.watermeter.command.application.exception.WaterMeterDeleteStat
 import com.nos.tax.watermeter.command.application.exception.WaterMeterNotFoundException;
 import com.nos.tax.watermeter.command.application.service.WaterMeterCreateService;
 import com.nos.tax.watermeter.command.application.service.WaterMeterDeleteService;
+import com.nos.tax.watermeter.query.TotalMonthWaterMeter;
+import com.nos.tax.watermeter.query.TotalMonthWaterMeterSearch;
+import com.nos.tax.watermeter.query.WaterMeterQueryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.YearMonth;
+import java.util.List;
 
 @RestController
 @RequestMapping("/member/water-meter")
@@ -23,6 +30,7 @@ public class MemberWaterMeterController {
 
     private final WaterMeterCreateService waterMeterCreateService;
     private final WaterMeterDeleteService waterMeterDeleteService;
+    private final WaterMeterQueryService waterMeterQueryService;
 
     /**
      * 수도계량 데이터 생성
@@ -74,5 +82,20 @@ public class MemberWaterMeterController {
     ){
         waterMeterDeleteService.delete(id);
         return Response.ok();
+    }
+
+    @Operation(summary = "월별 수도계량 조회", description = "월별 수도계량 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "정상"),
+            @ApiResponse(responseCode = "500", description = "서버 내부 오류")
+    })
+    @GetMapping
+    public DataResponse<List<TotalMonthWaterMeter>> getTotalMonthWaterMeters(
+            @RequestParam Long buildingId,
+            @RequestParam Long houseHoldId,
+            @RequestParam YearMonth start,
+            @RequestParam YearMonth end
+    ){
+        return DataResponse.ok(waterMeterQueryService.getTotalMonthWaterMeters(TotalMonthWaterMeterSearch.of(buildingId, houseHoldId, start, end)));
     }
 }
