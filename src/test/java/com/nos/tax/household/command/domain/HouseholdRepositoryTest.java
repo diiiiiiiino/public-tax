@@ -6,6 +6,7 @@ import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
 import com.nos.tax.household.command.domain.enumeration.HouseHoldState;
 import com.nos.tax.household.command.domain.repository.HouseHoldRepository;
+import com.nos.tax.household.command.domain.repository.HouseHolderRepository;
 import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.member.command.domain.Mobile;
 import com.nos.tax.member.command.domain.Password;
@@ -35,6 +36,9 @@ public class HouseholdRepositoryTest {
 
     @Autowired
     private HouseHoldRepository houseHoldRepository;
+
+    @Autowired
+    private HouseHolderRepository houseHolderRepository;
 
     @Autowired
     private BuildingRepository buildingRepository;
@@ -70,6 +74,7 @@ public class HouseholdRepositoryTest {
         memberRepository.save(member);
 
         HouseHolder houseHolder = HouseHolder.of(member);
+        houseHolderRepository.save(houseHolder);
 
         houseHold.moveInHouse(houseHolder);
 

@@ -7,6 +7,8 @@ import com.nos.tax.member.command.application.security.SecurityMember;
 import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.member.command.domain.enumeration.MemberState;
 import com.nos.tax.member.command.domain.repository.MemberRepository;
+import com.nos.tax.member.query.LoginDto;
+import com.nos.tax.member.query.MemberQueryDslRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.GrantedAuthority;
@@ -29,11 +31,13 @@ import static org.mockito.Mockito.when;
 public class MemberUserDetailsServiceTest {
 
     private MemberRepository memberRepository;
+    private MemberQueryDslRepository memberQueryDslRepository;
     private MemberUserDetailsService memberUserDetailsService;
 
     public MemberUserDetailsServiceTest() {
         memberRepository = mock(MemberRepository.class);
-        memberUserDetailsService = new MemberUserDetailsService(memberRepository);
+        memberQueryDslRepository = mock(MemberQueryDslRepository.class);
+        memberUserDetailsService = new MemberUserDetailsService(memberQueryDslRepository);
     }
 
     @DisplayName("로그인ID로 회원 조회시 미존재")
@@ -50,7 +54,7 @@ public class MemberUserDetailsServiceTest {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         Member member = MemberCreateHelperBuilder.builder().build();
 
-        when(memberRepository.findByLoginIdAndState(anyString(), any(MemberState.class))).thenReturn(Optional.of(member));
+        when(memberQueryDslRepository.findByLoginId(anyString())).thenReturn(Optional.of(LoginDto.of(member, 1L, 1L)));
 
         UserDetails userDetails = memberUserDetailsService.loadUserByUsername("loginId");
 

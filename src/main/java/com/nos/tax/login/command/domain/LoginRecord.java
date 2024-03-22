@@ -28,10 +28,9 @@ public class LoginRecord {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     Member member;
 
-    @Column(nullable = false, columnDefinition = "timestamp(4)")
+    @Column(nullable = false)
     LocalDateTime loginTime;
 
-    @Column(columnDefinition = "char(200)")
     String userAgent;
 
     /**

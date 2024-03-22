@@ -24,10 +24,10 @@ public class Authority extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false, columnDefinition = "varchar(20)")
+    @Column(unique = true, nullable = false)
     private String name;
 
-    @Column(name = "active_yn", nullable = false, columnDefinition = "tinyint(1)")
+    @Column(name = "active_yn", nullable = false)
     private boolean isActive = true;
 
     /**

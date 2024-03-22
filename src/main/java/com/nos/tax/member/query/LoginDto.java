@@ -16,4 +16,10 @@ public class LoginDto {
         this.houseHoldId = houseHoldId;
         this.buildingId = buildingId;
     }
+
+    public static LoginDto of(Member member,
+                              Long houseHoldId,
+                              Long buildingId){
+        return new LoginDto(member, houseHoldId, buildingId);
+    }
 }

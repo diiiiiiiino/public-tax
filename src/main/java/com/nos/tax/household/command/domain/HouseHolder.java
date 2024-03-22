@@ -21,16 +21,20 @@ import static com.nos.tax.common.enumeration.TextLengthRange.MEMBER_NAME;
  * {@code member}가 {@code null}인 경우
  */
 @Getter
-@Embeddable
+@Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class HouseHolder {
+
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
+
     @OneToOne(fetch = FetchType.LAZY)
     private Member member;
 
-    @Column(nullable = false, columnDefinition = "char(20)")
+    @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, columnDefinition = "char(11)")
+    @Column(nullable = false)
     @Convert(converter = MobileConverter.class)
     private Mobile mobile;
 

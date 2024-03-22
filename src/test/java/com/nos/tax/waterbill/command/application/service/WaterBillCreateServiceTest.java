@@ -16,6 +16,7 @@ import com.nos.tax.waterbill.command.domain.WaterBill;
 import com.nos.tax.waterbill.command.domain.enumeration.WaterBillState;
 import com.nos.tax.waterbill.command.domain.exception.WaterBillDuplicateException;
 import com.nos.tax.waterbill.command.domain.repository.WaterBillRepository;
+import com.nos.tax.watermeter.command.application.service.WaterMeterCreateService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -34,13 +35,15 @@ public class WaterBillCreateServiceTest {
     private BuildingRepository buildingRepository;
     private WaterBillCreateService waterBillCreateService;
     private WaterBillRepository waterBillRepository;
+    private WaterMeterCreateService waterMeterCreateService;
     private WaterBillCreateRequestValidator validator;
 
     public WaterBillCreateServiceTest() {
         buildingRepository = mock(BuildingRepository.class);
         waterBillRepository = mock(WaterBillRepository.class);
+        waterMeterCreateService = mock(WaterMeterCreateService.class);
         validator = new WaterBillCreateRequestValidator();
-        waterBillCreateService = new WaterBillCreateService(buildingRepository, waterBillRepository, validator);
+        waterBillCreateService = new WaterBillCreateService(buildingRepository, waterBillRepository, waterMeterCreateService, validator);
     }
 
     @DisplayName("수도요금 정산 생성 시 파라미터 유효성 오류")

@@ -1,6 +1,6 @@
-package com.nos.tax.login.command.application.presentation;
+package com.nos.tax.login.command.presentation;
 
-import com.nos.tax.common.http.response.Response;
+
 import com.nos.tax.login.command.application.service.LoginRecordService;
 import com.nos.tax.member.command.application.exception.MemberNotFoundException;
 import com.nos.tax.member.command.application.security.SecurityMember;
@@ -39,9 +39,9 @@ public class LoginController {
             @ApiResponse(responseCode = "500", description = "서버 내부 오류")
     })
     @PostMapping
-    public Response login(@AuthenticationPrincipal SecurityMember securityMember,
+    public String login(@AuthenticationPrincipal SecurityMember securityMember,
                           HttpServletRequest request) {
         loginRecordService.loginRecord(securityMember.getMember(), request.getHeader(HttpHeaders.USER_AGENT));
-        return Response.ok();
+        return "Response";
     }
 }

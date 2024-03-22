@@ -40,19 +40,16 @@ public class HouseHold extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "houseHold")
     private List<WaterMeter> waterMeters;
 
-    @Column(unique = true, nullable = false, columnDefinition = "char(6)")
+    @OneToOne(fetch = FetchType.LAZY)
+    private HouseHolder houseHolder;
+
+    @Column(nullable = false)
     private String room;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private HouseHoldState houseHoldState = HouseHoldState.EMPTY;
 
-    @AttributeOverrides(value = {
-            @AttributeOverride(name = "name", column = @Column(name = "house_holder_name", columnDefinition = "char(20)")),
-            @AttributeOverride(name = "mobile", column = @Column(name = "house_holder_mobile", columnDefinition = "char(11)")),
-    })
-    @Embedded
-    private HouseHolder houseHolder;
 
     /**
      * @param room 세대명

@@ -5,6 +5,7 @@ import com.nos.tax.helper.builder.BuildingCreateHelperBuilder;
 import com.nos.tax.helper.builder.MemberCreateHelperBuilder;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.household.command.domain.HouseHolder;
+import com.nos.tax.household.command.domain.repository.HouseHolderRepository;
 import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.member.command.domain.Mobile;
 import com.nos.tax.member.command.domain.Password;
@@ -34,6 +35,9 @@ public class BuildingRepositoryTest {
 
     @Autowired
     private BuildingRepository buildingRepository;
+
+    @Autowired
+    private HouseHolderRepository houseHolderRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -135,7 +139,10 @@ public class BuildingRepositoryTest {
         for(int i = 0; i < houseHolds1.size(); i++){
             Member member = members.get(i);
             HouseHold houseHold = houseHolds1.get(i);
-            houseHold.moveInHouse(HouseHolder.of(member));
+
+            HouseHolder houseHolder = houseHolderRepository.save(HouseHolder.of(member));
+
+            houseHold.moveInHouse(houseHolder);
         }
 
         flushAndClear(entityManager);

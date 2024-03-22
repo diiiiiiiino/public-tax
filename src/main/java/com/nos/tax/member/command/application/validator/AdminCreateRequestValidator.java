@@ -46,8 +46,8 @@ public class AdminCreateRequestValidator implements RequestValidator<AdminCreate
             BuildingInfo buildingInfo = request.getBuildingInfo();
             List<HouseHoldInfo> houseHoldInfos = request.getHouseHoldInfos();
 
-//            List<ValidationError> memberCreateRequestErrors = memberCreateRequestValidator.validate(memberCreateRequest);
-//            errors.addAll(memberCreateRequestErrors);
+            List<ValidationError> memberCreateRequestErrors = memberCreateRequestValidator.validate(memberCreateRequest);
+            errors.addAll(memberCreateRequestErrors);
 
             if(buildingInfo == null){
                 errors.add(ValidationError.of("buildingInfo", ValidationCode.NULL.getValue()));

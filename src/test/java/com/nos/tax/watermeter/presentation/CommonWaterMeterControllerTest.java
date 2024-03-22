@@ -56,7 +56,7 @@ public class CommonWaterMeterControllerTest extends BaseControllerTest {
         doThrow(new ValidationErrorException("Request has invalid values", errors))
                 .when(waterMeterCreateService).create(any(), any(WaterMeterCreateRequest.class));
 
-        mvcPerform(post("/member/water-meter"), request)
+        mvcPerform(post("/common/water-meter"), request)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errors").isNotEmpty());
     }
@@ -67,7 +67,7 @@ public class CommonWaterMeterControllerTest extends BaseControllerTest {
         doThrow(new WaterMeterNotFoundException("WaterMeter not found"))
                 .when(waterMeterDeleteService).delete(anyLong());
 
-        mvcPerform(delete("/member/water-meter/1"), null)
+        mvcPerform(delete("/common/water-meter/1"), null)
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.errorCode").value("WaterMeterNotFound"));
     }
@@ -78,7 +78,7 @@ public class CommonWaterMeterControllerTest extends BaseControllerTest {
         doThrow(new WaterMeterDeleteStateException("WaterMeter can be deleted before the water bill is settled"))
                 .when(waterMeterDeleteService).delete(anyLong());
 
-        mvcPerform(delete("/member/water-meter/1"), null)
+        mvcPerform(delete("/common/water-meter/1"), null)
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.errorCode").value("WaterMeterDeleteState"));
     }
@@ -86,7 +86,7 @@ public class CommonWaterMeterControllerTest extends BaseControllerTest {
     @DisplayName("수도 계량 삭제 성공")
     @Test
     void whenWaterMeterDeleteSuccess() throws Exception {
-        mvcPerform(delete("/member/water-meter/1"), null)
+        mvcPerform(delete("/common/water-meter/1"), null)
                 .andExpect(status().isOk());
     }
 }

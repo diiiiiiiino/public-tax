@@ -22,13 +22,13 @@ import static com.nos.tax.common.enumeration.TextLengthRange.*;
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Address {
-    @Column(nullable = false, columnDefinition = "char(50)")
+    @Column(nullable = false)
     private String address1;
 
-    @Column(nullable = false, columnDefinition = "char(50)")
+    @Column(nullable = false)
     private String address2;
 
-    @Column(nullable = false, columnDefinition = "char(5)")
+    @Column(nullable = false)
     private String zipNo;
 
     /**

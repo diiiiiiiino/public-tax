@@ -35,7 +35,7 @@ public class Building extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private BuildingState state = BuildingState.ACTIVATION;
 
-    @Column(nullable = false, columnDefinition = "char(20)")
+    @Column(nullable = false)
     private String name;
 
     @Embedded

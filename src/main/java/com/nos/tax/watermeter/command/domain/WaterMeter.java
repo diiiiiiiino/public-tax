@@ -36,21 +36,16 @@ public class WaterMeter extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private HouseHold houseHold;
 
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private WaterMeterState state;
 
-    @Column(nullable = false, columnDefinition = "char(7)")
     @Convert(converter = YearMonthConverter.class)
     private YearMonth calculateYm;
 
-    @Column(nullable = false, columnDefinition = "smallint")
     private int previousMeter;
 
-    @Column(nullable = false, columnDefinition = "smallint")
     private int presentMeter;
 
-    @Column(nullable = false, columnDefinition = "smallint")
     private int waterUsage;
 
     /**

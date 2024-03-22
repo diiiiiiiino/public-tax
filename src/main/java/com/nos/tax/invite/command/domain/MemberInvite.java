@@ -34,14 +34,14 @@ public class MemberInvite extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private HouseHold houseHold;
 
-    @Column(nullable = false, columnDefinition = "char(11)")
+    @Column(nullable = false)
     @Convert(converter = MobileConverter.class)
     private Mobile mobile;
 
-    @Column(nullable = false, columnDefinition = "char(6)")
+    @Column(nullable = false)
     private String code;
 
-    @Column(nullable = false, columnDefinition = "timestamp(4)")
+    @Column(nullable = false)
     private LocalDateTime expireDateTime;
 
     /**

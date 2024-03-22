@@ -16,14 +16,12 @@ public abstract class BaseEntity {
     /**
      * 생성일시
      */
-    @Column(columnDefinition = "timestamp default current_timestamp")
     @CreationTimestamp
     private LocalDateTime createTime;
 
     /**
      * 수정일시
      */
-    @Column(columnDefinition = "timestamp default current_timestamp on update current_timestamp")
     @UpdateTimestamp
     private LocalDateTime updateTime;
 }

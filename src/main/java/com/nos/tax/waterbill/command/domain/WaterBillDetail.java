@@ -27,10 +27,8 @@ public class WaterBillDetail extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     private WaterMeter waterMeter;
 
-    @Column(nullable = false, columnDefinition = "int")
     private int amount;
 
-    @Column(nullable = false, columnDefinition = "int")
     private int difference;
 
     /**

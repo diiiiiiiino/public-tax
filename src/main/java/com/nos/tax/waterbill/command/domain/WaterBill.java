@@ -45,13 +45,12 @@ public class WaterBill extends BaseEntity {
     @OrderColumn(name = "line_idx")
     private List<WaterBillDetail> waterBillDetails = new ArrayList<>();
 
-    @Column(nullable = false, columnDefinition = "int")
+    @Column(nullable = false)
     private int totalAmount;
 
-    @Column(columnDefinition = "decimal(8, 2)")
     private double unitAmount;
 
-    @Column(nullable = false, columnDefinition = "char(7)")
+    @Column(nullable = false)
     @Convert(converter = YearMonthConverter.class)
     private YearMonth calculateYm;
 
