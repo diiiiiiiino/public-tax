@@ -1,5 +1,6 @@
 package com.nos.tax.household.command.domain;
 
+import com.nos.tax.common.entity.BaseEntity;
 import com.nos.tax.member.command.domain.Member;
 import com.nos.tax.member.command.domain.Mobile;
 import com.nos.tax.member.command.domain.converter.MobileConverter;
@@ -23,7 +24,7 @@ import static com.nos.tax.common.enumeration.TextLengthRange.MEMBER_NAME;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class HouseHolder {
+public class HouseHolder extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;

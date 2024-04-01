@@ -4,6 +4,8 @@ import com.nos.tax.building.command.domain.Building;
 import com.nos.tax.household.command.domain.HouseHold;
 import com.nos.tax.member.command.domain.Member;
 
+import java.util.List;
+
 public class HouseHoldCreateHelperBuilder {
     private Long id = 1L;
     private String room = "101호";
@@ -36,6 +38,6 @@ public class HouseHoldCreateHelperBuilder {
 
     public HouseHold build(){
         return member == null ? HouseHold.of(id, room, building)
-                : HouseHold.of(id, room, building, member);
+                : HouseHold.of(id, room, building, List.of(member));
     }
 }

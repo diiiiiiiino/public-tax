@@ -66,7 +66,7 @@ public class MemberWithdrawServiceTest {
         memberWithdrawService.withDraw(member);
 
         assertThat(member.getState()).isEqualTo(MemberState.DEACTIVATION);
-        assertThat(houseHold.getHouseHolder()).isNull();
+        assertThat(houseHold.getMembers()).isEmpty();
         assertThat(houseHold.getHouseHoldState()).isEqualTo(HouseHoldState.EMPTY);
     }
 }

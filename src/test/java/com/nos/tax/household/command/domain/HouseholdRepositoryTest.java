@@ -73,17 +73,17 @@ public class HouseholdRepositoryTest {
                 .build();;
         memberRepository.save(member);
 
-        HouseHolder houseHolder = HouseHolder.of(member);
-        houseHolderRepository.save(houseHolder);
-
-        houseHold.moveInHouse(houseHolder);
+        houseHold.moveInHouse(List.of(member));
 
         flushAndClear(entityManager);
 
         houseHold = houseHoldRepository.findById(houseHold.getId()).get();
 
-        assertThat(houseHold.getHouseHolder().getName()).isEqualTo("스컬");
-        assertThat(houseHold.getHouseHolder().getMobile().toString()).isEqualTo("01012121313");
+        List<Member> members = houseHold.getMembers();
+
+        assertThat(members.size()).isEqualTo(1);
+        assertThat(members.get(0).getName()).isEqualTo("스컬");
+        assertThat(members.get(0).getMobile().toString()).isEqualTo("01012121313");
         assertThat(houseHold.getHouseHoldState()).isEqualTo(HouseHoldState.LIVE);
     }
 

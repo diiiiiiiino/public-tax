@@ -14,8 +14,8 @@ public interface MemberQueryRepository extends JpaRepository<Member, Long> {
                    "        m.mobile, " +
                    "        hh.id as houseHoldId, " +
                    "        hh.building.id as buildingId " +
-                    " from HouseHold hh " +
-                    " join hh.houseHolder.member m " +
-                    " where hh.houseHolder.member.id = :memberId ")
+                    " from Member m " +
+                    " join m.houseHold hh " +
+                    " where m.id = :memberId ")
     Optional<MemberDto> findByMemberId(Long memberId);
 }

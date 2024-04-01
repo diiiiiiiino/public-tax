@@ -61,9 +61,11 @@ public class BuildingRepositoryTest {
         HouseHold findHouseHold = findHouseHolds.get(0);
         assertThat(findHouseHold.getRoom()).isEqualTo("101호");
 
-        HouseHolder houseHolder = findHouseHold.getHouseHolder();
-        assertThat(houseHolder.getName()).isEqualTo("세대주1");
-        assertThat(houseHolder.getMobile().toString()).isEqualTo("01011111111");
+        List<Member> members = findHouseHold.getMembers();
+
+        assertThat(members.size()).isEqualTo(1);
+        assertThat(members.get(0).getName()).isEqualTo("세대주1");
+        assertThat(members.get(0).getMobile().toString()).isEqualTo("01011111111");
     }
 
     @DisplayName("Building 건물명 수정")
@@ -140,9 +142,7 @@ public class BuildingRepositoryTest {
             Member member = members.get(i);
             HouseHold houseHold = houseHolds1.get(i);
 
-            HouseHolder houseHolder = houseHolderRepository.save(HouseHolder.of(member));
-
-            houseHold.moveInHouse(houseHolder);
+            houseHold.moveInHouse(List.of(member));
         }
 
         flushAndClear(entityManager);

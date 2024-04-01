@@ -3,7 +3,7 @@ package com.nos.tax.household.command.presentaion;
 import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.common.http.response.Response;
 import com.nos.tax.household.command.application.HouseHoldMoveOutService;
-import com.nos.tax.household.command.application.HouseHolderChangeService;
+import com.nos.tax.household.command.application.HouseHoldMemberAddService;
 import com.nos.tax.member.command.application.exception.HouseHoldNotFoundException;
 import com.nos.tax.member.command.application.exception.MemberNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminHouseHoldController {
 
     private final HouseHoldMoveOutService houseHoldMoveOutService;
-    private final HouseHolderChangeService houseHolderChangeService;
+    private final HouseHoldMemberAddService houseHoldMemberAddService;
 
     /**
      * @param houseHoldId
@@ -60,7 +60,7 @@ public class AdminHouseHoldController {
     })
     @PostMapping(value = "/householder/{houseHoldId}/{memberId}")
     public Response houseHolderChange(@PathVariable Long houseHoldId, @PathVariable Long memberId){
-        houseHolderChangeService.change(houseHoldId, memberId);
+        houseHoldMemberAddService.memberAdd(houseHoldId, memberId);
 
         return Response.ok();
     }

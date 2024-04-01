@@ -8,13 +8,9 @@ import java.util.List;
 
 public interface HouseHoldQueryRepository extends JpaRepository<HouseHold, Long> {
     
-    @Query(value = " select hh.id," +
-                    " hh.room," +
-                "    hh.houseHoldState," +
-                "    hh.houseHolder.name," +
-                "    hh.houseHolder.mobile" +
-                "   from Building b " +
-                "   join b.houseHolds hh " +
+    @Query(value = " select hh" +
+                "   from HouseHold hh " +
+                "   join hh.building b " +
                 "  where b.id = :buildingId")
     List<HouseHold> findAllByBuilding(Long buildingId);
 }

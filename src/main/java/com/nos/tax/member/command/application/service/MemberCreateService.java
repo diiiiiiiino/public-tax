@@ -83,6 +83,6 @@ public class MemberCreateService {
         Member member = MemberCreateRequest.newMember(request, passwordEncoder);
         memberRepository.save(member);
 
-        houseHold.moveInHouse(HouseHolder.of(member));
+        houseHold.moveInHouse(List.of(member));
     }
 }

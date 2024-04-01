@@ -2,6 +2,8 @@ package com.nos.tax.member.command.domain;
 
 import com.nos.tax.common.entity.BaseEntity;
 import com.nos.tax.common.exception.ValidationErrorException;
+import com.nos.tax.household.command.domain.HouseHold;
+import com.nos.tax.household.command.domain.HouseHolder;
 import com.nos.tax.member.command.domain.converter.MobileConverter;
 import com.nos.tax.member.command.domain.enumeration.MemberState;
 import com.nos.tax.member.command.domain.exception.PasswordNotMatchedException;
@@ -38,6 +40,10 @@ public class Member extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "house_hold_id")
+    private HouseHold houseHold;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -187,6 +193,14 @@ public class Member extends BaseEntity {
      */
     public void updateState(MemberState state){
         this.state = state;
+    }
+
+    /**
+     * 세대 변경
+     * @param houseHold 세대
+     */
+    public void updateHouseHold(HouseHold houseHold){
+        this.houseHold = houseHold;
     }
 
     /**

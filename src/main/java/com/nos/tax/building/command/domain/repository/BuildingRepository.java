@@ -9,10 +9,9 @@ import java.util.Optional;
 
 public interface BuildingRepository extends JpaRepository<Building, Long> {
     @Query(value = "select b " +
-            " from Building b" +
-            " join b.houseHolds hh" +
-            " join hh.houseHolder hr" +
-            " join hr.member m " +
+            " from Member m" +
+            " join m.houseHold hh" +
+            " join hh.building b " +
             " where m.id = :memberId and b.state = :state ")
     Optional<Building> findByMember(Long memberId, BuildingState state);
     Optional<Building> findByIdAndState(Long id, BuildingState state);

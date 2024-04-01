@@ -24,7 +24,7 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
-public class HouseHolderChangeService {
+public class HouseHoldMemberAddService {
 
     private final HouseHoldRepository houseHoldRepository;
     private final MemberRepository memberRepository;
@@ -42,7 +42,7 @@ public class HouseHolderChangeService {
      * </ul>
      */
     @Transactional
-    public void change(Long houseHoldId, Long memberId) {
+    public void memberAdd(Long houseHoldId, Long memberId) {
         List<ValidationError> errors = validateRequest(houseHoldId, memberId);
         if(!errors.isEmpty()){
             throw new ValidationErrorException("Request has invalid values", errors);
@@ -54,7 +54,7 @@ public class HouseHolderChangeService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException("Member not found"));
 
-        houseHold.moveInHouse(HouseHolder.of(member));
+        houseHold.moveInHouse(List.of(member));
     }
 
     /**

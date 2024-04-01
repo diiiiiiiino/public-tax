@@ -12,6 +12,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -38,17 +39,17 @@ public class HouseHold extends BaseEntity {
     private Building building;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "houseHold")
-    private List<WaterMeter> waterMeters;
+    private List<Member> members = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY)
-    private HouseHolder houseHolder;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "houseHold")
+    private List<WaterMeter> waterMeters = new ArrayList<>();
 
     @Column(nullable = false)
     private String room;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private HouseHoldState houseHoldState = HouseHoldState.EMPTY;
+    private HouseHoldState houseHoldState;
 
 
     /**
@@ -58,6 +59,7 @@ public class HouseHold extends BaseEntity {
     private HouseHold(String room, Building building) {
         setRoom(room);
         setBuilding(building);
+        setState();
     }
 
     /**
@@ -67,27 +69,28 @@ public class HouseHold extends BaseEntity {
     private HouseHold(Long id, String room, Building building){
         this(room, building);
         setId(id);
+        setState();
     }
 
     /**
      * @param room 세대명
      * @param building 건물
-     * @param member 회원
+     * @param members 회원 리스트
      */
-    private HouseHold(String room, Building building, Member member){
+    private HouseHold(String room, Building building, List<Member> members){
         this(room, building);
-        setHouseHolder(HouseHolder.of(member));
+        moveInHouse(members);
     }
 
     /**
      * @param id 세대 ID
      * @param room 세대명
      * @param building 건물 객체
-     * @param member 회원 객체
+     * @param members 회원 리스트
      */
-    private HouseHold(Long id, String room, Building building, Member member){
+    private HouseHold(Long id, String room, Building building, List<Member> members){
         this(id, room, building);
-        setHouseHolder(HouseHolder.of(member));
+        moveInHouse(members);
     }
 
     /**
@@ -102,11 +105,11 @@ public class HouseHold extends BaseEntity {
     /**
      * @param room 세대명
      * @param building 건물 객체
-     * @param member 회원 객체
+     * @param members 회원 리스트
      * @return 세대
      */
-    public static HouseHold of(String room, Building building, Member member) {
-        return new HouseHold(room, building, member);
+    public static HouseHold of(String room, Building building, List<Member> members) {
+        return new HouseHold(room, building, members);
     }
 
     /**
@@ -123,28 +126,35 @@ public class HouseHold extends BaseEntity {
      * @param id 세대 ID
      * @param room 세대명
      * @param building 건물 객체
-     * @param member 회원 객체
+     * @param members 회원 리스트
      * @return 세대
      */
-    public static HouseHold of(Long id, String room, Building building, Member member) {
-        return new HouseHold(id, room, building, member);
+    public static HouseHold of(Long id, String room, Building building, List<Member> members) {
+        return new HouseHold(id, room, building, members);
     }
 
     /**
      * 세대주를 입주 처리한다.
-     * @param houseHolder 세대주
-     * @throws CustomNullPointerException {@code houseHolder}가 {@code null}인 경우
+     * @param members 세대주
+     * @throws CustomNullPointerException {@code member}가 {@code null}인 경우
      */
-    public void moveInHouse(HouseHolder houseHolder) {
-        VerifyUtil.verifyNull(houseHolder, "houseHolder");
-        setHouseHolder(houseHolder);
+    public void moveInHouse(List<Member> members) {
+        VerifyUtil.verifyCollection(members, "member");
+
+        this.members.addAll(members);
+        for(Member member : members){
+            member.updateHouseHold(this);
+        }
+
+        setState();
     }
 
     /**
-     * 세대주를 이사 처리한다.
+     * 세대 구성원을 이사 처리한다.
      */
     public void moveOutHouse(){
-        setHouseHolder(null);
+        members.clear();
+        setState();
     }
 
     private void setId(Long id){
@@ -152,11 +162,10 @@ public class HouseHold extends BaseEntity {
     }
 
     /**
-     * @param houseHoldState 세대 상태
+     * 세대에 등록된 멤버 수로 세대 상태 설정
      */
-    private void setState(HouseHoldState houseHoldState){
-        VerifyUtil.verifyNull(houseHoldState, "houseHoldState");
-        this.houseHoldState = houseHoldState;
+    private void setState(){
+        this.houseHoldState = this.members.isEmpty() ? HouseHoldState.EMPTY : HouseHoldState.LIVE;
     }
 
     /**
@@ -164,14 +173,6 @@ public class HouseHold extends BaseEntity {
      */
     private void setRoom(String room) {
         this.room = VerifyUtil.verifyTextLength(room, "houseHoldRoom", HOUSEHOLD_ROOM.getMin(), HOUSEHOLD_ROOM.getMax());
-    }
-
-    /**
-     * @param houseHolder 세대주
-     */
-    private void setHouseHolder(HouseHolder houseHolder) {
-        this.houseHolder = houseHolder;
-        setState(houseHolder != null ? HouseHoldState.LIVE : HouseHoldState.EMPTY);
     }
 
     /**

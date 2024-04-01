@@ -140,7 +140,7 @@ public class AdminCreateServiceTest {
         assertThat(savedBuilding.getAddress().getZipNo()).isEqualTo("12345");
         assertThat(savedBuilding.getHouseHolds()
                 .stream()
-                .filter(houseHold -> houseHold.getHouseHolder() != null)
+                .filter(houseHold -> !houseHold.getMembers().isEmpty())
                 .count()).isEqualTo(1);
         assertThat(savedMember.getLoginId()).isEqualTo("loginId");
         assertThat(savedMember.getPassword().match("qwer1234!@", new BCryptPasswordEncoder())).isTrue();

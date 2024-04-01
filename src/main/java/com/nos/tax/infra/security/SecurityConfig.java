@@ -74,6 +74,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(registry -> registry
                         .requestMatchers(AUTH_WHITELIST).permitAll()
                         .requestMatchers(HttpMethod.POST, "/member").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/admin").permitAll()
                         .requestMatchers("/member/**").hasRole("MEMBER")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/login/**").hasAnyRole("MEMBER", "ADMIN")

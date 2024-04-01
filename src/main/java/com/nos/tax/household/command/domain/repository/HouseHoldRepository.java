@@ -11,9 +11,8 @@ import java.util.Optional;
 @Repository
 public interface HouseHoldRepository extends JpaRepository<HouseHold, Long> {
     @Query(value = "select hh " +
-            " from HouseHold hh" +
-            " join hh.houseHolder holder" +
-            " join holder.member m " +
+            " from Member m" +
+            " join m.houseHold hh" +
             " where m.id = :memberId")
     Optional<HouseHold> findByMemberId(Long memberId);
 

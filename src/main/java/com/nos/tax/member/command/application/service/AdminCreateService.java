@@ -82,7 +82,7 @@ public class AdminCreateService {
         List<Function<Building, HouseHold>> households = houseHoldInfos.stream()
                 .map(houseHoldInfo ->
                         houseHoldInfo.isChecked() ?
-                        (Function<Building, HouseHold>) (building -> HouseHold.of(houseHoldInfo.getRoom(), building, admin)) :
+                        (Function<Building, HouseHold>) (building -> HouseHold.of(houseHoldInfo.getRoom(), building, List.of(admin))) :
                         (Function<Building, HouseHold>) (building -> HouseHold.of(houseHoldInfo.getRoom(), building))
                 ).collect(Collectors.toList());
 

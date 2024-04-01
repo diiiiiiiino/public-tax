@@ -62,6 +62,6 @@ public class HouseHoldMoveOutServiceTest {
         houseHoldMoveOutService.leave(houseHoldId);
 
         assertThat(houseHold.getHouseHoldState()).isEqualTo(HouseHoldState.EMPTY);
-        assertThat(houseHold.getHouseHolder()).isNull();
+        assertThat(houseHold.getMembers()).isEmpty();
     }
 }

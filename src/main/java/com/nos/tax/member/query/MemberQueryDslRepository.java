@@ -40,9 +40,9 @@ public class MemberQueryDslRepository {
     }
 
     private JPAQuery<?> from(){
-        return jpaQueryFactory.from(houseHold)
-                .join(m)
-                .on(m.eq(houseHold.houseHolder.member));
+        return jpaQueryFactory.from(m)
+                .join(houseHold)
+                .on(m.houseHold.eq(houseHold));
     }
 
     private BooleanExpression whereState() {

@@ -32,7 +32,7 @@ public class AdminController {
     /**
      * 관리자 생성
      * @param request 관리자 생성 요청
-     * @return Response2
+     * @return Response
      * @throws ValidationErrorException 관리자 생성 요청 유효성 에러
      */
     @Operation(summary = "관리자 생성", description = "관리자 생성")
@@ -52,7 +52,7 @@ public class AdminController {
      * 관리자 변경
      * @param securityAdmin 인증 관리자
      * @param memberId 관리자로 변경할 회원 ID
-     * @return Response2
+     * @return Response
      * @throws MemberNotFoundException 관리자로 변경할 회원 미조회
      * @throws AuthorityNotFoundException 권한 미조회
      */
@@ -74,7 +74,7 @@ public class AdminController {
     /**
      * 회원 생성 요청
      * @param requests 회원 생성 요청 대상 리스트
-     * @return Response2
+     * @return Response
      * @throws HouseHoldNotFoundException 세대 미조회
      * @throws ValidationErrorException 회원 생성 요청 대상 유효성 검증 에러
      */

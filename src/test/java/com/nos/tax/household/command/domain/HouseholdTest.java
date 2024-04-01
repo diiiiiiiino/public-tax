@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -38,9 +40,8 @@ public class HouseholdTest {
         HouseHold houseHold = HouseHold.of("101호", BuildingCreateHelperBuilder.builder().build());
 
         Member member = MemberCreateHelperBuilder.builder().build();
-        HouseHolder houseHolder = HouseHolder.of(member);
 
-        houseHold.moveInHouse(houseHolder);
-        assertThat(houseHold.getHouseHolder()).isNotNull();
+        houseHold.moveInHouse(List.of(member));
+        assertThat(houseHold.getMembers()).isNotEmpty();
     }
 }

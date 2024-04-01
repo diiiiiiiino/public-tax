@@ -154,11 +154,12 @@ public class MemberCreateServiceTest {
         assertThat(authoritySet).hasSize(1);
         assertThat(authoritySet).containsOnly(AuthorityEnum.ROLE_MEMBER.getName());
 
-        HouseHolder houseHolder = houseHold.getHouseHolder();
-        assertThat(houseHolder.getMember().getLoginId()).isEqualTo("loginId");
-        assertThat(houseHolder.getMember().passwordMatch("qwer1234!@", new BCryptPasswordEncoder())).isTrue();
-        assertThat(houseHolder.getMember().getName()).isEqualTo("홍길동");
-        assertThat(houseHolder.getName()).isEqualTo("홍길동");
-        assertThat(houseHolder.getMobile().toString()).isEqualTo("01012345678");
+        List<Member> members = houseHold.getMembers();
+
+        assertThat(members.size()).isEqualTo(1);
+        assertThat(members.get(0).getLoginId()).isEqualTo("loginId");
+        assertThat(members.get(0).passwordMatch("qwer1234!@", new BCryptPasswordEncoder())).isTrue();
+        assertThat(members.get(0).getName()).isEqualTo("홍길동");
+        assertThat(members.get(0).getMobile().toString()).isEqualTo("01012345678");
     }
 }

@@ -5,7 +5,7 @@ import com.nos.tax.common.exception.ValidationError;
 import com.nos.tax.common.exception.ValidationErrorException;
 import com.nos.tax.helper.BaseControllerTest;
 import com.nos.tax.household.command.application.HouseHoldMoveOutService;
-import com.nos.tax.household.command.application.HouseHolderChangeService;
+import com.nos.tax.household.command.application.HouseHoldMemberAddService;
 import com.nos.tax.member.command.application.exception.HouseHoldNotFoundException;
 import com.nos.tax.member.command.application.exception.MemberNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +32,7 @@ public class AdminHouseHoldControllerTest extends BaseControllerTest {
     private HouseHoldMoveOutService houseHoldMoveOutService;
 
     @MockBean
-    private HouseHolderChangeService houseHolderChangeService;
+    private HouseHoldMemberAddService houseHoldMemberAddService;
 
     @BeforeEach
     void beforeEach() throws Exception {
@@ -76,7 +76,7 @@ public class AdminHouseHoldControllerTest extends BaseControllerTest {
         errors.add(ValidationError.of("memberId", ValidationCode.NULL.getValue()));
 
         doThrow(new ValidationErrorException("Request has invalid values", errors))
-                .when(houseHolderChangeService).change(anyLong(), anyLong());
+                .when(houseHoldMemberAddService).memberAdd(anyLong(), anyLong());
 
         mvcPerform(post("/admin/household/householder/1/1"), null)
                 .andExpect(status().isBadRequest())
@@ -87,7 +87,7 @@ public class AdminHouseHoldControllerTest extends BaseControllerTest {
     @Test
     void whenHouseHolderChangeThenHouseHoldNotFound() throws Exception {
         doThrow(new HouseHoldNotFoundException("Household not found"))
-                .when(houseHolderChangeService).change(anyLong(), anyLong());
+                .when(houseHoldMemberAddService).memberAdd(anyLong(), anyLong());
 
         mvcPerform(post("/admin/household/householder/1/1"), null)
                 .andExpect(status().isNotFound())
@@ -98,7 +98,7 @@ public class AdminHouseHoldControllerTest extends BaseControllerTest {
     @Test
     void whenHouseHolderChangeThenMemberNotFound() throws Exception {
         doThrow(new MemberNotFoundException("Member not found"))
-                .when(houseHolderChangeService).change(anyLong(), anyLong());
+                .when(houseHoldMemberAddService).memberAdd(anyLong(), anyLong());
 
         mvcPerform(post("/admin/household/householder/1/1"), null)
                 .andExpect(status().isNotFound())
